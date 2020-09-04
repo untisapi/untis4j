@@ -18,7 +18,7 @@ Just download the latest untis4j.jar file, implement it into your project and st
 
 # Examples
 
-To get an overview about all classes and methods, read the docs
+To get an overview about all classes and methods, read the [docs](https://bytedream.github.io/untis4j/)
 
 ## Simple timetable
 
