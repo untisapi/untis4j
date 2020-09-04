@@ -10,7 +10,7 @@ you can easily implement the method yourself with the `Session.getCustomData` [m
 # Requirements
 
 - Java 8 or higher
-- [org.json java library](https://github.com/stleary/JSON-java)
+- `org.json` [java library](https://github.com/stleary/JSON-java)
 
 # Installation
 
