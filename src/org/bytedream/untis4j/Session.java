@@ -312,8 +312,8 @@ public class Session {
         Response response;
 
         if (schoolYearId != null) {
-            response = requestManager.POST(UntisUtils.Methods.GETKLASSEN.getMethod(), new HashMap<String, String>() {{
-                put("schoolyearId", "schoolYearId");
+            response = requestManager.POST(UntisUtils.Methods.GETKLASSEN.getMethod(), new HashMap<String, Integer>() {{
+                put("schoolyearId", schoolYearId);
             }});
         } else {
             response = requestManager.POST(UntisUtils.Methods.GETKLASSEN.getMethod());
