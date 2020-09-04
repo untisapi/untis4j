@@ -5,7 +5,7 @@
 **untis4j** is a java API for the webuntis timetable / schedule software and is inspired from the [python webuntis api](https://github.com/python-webuntis/python-webuntis)
 and another [java webuntis api](https://github.com/FearlessTobi/WebUntis-Java).
 It support almost all webuntis request and is easy to use. If a request method is missing,
-you can easily implement the method yourself with the `Session.getCustomData` [method](#Custom_request)
+you can easily implement the method yourself with the `Session.getCustomData` [method](#Custom-request)
 
 # Requirements
 
