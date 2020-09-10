@@ -1,9 +1,11 @@
 package org.bytedream.untis4j.responseObjects;
 
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
+import org.json.JSONObject;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 /**
  * Contains the information about the timetable of a specific week
@@ -66,4 +68,29 @@ public class WeeklyTimetable implements BaseResponse {
         return timetables[dayOfWeek.getValue() - 1];
     }
 
+    /**
+     * Returns the size of the weekly timetable (always 7)
+     *
+     * @return size
+     *
+     * @since 1.1
+     */
+    public int size() {
+        return 7;
+    }
+
+    @Override
+    public String toString() {
+        HashMap<String, String> weeklyTimetableAsMap = new HashMap<>();
+
+        weeklyTimetableAsMap.put("1", timetables[0].toString());
+        weeklyTimetableAsMap.put("2", timetables[1].toString());
+        weeklyTimetableAsMap.put("3", timetables[2].toString());
+        weeklyTimetableAsMap.put("4", timetables[3].toString());
+        weeklyTimetableAsMap.put("5", timetables[4].toString());
+        weeklyTimetableAsMap.put("6", timetables[5].toString());
+        weeklyTimetableAsMap.put("7", timetables[6].toString());
+
+        return new JSONObject(weeklyTimetableAsMap).toString();
+    }
 }
