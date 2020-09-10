@@ -328,38 +328,38 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
-     * Sorts the timetable by all klassen ids
+     * Sorts the timetable by all klassen
      *
      * @since 1.1
      */
-    public void sortByKlassenId() {
+    public void sortByKlassen() {
         return;
     }
 
     /**
-     * Sorts the timetable by all teacher ids
+     * Sorts the timetable by all teachers
      *
      * @since 1.1
      */
-    public void sortByTeacherId() {
+    public void sortByTeachers() {
         return;
     }
 
     /**
-     * Sorts the timetable by all room ids
+     * Sorts the timetable by all rooms
      *
      * @since 1.1
      */
-    public void sortByRoomId() {
+    public void sortByRooms() {
         return;
     }
 
     /**
-     * Sorts the timetable by all subject ids
+     * Sorts the timetable by all subjects
      *
      * @since 1.1
      */
-    public void sortBySubjectId() {
+    public void sortBySubjects() {
         return;
     }
 
@@ -421,54 +421,54 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
-     * Sorts the given timetable by all klassen ids and returns the sorted timetable
+     * Sorts the given timetable by all klassen and returns the sorted timetable
      *
      * @param timetable timetable that should be sorted
      * @return the sorted timetable
      *
      * @since 1.1
      */
-    public static Timetable sortByKlassenId(Timetable timetable) {
-        timetable.sortByKlassenId();
+    public static Timetable sortByKlassen(Timetable timetable) {
+        timetable.sortByKlassen();
         return timetable;
     }
 
     /**
-     * Sorts the given timetable by all teacher ids and returns the sorted timetable
+     * Sorts the given timetable by all teachers and returns the sorted timetable
      *
      * @param timetable timetable that should be sorted
      * @return the sorted timetable
      *
      * @since 1.1
      */
-    public static Timetable sortByTeacherId(Timetable timetable) {
-        timetable.sortByTeacherId();
+    public static Timetable sortByTeachers(Timetable timetable) {
+        timetable.sortByTeachers();
         return timetable;
     }
 
     /**
-     * Sorts the given timetable by all room ids and returns the sorted timetable
+     * Sorts the given timetable by all rooms and returns the sorted timetable
      *
      * @param timetable timetable that should be sorted
      * @return the sorted timetable
      *
      * @since 1.1
      */
-    public static Timetable sortByRoomId(Timetable timetable) {
-        timetable.sortByRoomId();
+    public static Timetable sortByRooms(Timetable timetable) {
+        timetable.sortByRooms();
         return timetable;
     }
 
     /**
-     * Sorts the given timetable by all subject ids and returns the sorted timetable
+     * Sorts the given timetable by all subjects and returns the sorted timetable
      *
      * @param timetable timetable that should be sorted
      * @return the sorted timetable
      *
      * @since 1.1
      */
-    public static Timetable sortBySubjectId(Timetable timetable) {
-        timetable.sortBySubjectId();
+    public static Timetable sortBySubjects(Timetable timetable) {
+        timetable.sortBySubjects();
         return timetable;
     }
 
