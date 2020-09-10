@@ -1,8 +1,7 @@
 package org.bytedream.untis4j.responseObjects;
 
-import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.*;
-import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.*;
-
+import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.NILResponseList;
+import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NILResponseObject;
 
 /**
  * Class to manage {@link DepartmentObject} objects

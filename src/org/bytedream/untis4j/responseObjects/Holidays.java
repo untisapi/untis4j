@@ -18,11 +18,34 @@ import java.util.HashMap;
 public class Holidays extends NILResponseList<Holidays.HolidaysObject> {
 
     /**
+     * Sorts the given holidays by all start dates and returns the sorted holidays
+     *
+     * @param holidays holidays that should be sorted
+     * @return the sorted holidays
+     * @since 1.1
+     */
+    public static Holidays sortByStartDate(Holidays holidays) {
+        holidays.sortByStartDate();
+        return holidays;
+    }
+
+    /**
+     * Sorts the given holidays by all end dates and returns the sorted holidays
+     *
+     * @param holidays holidays that should be sorted
+     * @return the sorted holidays
+     * @since 1.1
+     */
+    public static Holidays sortByEndDate(Holidays holidays) {
+        holidays.sortByEndDate();
+        return holidays;
+    }
+
+    /**
      * Finds a holidays by its start date
      *
      * @param startDate start date of the holidays you want to find
      * @return the holidays
-     *
      * @since 1.0
      */
     public HolidaysObject findByStartDate(LocalDate startDate) {
@@ -34,7 +57,6 @@ public class Holidays extends NILResponseList<Holidays.HolidaysObject> {
      *
      * @param endDate end date of the holidays you want to find
      * @return the holidays
-     *
      * @since 1.0
      */
     public HolidaysObject findByEndDate(LocalDate endDate) {
@@ -46,7 +68,6 @@ public class Holidays extends NILResponseList<Holidays.HolidaysObject> {
      *
      * @param startDate start date of the holidays you want to search
      * @return {@link Holidays} with holidays that have the {@code startDate} or a part of it in their start date
-     *
      * @since 1.0
      */
     public Holidays searchByStartDate(LocalDate startDate) {
@@ -62,7 +83,6 @@ public class Holidays extends NILResponseList<Holidays.HolidaysObject> {
      *
      * @param endDate end date of the holidays you want to search
      * @return {@link Holidays} with holidays that have the {@code endDate} or a part of it in their end date
-     *
      * @since 1.0
      */
     public Holidays searchByEndDate(LocalDate endDate) {
@@ -92,32 +112,6 @@ public class Holidays extends NILResponseList<Holidays.HolidaysObject> {
     }
 
     /**
-     * Sorts the given holidays by all start dates and returns the sorted holidays
-     *
-     * @param holidays holidays that should be sorted
-     * @return the sorted holidays
-     *
-     * @since 1.1
-     */
-    public static Holidays sortByStartDate(Holidays holidays) {
-        holidays.sortByStartDate();
-        return holidays;
-    }
-
-    /**
-     * Sorts the given holidays by all end dates and returns the sorted holidays
-     *
-     * @param holidays holidays that should be sorted
-     * @return the sorted holidays
-     *
-     * @since 1.1
-     */
-    public static Holidays sortByEndDate(Holidays holidays) {
-        holidays.sortByEndDate();
-        return holidays;
-    }
-
-    /**
      * Class to get information about holidays
      *
      * @version 1.0
@@ -131,12 +125,11 @@ public class Holidays extends NILResponseList<Holidays.HolidaysObject> {
         /**
          * Initialize the {@link HolidaysObject} class
          *
-         * @param endDate end of the holidays
-         * @param name name of the teacher
-         * @param id id of the teacher
+         * @param endDate   end of the holidays
+         * @param name      name of the teacher
+         * @param id        id of the teacher
          * @param startDate start of the holidays
-         * @param longName long name of the teacher
-         *
+         * @param longName  long name of the teacher
          * @since 1.0
          */
         public HolidaysObject(String name, LocalDate startDate, LocalDate endDate, int id, String longName) {
@@ -149,7 +142,6 @@ public class Holidays extends NILResponseList<Holidays.HolidaysObject> {
          * Returns the start date of the holidays
          *
          * @return the start date of the holidays
-         *
          * @since 1.0
          */
         public LocalDate getStartDate() {
@@ -160,7 +152,6 @@ public class Holidays extends NILResponseList<Holidays.HolidaysObject> {
          * Returns the end date of the holidays
          *
          * @return the end date of the holidays
-         *
          * @since 1.0
          */
         public LocalDate getEndDate() {
@@ -171,7 +162,6 @@ public class Holidays extends NILResponseList<Holidays.HolidaysObject> {
          * Returns a json parsed string with all information
          *
          * @return a json parsed string with all information
-         *
          * @since 1.0
          */
         @Override

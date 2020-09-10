@@ -21,11 +21,118 @@ import java.util.Set;
 public class Timetable extends ResponseList<Timetable.Lesson> {
 
     /**
+     * Sorts the given timetable by all dates and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     * @since 1.1
+     */
+    public static Timetable sortByDate(Timetable timetable) {
+        timetable.sortByDate();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all start times and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     * @since 1.1
+     */
+    public static Timetable sortByStartTime(Timetable timetable) {
+        timetable.sortByStartTime();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all end times and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     * @since 1.1
+     */
+    public static Timetable sortByEndTime(Timetable timetable) {
+        timetable.sortByEndTime();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all klassen and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     * @since 1.1
+     */
+    public static Timetable sortByKlassen(Timetable timetable) {
+        timetable.sortByKlassen();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all teachers and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     * @since 1.1
+     */
+    public static Timetable sortByTeachers(Timetable timetable) {
+        timetable.sortByTeachers();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all rooms and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     * @since 1.1
+     */
+    public static Timetable sortByRooms(Timetable timetable) {
+        timetable.sortByRooms();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all subjects and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     * @since 1.1
+     */
+    public static Timetable sortBySubjects(Timetable timetable) {
+        timetable.sortBySubjects();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all codes and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     * @since 1.1
+     */
+    public static Timetable sortByCode(Timetable timetable) {
+        timetable.sortByCode();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all activity types and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     * @since 1.1
+     */
+    public static Timetable sortByActivityType(Timetable timetable) {
+        timetable.sortByActivityType();
+        return timetable;
+    }
+
+    /**
      * Finds a timetable by its date (basically returns itself, if the date is correct)
      *
      * @param date date of the timetable you want to find
      * @return the timetable
-     *
      * @since 1.0
      */
     public Timetable findByDate(LocalDate date) {
@@ -41,7 +148,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param startTime start time of the lesson you want to find
      * @return the lesson
-     *
      * @since 1.0
      */
     public Lesson findByStartTime(LocalTime startTime) {
@@ -53,7 +159,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param endTime end time of the lesson you want to find
      * @return the lesson
-     *
      * @since 1.0
      */
     public Lesson findByEndTime(LocalTime endTime) {
@@ -65,7 +170,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param klassenIds klassen ids of the lesson you want to find
      * @return the lesson
-     *
      * @since 1.0
      */
     public Lesson findByKlassenIds(Set<Integer> klassenIds) {
@@ -77,7 +181,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param teacherIds teacher ids of the lesson you want to find
      * @return the lesson
-     *
      * @since 1.0
      */
     public Lesson findByTeacherIds(Set<Integer> teacherIds) {
@@ -89,7 +192,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param roomIds room ids of the lesson you want to find
      * @return the lesson
-     *
      * @since 1.0
      */
     public Lesson findByRoomIds(Set<Integer> roomIds) {
@@ -101,7 +203,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param subjectIds subject ids of the lesson you want to find
      * @return the lesson
-     *
      * @since 1.0
      */
     public Lesson findBySubjectIds(Set<Integer> subjectIds) {
@@ -113,7 +214,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param code code of the lessons you want find
      * @return the timetable
-     *
      * @since 1.0
      */
     public Timetable findByCode(UntisUtils.LessonCode code) {
@@ -129,7 +229,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param activityType activity type of the lessons you want find
      * @return the timetable
-     *
      * @since 1.0
      */
     public Timetable findByActivityType(String activityType) {
@@ -145,7 +244,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param date date of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code date} or a part of it in their date
-     *
      * @since 1.0
      */
     public Timetable searchByDate(LocalDate date) {
@@ -161,7 +259,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param startTime start time of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code startTime} or a part of it in their start time
-     *
      * @since 1.0
      */
     public Timetable searchByStartTime(LocalTime startTime) {
@@ -177,7 +274,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param endTime end time of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code endTime} or a part of it in their end time
-     *
      * @since 1.0
      */
     public Timetable searchByEndTime(LocalTime endTime) {
@@ -193,7 +289,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param klassen klassen of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code klassenIds} or a part of it in their klassen ids
-     *
      * @since 1.0
      */
     public Timetable searchByKlassen(Klassen klassen) {
@@ -213,7 +308,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param teachers teachers of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code teacherIds} or a part of it in their teacher ids
-     *
      * @since 1.0
      */
     public Timetable searchByTeacherIds(Teachers teachers) {
@@ -233,7 +327,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param rooms rooms of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code roomIds} or a part of it in their room ids
-     *
      * @since 1.0
      */
     public Timetable searchByRoomIds(Rooms rooms) {
@@ -253,7 +346,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param subjects subjects of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code subjectIds} or a part of it in their subject ids
-     *
      * @since 1.0
      */
     public Timetable searchBySubjectIds(Subjects subjects) {
@@ -273,7 +365,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param code code of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code code} in their code
-     *
      * @since 1.0
      */
     public Timetable searchByCode(UntisUtils.LessonCode code) {
@@ -289,7 +380,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      *
      * @param activityType activity type of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code activityType} in their activity type
-     *
      * @since 1.0
      */
     public Timetable searchByActivityType(String activityType) {
@@ -382,123 +472,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
-     * Sorts the given timetable by all dates and returns the sorted timetable
-     *
-     * @param timetable timetable that should be sorted
-     * @return the sorted timetable
-     *
-     * @since 1.1
-     */
-    public static Timetable sortByDate(Timetable timetable) {
-        timetable.sortByDate();
-        return timetable;
-    }
-
-    /**
-     * Sorts the given timetable by all start times and returns the sorted timetable
-     *
-     * @param timetable timetable that should be sorted
-     * @return the sorted timetable
-     *
-     * @since 1.1
-     */
-    public static Timetable sortByStartTime(Timetable timetable) {
-        timetable.sortByStartTime();
-        return timetable;
-    }
-
-    /**
-     * Sorts the given timetable by all end times and returns the sorted timetable
-     *
-     * @param timetable timetable that should be sorted
-     * @return the sorted timetable
-     *
-     * @since 1.1
-     */
-    public static Timetable sortByEndTime(Timetable timetable) {
-        timetable.sortByEndTime();
-        return timetable;
-    }
-
-    /**
-     * Sorts the given timetable by all klassen and returns the sorted timetable
-     *
-     * @param timetable timetable that should be sorted
-     * @return the sorted timetable
-     *
-     * @since 1.1
-     */
-    public static Timetable sortByKlassen(Timetable timetable) {
-        timetable.sortByKlassen();
-        return timetable;
-    }
-
-    /**
-     * Sorts the given timetable by all teachers and returns the sorted timetable
-     *
-     * @param timetable timetable that should be sorted
-     * @return the sorted timetable
-     *
-     * @since 1.1
-     */
-    public static Timetable sortByTeachers(Timetable timetable) {
-        timetable.sortByTeachers();
-        return timetable;
-    }
-
-    /**
-     * Sorts the given timetable by all rooms and returns the sorted timetable
-     *
-     * @param timetable timetable that should be sorted
-     * @return the sorted timetable
-     *
-     * @since 1.1
-     */
-    public static Timetable sortByRooms(Timetable timetable) {
-        timetable.sortByRooms();
-        return timetable;
-    }
-
-    /**
-     * Sorts the given timetable by all subjects and returns the sorted timetable
-     *
-     * @param timetable timetable that should be sorted
-     * @return the sorted timetable
-     *
-     * @since 1.1
-     */
-    public static Timetable sortBySubjects(Timetable timetable) {
-        timetable.sortBySubjects();
-        return timetable;
-    }
-
-    /**
-     * Sorts the given timetable by all codes and returns the sorted timetable
-     *
-     * @param timetable timetable that should be sorted
-     * @return the sorted timetable
-     *
-     * @since 1.1
-     */
-    public static Timetable sortByCode(Timetable timetable) {
-        timetable.sortByCode();
-        return timetable;
-    }
-
-    /**
-     * Sorts the given timetable by all activity types and returns the sorted timetable
-     *
-     * @param timetable timetable that should be sorted
-     * @return the sorted timetable
-     *
-     * @since 1.1
-     */
-    public static Timetable sortByActivityType(Timetable timetable) {
-        timetable.sortByActivityType();
-        return timetable;
-    }
-
-    /**
      * Class to get information about a lesson
      *
      * @version 1.0
@@ -519,16 +492,15 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
         /**
          * Initialize the {@link Lesson} class
          *
-         * @param date date of the timetable
-         * @param startTime time when the lesson start
-         * @param endTime time when the lesson end
-         * @param klassen klassen
-         * @param teachers teachers
-         * @param rooms rooms
-         * @param subjects subjects
-         * @param code code of the lesson (normally null, {@link UntisUtils.LessonCode#CANCELLED} if the lesson is cancelled, {@code UntisUtils.LessonCode.IRREGULAR} if e.g. a lesson has been moved
+         * @param date         date of the timetable
+         * @param startTime    time when the lesson start
+         * @param endTime      time when the lesson end
+         * @param klassen      klassen
+         * @param teachers     teachers
+         * @param rooms        rooms
+         * @param subjects     subjects
+         * @param code         code of the lesson (normally null, {@link UntisUtils.LessonCode#CANCELLED} if the lesson is cancelled, {@code UntisUtils.LessonCode.IRREGULAR} if e.g. a lesson has been moved
          * @param activityType type of the lesson
-         *
          * @since 1.0
          */
         public Lesson(LocalDate date,
@@ -555,7 +527,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          * Returns the date of the lesson
          *
          * @return the date of the lesson
-         *
          * @since 1.0
          */
         public LocalDate getDate() {
@@ -566,7 +537,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          * Returns the start time of the lesson
          *
          * @return the start time of the lesson
-         *
          * @since 1.0
          */
         public LocalTime getStartTime() {
@@ -577,7 +547,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          * Returns the end time of the lesson
          *
          * @return the end time of the lesson
-         *
          * @since 1.0
          */
         public LocalTime getEndTime() {
@@ -588,7 +557,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          * Returns the klassen that have this lesson
          *
          * @return the klassen that have this lesson
-         *
          * @since 1.0
          */
         public Klassen getKlassen() {
@@ -599,7 +567,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          * Returns the teachers that have this lesson
          *
          * @return the teachers that have this lesson
-         *
          * @since 1.0
          */
         public Teachers getTeachers() {
@@ -610,7 +577,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          * Returns the id of the rooms where the lesson is
          *
          * @return the id of the rooms where the lesson is
-         *
          * @since 1.0
          */
         public Rooms getRooms() {
@@ -621,7 +587,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          * Returns the lesson subjects
          *
          * @return the lesson subjects
-         *
          * @since 1.0
          */
         public Subjects getSubjects() {
@@ -632,7 +597,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          * Returns the lesson code (if cancelled the lesson is cancelled, if irregular the something irregular is with this lesson (it got moved or something)
          *
          * @return the lesson code
-         *
          * @since 1.0
          */
         public UntisUtils.LessonCode getCode() {
@@ -643,7 +607,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          * Returns the activity type
          *
          * @return the activity type
-         *
          * @since 1.0
          */
         public String getActivityType() {
@@ -654,7 +617,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          * Returns a json parsed string with all information
          *
          * @return a json parsed string with all information
-         *
          * @since 1.0
          */
         @Override

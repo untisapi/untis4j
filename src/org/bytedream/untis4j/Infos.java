@@ -17,11 +17,10 @@ public class Infos {
     /**
      * Initialize the {@link Infos} class
      *
-     * @param username the username used for the api
-     * @param password the password used for the api
-     * @param server the server used for the api
+     * @param username   the username used for the api
+     * @param password   the password used for the api
+     * @param server     the server used for the api
      * @param schoolName the school name used for the api
-     *
      * @since 1.0
      */
     public Infos(String username, String password, String server, String schoolName, String userAgent) {
@@ -36,7 +35,6 @@ public class Infos {
      * Returns the username used for the api
      *
      * @return the username used for the api
-     *
      * @since 1.0
      */
     public String getUsername() {
@@ -47,7 +45,6 @@ public class Infos {
      * Returns the password used for the api
      *
      * @return the password used for the api
-     *
      * @since 1.0
      */
     public String getPassword() {
@@ -58,7 +55,6 @@ public class Infos {
      * Returns the server used for the api
      *
      * @return the server used for the api
-     *
      * @since 1.0
      */
     public String getServer() {
@@ -69,7 +65,6 @@ public class Infos {
      * Returns the school name used for the api
      *
      * @return the school name used for the api
-     *
      * @since 1.0
      */
     public String getSchoolName() {
@@ -80,7 +75,6 @@ public class Infos {
      * Returns the user agent used for the api
      *
      * @return the user agent used for the api
-     *
      * @since 1.0
      */
     public String getUserAgent() {

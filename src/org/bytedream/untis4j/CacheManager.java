@@ -1,11 +1,12 @@
 package org.bytedream.untis4j;
 
-import org.bytedream.untis4j.responseObjects.Rooms;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.ResponseList;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
 
 /**
  * Class to manage cache and minimize server requests and speed up the API
@@ -21,8 +22,7 @@ public class CacheManager {
      * Adds content to the cache
      *
      * @param cacheKeys cache keys of the object to cache
-     * @param content content of the cache
-     *
+     * @param content   content of the cache
      * @since 1.1
      */
     public <T extends BaseResponse> void add(CacheKeys cacheKeys, T content) {
@@ -34,7 +34,6 @@ public class CacheManager {
      *
      * @param method method of the cached object you want to check
      * @return if the cache contains the given method
-     *
      * @since 1.1
      */
     public boolean contains(UntisUtils.Method method) {
@@ -45,7 +44,6 @@ public class CacheManager {
      * Gets content from the cache
      *
      * @param method method of the object in cache
-     *
      * @since 1.1
      */
     public <T extends BaseResponse> T get(UntisUtils.Method method) {
@@ -56,7 +54,6 @@ public class CacheManager {
      * Checks if the given method is in cache and depending on the result it returns the cached object or a the response of a new request
      *
      * @see CacheManager#getOrRequest(UntisUtils.Method, RequestManager, Map, ResponseConsumer)
-     *
      * @since 1.1
      */
     public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, ResponseConsumer<? extends T> action) throws IOException {
@@ -67,12 +64,11 @@ public class CacheManager {
      * Checks if the given method is in cache and depending on the result it returns the cached object or a the response of a new request
      *
      * @param requestManager request manager through which the POST requests are sent
-     * @param method the POST method
-     * @param params params you want to send with the request
-     * @param action lambda expression that gets called if the {@code method} is not in the cache manager
+     * @param method         the POST method
+     * @param params         params you want to send with the request
+     * @param action         lambda expression that gets called if the {@code method} is not in the cache manager
      * @return the response in a {@link ResponseList}
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.1
      */
     public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<? extends T> action) throws IOException {
@@ -91,7 +87,6 @@ public class CacheManager {
      * Removes a response from the cache if the given condition is true
      *
      * @see CacheManager#removeIf(boolean, UntisUtils.Method, Map)
-     *
      * @since 1.1
      */
     public void removeIf(boolean condition, UntisUtils.Method methodToRemove) {
@@ -101,10 +96,9 @@ public class CacheManager {
     /**
      * Removes a response from the cache if the given condition is true
      *
-     * @param condition condition you want to check
+     * @param condition      condition you want to check
      * @param methodToRemove response to remove
-     * @param params extra parameter for the method
-     *
+     * @param params         extra parameter for the method
      * @since 1.1
      */
     public void removeIf(boolean condition, UntisUtils.Method methodToRemove, Map<String, ?> params) {
@@ -117,7 +111,6 @@ public class CacheManager {
      * Updates cache content
      *
      * @see CacheManager#update(UntisUtils.Method, Map, BaseResponse)
-     *
      * @since 1.1
      */
     public <T extends BaseResponse> void update(UntisUtils.Method method, T content) {
@@ -127,10 +120,9 @@ public class CacheManager {
     /**
      * Updates cache content
      *
-     * @param method method of the object in cache
-     * @param params extra parameter of the method
+     * @param method  method of the object in cache
+     * @param params  extra parameter of the method
      * @param content content for the new cache
-     *
      * @since 1.1
      */
     public <T extends BaseResponse> void update(UntisUtils.Method method, Map<String, ?> params, T content) {
@@ -141,11 +133,10 @@ public class CacheManager {
      * Updates cache content with a lambda expression
      *
      * @param requestManager request manager through which the POST requests are sent
-     * @param method the POST method
-     * @param params params you want to send with the request
-     * @param action lambda expression that gets returns the new content
+     * @param method         the POST method
+     * @param params         params you want to send with the request
+     * @param action         lambda expression that gets returns the new content
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.1
      */
     public void update(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<? extends BaseResponse> action) throws IOException {
@@ -167,7 +158,6 @@ public class CacheManager {
          * Initialize the {@link CacheKeys} class
          *
          * @see CacheKeys
-         *
          * @since 1.1
          */
         public CacheKeys(UntisUtils.Method method) {
@@ -179,7 +169,6 @@ public class CacheManager {
          *
          * @param method method to cache
          * @param params extra params to identify the cache keys
-         *
          * @since 1.1
          */
         public CacheKeys(UntisUtils.Method method, Map<String, ?> params) {

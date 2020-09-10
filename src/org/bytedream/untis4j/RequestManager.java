@@ -22,18 +22,15 @@ import java.util.Map;
 public class RequestManager {
 
     private final Infos infos;
-
-    private boolean loggedIn = false;
     private final String baseURL = "/WebUntis/jsonrpc.do";
-
     private final String url;
+    private boolean loggedIn = false;
     private String sessionId = null;
 
     /**
      * Initialize the {@link RequestManager} class
      *
      * @param infos user information
-     *
      * @since 1.0
      */
     public RequestManager(Infos infos) {
@@ -46,7 +43,6 @@ public class RequestManager {
      * Sends a POST request to the server
      *
      * @see RequestManager#POST(String, Map)
-     *
      * @since 1.0
      */
     public Response POST(String method) throws IOException {
@@ -60,7 +56,6 @@ public class RequestManager {
      * @param params params you want to send with the request
      * @return {@link Response} with all information about the response
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Response POST(String method, Map<String, ?> params) throws IOException {
@@ -130,7 +125,6 @@ public class RequestManager {
      * Returns the url, generated out of the server address and school name which were set in the info parameter in {@link RequestManager#infos}
      *
      * @return the url, generated out of the server address and school name which were set in the info parameter in {@link RequestManager#infos}
-     *
      * @since 1.0
      */
     public String getURL() {

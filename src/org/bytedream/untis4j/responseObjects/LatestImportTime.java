@@ -1,6 +1,5 @@
 package org.bytedream.untis4j.responseObjects;
 
-import org.bytedream.untis4j.Response;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.ResponseObject;
 import org.json.JSONObject;
 
@@ -20,7 +19,6 @@ public class LatestImportTime extends ResponseObject {
      * Initializes the {@link LatestImportTime} class
      *
      * @param latestImportTime time when the last change were made
-     *
      * @since 1.0
      */
     public LatestImportTime(int latestImportTime) {
@@ -31,7 +29,6 @@ public class LatestImportTime extends ResponseObject {
      * Returns the time when the last change were made
      *
      * @return the time when the last change were made
-     *
      * @since 1.0
      */
     public int getLatestImportTime() {
@@ -42,11 +39,12 @@ public class LatestImportTime extends ResponseObject {
      * Returns a json parsed string with all information
      *
      * @return a json parsed string with all information
-     *
      * @since 1.0
      */
     @Override
     public String toString() {
-        return new JSONObject(new HashMap<String, Object>() {{put("latestImportTime", latestImportTime);}}).toString();
+        return new JSONObject(new HashMap<String, Object>() {{
+            put("latestImportTime", latestImportTime);
+        }}).toString();
     }
 }

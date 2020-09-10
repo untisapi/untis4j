@@ -4,7 +4,6 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.NAILR
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NAILResponseObject;
 import org.json.JSONObject;
 
-import java.util.Comparator;
 import java.util.HashMap;
 
 /**
@@ -16,11 +15,46 @@ import java.util.HashMap;
 public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
 
     /**
+     * Sorts the given teachers by all titles and returns the sorted teachers
+     *
+     * @param teachers teachers that should be sorted
+     * @return the sorted teachers
+     * @since 1.1
+     */
+    public static Teachers sortByTitle(Teachers teachers) {
+        teachers.sortByTitle();
+        return teachers;
+    }
+
+    /**
+     * Sorts the given teachers by all fore names and returns the sorted teachers
+     *
+     * @param teachers teachers that should be sorted
+     * @return the sorted teachers
+     * @since 1.1
+     */
+    public static Teachers sortByForeName(Teachers teachers) {
+        teachers.sortByForeName();
+        return teachers;
+    }
+
+    /**
+     * Sorts the given teachers by all full names and returns the sorted teachers
+     *
+     * @param teachers teachers that should be sorted
+     * @return the sorted teachers
+     * @since 1.1
+     */
+    public static Teachers sortByFullName(Teachers teachers) {
+        teachers.sortByFullName();
+        return teachers;
+    }
+
+    /**
      * Finds a teacher by its title name
      *
      * @param title title of his teacher you want to find
      * @return the subject
-     *
      * @since 1.0
      */
     public TeacherObject findByTitle(String title) {
@@ -32,7 +66,6 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
      *
      * @param foreName fore name of the teacher you want to find
      * @return the subject
-     *
      * @since 1.0
      */
     public TeacherObject findByForeName(String foreName) {
@@ -44,7 +77,6 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
      *
      * @param fullName full name of the teacher you want to find
      * @return the subject
-     *
      * @since 1.0
      */
     public TeacherObject findByFullName(String fullName) {
@@ -56,7 +88,6 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
      *
      * @param title title of the teachers you want to search
      * @return {@link Teachers} with teachers that have the {@code title} or a part of it in their title
-     *
      * @since 1.0
      */
     public Teachers searchByTitle(String title) {
@@ -72,7 +103,6 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
      *
      * @param foreName fore name of the teachers you want to search
      * @return {@link Teachers} with teachers that have the {@code foreName} or a part of it in their fore name
-     *
      * @since 1.0
      */
     public Teachers searchByForeName(String foreName) {
@@ -88,7 +118,6 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
      *
      * @param fullName full name of the teachers you want to search
      * @return {@link Teachers} with teachers that have the {@code fullName} or a part of it in their full name
-     *
      * @since 1.0
      */
     public Teachers searchByFullName(String fullName) {
@@ -127,45 +156,6 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
     }
 
     /**
-     * Sorts the given teachers by all titles and returns the sorted teachers
-     *
-     * @param teachers teachers that should be sorted
-     * @return the sorted teachers
-     *
-     * @since 1.1
-     */
-    public static Teachers sortByTitle(Teachers teachers) {
-        teachers.sortByTitle();
-        return teachers;
-    }
-
-    /**
-     * Sorts the given teachers by all fore names and returns the sorted teachers
-     *
-     * @param teachers teachers that should be sorted
-     * @return the sorted teachers
-     *
-     * @since 1.1
-     */
-    public static Teachers sortByForeName(Teachers teachers) {
-        teachers.sortByForeName();
-        return teachers;
-    }
-
-    /**
-     * Sorts the given teachers by all full names and returns the sorted teachers
-     *
-     * @param teachers teachers that should be sorted
-     * @return the sorted teachers
-     *
-     * @since 1.1
-     */
-    public static Teachers sortByFullName(Teachers teachers) {
-        teachers.sortByFullName();
-        return teachers;
-    }
-
-    /**
      * Class to get information about a teacher
      *
      * @version 1.0
@@ -180,13 +170,12 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
         /**
          * Initialize the {@link TeacherObject} class
          *
-         * @param name name of the teacher
-         * @param active if the teacher is active
-         * @param id id of the teacher
-         * @param title title of the teacher
+         * @param name     name of the teacher
+         * @param active   if the teacher is active
+         * @param id       id of the teacher
+         * @param title    title of the teacher
          * @param foreName fore name of the teacher
          * @param longName long name of the teacher
-         *
          * @since 1.0
          */
         public TeacherObject(String name, boolean active, int id, String title, String foreName, String longName) {
@@ -201,7 +190,6 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
          * Returns the title of the teacher
          *
          * @return the title of the teacher
-         *
          * @since 1.0
          */
         public String getTitle() {
@@ -212,7 +200,6 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
          * Returns the fore name of the teacher
          *
          * @return the fore name of the teacher
-         *
          * @since 1.0
          */
         public String getForename() {
@@ -223,7 +210,6 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
          * Returns the full name of the teacher
          *
          * @return the full name of the teacher
-         *
          * @since 1.0
          */
         public String getFullName() {
@@ -234,7 +220,6 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
          * Returns a json parsed string with all information
          *
          * @return a json parsed string with all information
-         *
          * @since 1.0
          */
         @Override

@@ -27,11 +27,10 @@ public class Klassen extends NAILResponseList<Klassen.KlasseObject> {
         /**
          * Initialize the {@link KlasseObject} class
          *
-         * @param name name of the klasse
-         * @param active if the klasse is active
-         * @param id id of the klasse
+         * @param name     name of the klasse
+         * @param active   if the klasse is active
+         * @param id       id of the klasse
          * @param longName long name of the klasse
-         *
          * @since 1.0
          */
         public KlasseObject(String name, boolean active, int id, String longName) {
@@ -42,7 +41,6 @@ public class Klassen extends NAILResponseList<Klassen.KlasseObject> {
          * Returns a json parsed string with all information
          *
          * @return a json parsed string with all information
-         *
          * @since 1.0
          */
         @Override

@@ -1,7 +1,6 @@
 package org.bytedream.untis4j.responseObjects;
 
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.ResponseList;
-import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.ResponseObject;
 import org.json.JSONObject;
 
@@ -19,11 +18,58 @@ import java.util.HashMap;
 public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
 
     /**
+     * Sorts the given school years by all names and returns the sorted school years
+     *
+     * @param schoolYears school years that should be sorted
+     * @return the sorted school years
+     * @since 1.1
+     */
+    public static SchoolYears sortByName(SchoolYears schoolYears) {
+        schoolYears.sortByName();
+        return schoolYears;
+    }
+
+    /**
+     * Sorts the given school years by all start dates and returns the sorted school years
+     *
+     * @param schoolYears school years that should be sorted
+     * @return the sorted school years
+     * @since 1.1
+     */
+    public static SchoolYears sortByStartDate(SchoolYears schoolYears) {
+        schoolYears.sortByStartDate();
+        return schoolYears;
+    }
+
+    /**
+     * Sorts the given school years by all end dates and returns the sorted school years
+     *
+     * @param schoolYears school years that should be sorted
+     * @return the sorted school years
+     * @since 1.1
+     */
+    public static SchoolYears sortByEndDate(SchoolYears schoolYears) {
+        schoolYears.sortByEndDate();
+        return schoolYears;
+    }
+
+    /**
+     * Sorts the given school years by all ids and returns the sorted school years
+     *
+     * @param schoolYears school years that should be sorted
+     * @return the sorted school years
+     * @since 1.1
+     */
+    public static SchoolYears sortById(SchoolYears schoolYears) {
+        schoolYears.sortById();
+        return schoolYears;
+    }
+
+    /**
      * Finds a school year by its name
      *
      * @param name name of the school year you want to find
      * @return the school year
-     *
      * @since 1.0
      */
     public SchoolYearObject findByName(String name) {
@@ -35,7 +81,6 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
      *
      * @param startDate start date of the school year you want to find
      * @return the school year
-     *
      * @since 1.0
      */
     public SchoolYearObject findByStartDate(LocalDate startDate) {
@@ -47,7 +92,6 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
      *
      * @param endDate end date of the school year you want to find
      * @return the school year
-     *
      * @since 1.0
      */
     public SchoolYearObject findByEndDate(LocalDate endDate) {
@@ -59,7 +103,6 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
      *
      * @param id id of the school year you want to find
      * @return the school year
-     *
      * @since 1.0
      */
     public SchoolYearObject findById(int id) {
@@ -71,7 +114,6 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
      *
      * @param name name of the school years you want to search
      * @return {@link SchoolYears} with school years that have the {@code name} or a part of it in their name
-     *
      * @since 1.0
      */
     public SchoolYears searchByName(String name) {
@@ -87,7 +129,6 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
      *
      * @param startDate start date of the school years you want to search
      * @return {@link SchoolYears} with school years that have the {@code startDate} or a part of it in their start date
-     *
      * @since 1.0
      */
     public SchoolYears searchByStartDate(LocalDate startDate) {
@@ -103,7 +144,6 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
      *
      * @param endDate end date of the school years you want to search
      * @return {@link SchoolYears} with school years that have the {@code endDate} or a part of it in their end date
-     *
      * @since 1.0
      */
     public SchoolYears searchByEndDate(LocalDate endDate) {
@@ -119,7 +159,6 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
      *
      * @param id id of the school years you want to search
      * @return {@link SchoolYears} with school years that have the {@code id} or a part of it in their id
-     *
      * @since 1.0
      */
     public SchoolYears searchById(int id) {
@@ -162,58 +201,6 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
     }
 
     /**
-     * Sorts the given school years by all names and returns the sorted school years
-     *
-     * @param schoolYears school years that should be sorted
-     * @return the sorted school years
-     *
-     * @since 1.1
-     */
-    public static SchoolYears sortByName(SchoolYears schoolYears) {
-        schoolYears.sortByName();
-        return schoolYears;
-    }
-
-    /**
-     * Sorts the given school years by all start dates and returns the sorted school years
-     *
-     * @param schoolYears school years that should be sorted
-     * @return the sorted school years
-     *
-     * @since 1.1
-     */
-    public static SchoolYears sortByStartDate(SchoolYears schoolYears) {
-        schoolYears.sortByStartDate();
-        return schoolYears;
-    }
-
-    /**
-     * Sorts the given school years by all end dates and returns the sorted school years
-     *
-     * @param schoolYears school years that should be sorted
-     * @return the sorted school years
-     *
-     * @since 1.1
-     */
-    public static SchoolYears sortByEndDate(SchoolYears schoolYears) {
-        schoolYears.sortByEndDate();
-        return schoolYears;
-    }
-
-    /**
-     * Sorts the given school years by all ids and returns the sorted school years
-     *
-     * @param schoolYears school years that should be sorted
-     * @return the sorted school years
-     *
-     * @since 1.1
-     */
-    public static SchoolYears sortById(SchoolYears schoolYears) {
-        schoolYears.sortById();
-        return schoolYears;
-    }
-
-    /**
      * Class to get information about the a school year
      *
      * @version 1.0
@@ -229,10 +216,9 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
         /**
          * Initialize the {@link SchoolYearObject} class
          *
-         * @param name name of the department
+         * @param name      name of the department
          * @param startDate date when the school year began
-         * @param endDate date when the school year will end
-         *
+         * @param endDate   date when the school year will end
          * @since 1.0
          */
         public SchoolYearObject(String name, LocalDate startDate, LocalDate endDate, int id) {
@@ -246,7 +232,6 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
          * Returns the name of the school year
          *
          * @return the name of the school year
-         *
          * @since 1.0
          */
         public String getName() {
@@ -257,7 +242,6 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
          * Returns the start day of the school year
          *
          * @return the start day of the school year
-         *
          * @since 1.0
          */
         public LocalDate getStartDate() {
@@ -268,7 +252,6 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
          * Returns the end day of the school year
          *
          * @return the end day of the school year
-         *
          * @since 1.0
          */
         public LocalDate getEndDate() {
@@ -279,7 +262,6 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
          * Returns the id of the school year
          *
          * @return the id of the school year
-         *
          * @since 1.0
          */
         public int getId() {
@@ -290,7 +272,6 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
          * Returns a json parsed string with all information
          *
          * @return a json parsed string with all information
-         *
          * @since 1.0
          */
         @Override

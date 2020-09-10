@@ -19,9 +19,8 @@ public class Response implements BaseResponse {
     /**
      * Initialize the {@code Response} class
      *
-     * @param code response code
+     * @param code     response code
      * @param response response content
-     *
      * @since 1.0
      */
     public Response(int code, JSONObject response) {
@@ -42,7 +41,6 @@ public class Response implements BaseResponse {
      * Returns if the response code represents an error
      *
      * @return if the response code represents an error
-     *
      * @since 1.0
      */
     public boolean isError() {
@@ -53,7 +51,6 @@ public class Response implements BaseResponse {
      * Returns the response code
      *
      * @return the response code
-     *
      * @since 1.0
      */
     public int getCode() {
@@ -64,7 +61,6 @@ public class Response implements BaseResponse {
      * Returns the error code (is -1 if there is no error code)
      *
      * @return the error code
-     *
      * @since 1.0
      */
     public int getErrorCode() {
@@ -75,7 +71,6 @@ public class Response implements BaseResponse {
      * Returns the error message (is null if there is no error message)
      *
      * @return the error message
-     *
      * @since 1.0
      */
     public String getErrorMessage() {
@@ -86,7 +81,6 @@ public class Response implements BaseResponse {
      * Returns the response
      *
      * @return the response
-     *
      * @since 1.0
      */
     public JSONObject getResponse() {
@@ -97,7 +91,6 @@ public class Response implements BaseResponse {
      * Returns the response as string
      *
      * @return the response as string
-     *
      * @since 1.0
      */
     @Override

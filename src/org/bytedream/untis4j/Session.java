@@ -19,7 +19,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class to control the untis4j API
@@ -41,10 +42,9 @@ public class Session {
      *
      * <p>Main class to handle and get all Untis information<p/>
      *
-     * @param infos infos about the user
+     * @param infos          infos about the user
      * @param requestManager manager that handles all requests
-     * @param useCache sets if every request response should be saved in cache
-     *
+     * @param useCache       sets if every request response should be saved in cache
      * @since 1.0
      */
     private Session(Infos infos, RequestManager requestManager, boolean useCache) {
@@ -60,10 +60,66 @@ public class Session {
     }
 
     /**
+     * Logs in to the server.
+     *
+     * <p>Send an login request to the server and returns {@link Session} if the login was successful.
+     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
+     *
+     * @see Session#login(String, String, String, String, String, boolean)
+     */
+    public static Session login(String username, String password, String server, String schoolName) throws IOException {
+        return login(username, password, server, schoolName, "", false);
+    }
+
+    /**
+     * Logs in to the server.
+     *
+     * <p>Send an login request to the server and returns {@link Session} if the login was successful.
+     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
+     *
+     * @see Session#login(String, String, String, String, String, boolean)
+     */
+    public static Session login(String username, String password, String server, String schoolName, boolean useCache) throws IOException {
+        return login(username, password, server, schoolName, "", useCache);
+    }
+
+    /**
+     * Logs in to the server.
+     *
+     * <p>Send an login request to the server and returns {@link Session} if the login was successful.
+     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
+     *
+     * @param server     the server from your school as URL
+     * @param schoolName school name of the school you want to connect to
+     * @param username   the username used for the API
+     * @param password   the password used for the API
+     * @param userAgent  the user agent you want to send with
+     * @param useCache   sets if every request response should be saved in cache
+     * @return a {@link Session} session
+     * @throws IOException if an IO Exception occurs
+     * @since 1.0
+     */
+    public static Session login(String username, String password, String server, String schoolName, String userAgent, boolean useCache) throws IOException {
+        Infos infos = new Infos(username, password, server, schoolName, userAgent);
+
+        RequestManager requestManager = new RequestManager(infos);
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("user", infos.getUsername());
+        params.put("password", infos.getPassword());
+        params.put("client", userAgent);
+
+        if (requestManager.POST(UntisUtils.Method.LOGIN.getMethod(), params).isError()) {
+            throw new LoginException("Failed to login");
+        } else {
+            return new Session(infos, requestManager, useCache);
+        }
+    }
+
+    /**
      * Checks if the cache should be used and depending on the result it calls {@link CacheManager#getOrRequest(UntisUtils.Method, RequestManager, Map, ResponseConsumer)} or request the given method manually
      *
      * @see Session#requestSender(UntisUtils.Method, Map, ResponseConsumer)
-     *
      * @since 1.1
      */
     private <T extends BaseResponse> T requestSender(UntisUtils.Method method, ResponseConsumer<? extends T> action) throws IOException {
@@ -78,7 +134,6 @@ public class Session {
      * @param action lambda expression that gets called if the {@code method} is not in the cache manager
      * @return the response in a {@link BaseResponseLists.ResponseList}
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.1
      */
     private <T extends BaseResponse> T requestSender(UntisUtils.Method method, Map<String, ?> params, ResponseConsumer<? extends T> action) throws IOException {
@@ -89,7 +144,7 @@ public class Session {
                     lastChange = newLatestImportTime;
                     cacheManager.update(method, requestManager, params, action);
                 }
-            } catch (IOException ignore){
+            } catch (IOException ignore) {
             }
             return cacheManager.getOrRequest(method, requestManager, params, action);
         } else {
@@ -104,7 +159,6 @@ public class Session {
      *
      * @return {@link Response} with the response from the request
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Response getClassRegCategories() throws IOException {
@@ -118,7 +172,6 @@ public class Session {
      *
      * @return {@link Response} with the response from the request
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Response getClassRegCategoryGroups() throws IOException {
@@ -130,13 +183,12 @@ public class Session {
      *
      * <p>Requests all class reg categories and give {@link Response} with all information about from the request back (i got an error while testing this method: no right for getClassregEvents())</p>
      *
-     * @param start the beginning of the time period
-     * @param end the end of the time period
+     * @param start       the beginning of the time period
+     * @param end         the end of the time period
      * @param elementType type on which the timetable should be oriented
-     * @param id id of the {@code elementType}
+     * @param id          id of the {@code elementType}
      * @return {@link Response} with the response from the request
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Response getClassRegEvents(LocalDate start, LocalDate end, UntisUtils.ElementType elementType, Integer id) throws IOException {
@@ -161,7 +213,6 @@ public class Session {
      * Get the Information about the ClassRegEvents for a specific time period and klasse id (<- from https://github.com/python-webuntis/python-webuntis).
      *
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
-     *
      * @since 1.0
      */
     public Response getAllClassRegEventsFromKlasseId(LocalDate start, LocalDate end, int id) throws IOException {
@@ -172,7 +223,6 @@ public class Session {
      * Get the Information about the ClassRegEvents for a specific time period and teacher id (<- from https://github.com/python-webuntis/python-webuntis).
      *
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
-     *
      * @since 1.0
      */
     public Response getAllClassRegEventsFromTeacherId(LocalDate start, LocalDate end, int id) throws IOException {
@@ -183,7 +233,6 @@ public class Session {
      * Get the Information about the ClassRegEvents for a specific time period and subject id (<- from https://github.com/python-webuntis/python-webuntis).
      *
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
-     *
      * @since 1.0
      */
     public Response getAllClassRegEventsFromSubjectId(LocalDate start, LocalDate end, int id) throws IOException {
@@ -194,7 +243,6 @@ public class Session {
      * Get the Information about the ClassRegEvents for a specific time period and room id (<- from https://github.com/python-webuntis/python-webuntis).
      *
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
-     *
      * @since 1.0
      */
     public Response getAllClassRegEventsFromRoomId(LocalDate start, LocalDate end, int id) throws IOException {
@@ -205,7 +253,6 @@ public class Session {
      * Get the Information about the ClassRegEvents for a specific time period and student id (<- from https://github.com/python-webuntis/python-webuntis).
      *
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
-     *
      * @since 1.0
      */
     public Response getAllClassRegEventsFromStudentId(LocalDate start, LocalDate end, int id) throws IOException {
@@ -219,7 +266,6 @@ public class Session {
      *
      * @return {@link Departments} with all departments
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Departments getDepartments() throws IOException {
@@ -250,11 +296,10 @@ public class Session {
      * <p>Requests all exams and give {@link Response} with all information about from the request back (i got an error while testing this method: no right for getExams())</p>
      *
      * @param start the beginning of the time period
-     * @param end the end of the time period
-     * @param id id of the exam
+     * @param end   the end of the time period
+     * @param id    id of the exam
      * @return {@link Response} with the response from the request
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Response getExams(LocalDate start, LocalDate end, int id) throws IOException {
@@ -271,7 +316,6 @@ public class Session {
      *
      * @return {@link Response} with the response from the request
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Response getExamTypes() throws IOException {
@@ -285,7 +329,6 @@ public class Session {
      *
      * @return {@link Holidays} with all information about the holidays
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Holidays getHolidays() throws IOException {
@@ -318,7 +361,6 @@ public class Session {
      * <p>Returns {@link Klassen} with all information about the klasse which are registered on the given server</p>
      *
      * @see Session#getKlassen(Integer)
-     *
      * @since 1.0
      */
     public Klassen getKlassen() throws IOException {
@@ -331,10 +373,8 @@ public class Session {
      * <p>Returns {@link Klassen} with all information about the klassen from the given school year which are registered on the given server</p>
      *
      * @param schoolYearId number of the school year from which you want to get the klassen
-     *
      * @return {@link Klassen} with all information about the klassen
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Klassen getKlassen(Integer schoolYearId) throws IOException {
@@ -375,7 +415,6 @@ public class Session {
      *
      * @return {@link LatestImportTime} with all information about the time when the last change were made
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public LatestImportTime getLatestImportTime() throws IOException {
@@ -397,7 +436,6 @@ public class Session {
      *
      * @return {@link Rooms} with all information about the rooms
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Rooms getRooms() throws IOException {
@@ -431,7 +469,6 @@ public class Session {
      *
      * @return {@link SchoolYears} with all information about the school years
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public SchoolYears getSchoolYears() throws IOException {
@@ -464,7 +501,6 @@ public class Session {
      *
      * @return {@link Response} with the response from the request
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Response getStatusData() throws IOException {
@@ -478,7 +514,6 @@ public class Session {
      *
      * @return {@link Subjects} with all information about the subjects
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Subjects getSubjects() throws IOException {
@@ -514,7 +549,6 @@ public class Session {
      *
      * @return {@link Teachers} with all information about the teachers
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Teachers getTeachers() throws IOException {
@@ -549,7 +583,6 @@ public class Session {
      *
      * @return {@link TimegridUnits} with all information about the timegrid units
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public TimegridUnits getTimegridUnits() throws IOException {
@@ -604,7 +637,6 @@ public class Session {
      *
      * @return {@link SchoolYears.SchoolYearObject} with all information about the current school year
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public SchoolYears.SchoolYearObject getCurrentSchoolYear() throws IOException {
@@ -628,13 +660,12 @@ public class Session {
      *
      * <p> Returns the lessons / timetable for a specific time period and klasse / teacher / subject / room / student id<p/>
      *
-     * @param start the beginning of the time period
-     * @param end the end of the time period
+     * @param start       the beginning of the time period
+     * @param end         the end of the time period
      * @param elementType type on which the timetable should be oriented
-     * @param id id of the {@code elementType}
+     * @param id          id of the {@code elementType}
      * @return {@link Timetable} with all information about the lessons
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public <E extends BaseResponseObjects.NAILResponseObject> Timetable getTimetable(LocalDate start, LocalDate end, UntisUtils.ElementType elementType, int id) throws IOException {
@@ -730,7 +761,6 @@ public class Session {
      * Returns the lessons / timetable for a specific time period and klasse id.
      *
      * @see Session#getTimetable(LocalDate, LocalDate, UntisUtils.ElementType, int)
-     *
      * @since 1.0
      */
     public Timetable getTimetableFromKlasseId(LocalDate start, LocalDate end, int klasseId) throws IOException {
@@ -741,7 +771,6 @@ public class Session {
      * Returns the lessons / timetable for a specific time period and teacher id.
      *
      * @see Session#getTimetable(LocalDate, LocalDate, UntisUtils.ElementType, int)
-     *
      * @since 1.0
      */
     public Timetable getTimetableFromTeacherId(LocalDate start, LocalDate end, int teacherId) throws IOException {
@@ -752,7 +781,6 @@ public class Session {
      * Returns the lessons / timetable for a specific time period and subject id.
      *
      * @see Session#getTimetable(LocalDate, LocalDate, UntisUtils.ElementType, int)
-     *
      * @since 1.0
      */
     public Timetable getTimetableFromSubjectId(LocalDate start, LocalDate end, int subjectId) throws IOException {
@@ -763,7 +791,6 @@ public class Session {
      * Returns the lessons / timetable for a specific time period and room id.
      *
      * @see Session#getTimetable(LocalDate, LocalDate, UntisUtils.ElementType, int)
-     *
      * @since 1.0
      */
     public Timetable getTimetableFromRoomId(LocalDate start, LocalDate end, int roomId) throws IOException {
@@ -774,7 +801,6 @@ public class Session {
      * Returns the lessons / timetable for a specific time period and student id.
      *
      * @see Session#getTimetable(LocalDate, LocalDate, UntisUtils.ElementType, int)
-     *
      * @since 1.0
      */
     public Timetable getTimetableFromStudentId(LocalDate start, LocalDate end, int studentId) throws IOException {
@@ -787,14 +813,13 @@ public class Session {
      * <p>Requests timetable with absence for a specific time period and give {@link Response} with all information about from the request back (i got an error while testing this method: no right for getTimetableWithAbsences())</p>
      *
      * @param start the beginning of the time period
-     * @param end the end of the time period
+     * @param end   the end of the time period
      * @return {@link Response} with the response from the request
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Response getTimetableWithAbsence(LocalDate start, LocalDate end) throws IOException {
-        return requestSender(UntisUtils.Method.GETTIMETABLEWITHABSENCE,  new HashMap<String, Object>() {{
+        return requestSender(UntisUtils.Method.GETTIMETABLEWITHABSENCE, new HashMap<String, Object>() {{
             put("options", UntisUtils.localDateToParams(start, end));
         }}, response -> response);
     }
@@ -803,11 +828,10 @@ public class Session {
      * Requests the timetable for a whole week
      *
      * @param anyDateOfWeek any day of the week you want to get the timetable from
-     * @param elementType type on which the timetable should be oriented
-     * @param id id of the {@code elementType}
+     * @param elementType   type on which the timetable should be oriented
+     * @param id            id of the {@code elementType}
      * @return the weekly timetable
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.1
      */
     public WeeklyTimetable getWeeklyTimetable(LocalDate anyDateOfWeek, UntisUtils.ElementType elementType, int id) throws IOException {
@@ -825,7 +849,6 @@ public class Session {
      * Requests the timetable for a whole week and a klasse id
      *
      * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
-     *
      * @since 1.1
      */
     public WeeklyTimetable getWeeklyTimetableFromKlasseId(LocalDate anyDateOfWeek, int klasseId) throws IOException {
@@ -836,7 +859,6 @@ public class Session {
      * Requests the timetable for a whole week and a teacher id
      *
      * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
-     *
      * @since 1.1
      */
     public WeeklyTimetable getWeeklyTimetableFromTeacherId(LocalDate anyDateOfWeek, int teacherId) throws IOException {
@@ -847,7 +869,6 @@ public class Session {
      * Requests the timetable for a whole week and a subject id
      *
      * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
-     *
      * @since 1.1
      */
     public WeeklyTimetable getWeeklyTimetableFromSubjectId(LocalDate anyDateOfWeek, int subjectId) throws IOException {
@@ -858,7 +879,6 @@ public class Session {
      * Requests the timetable for a whole week and a room id
      *
      * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
-     *
      * @since 1.1
      */
     public WeeklyTimetable getWeeklyTimetableFromRoomId(LocalDate anyDateOfWeek, int roomId) throws IOException {
@@ -869,7 +889,6 @@ public class Session {
      * Requests the timetable for a whole week and a student id
      *
      * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
-     *
      * @since 1.1
      */
     public WeeklyTimetable getWeeklyTimetableFromStudentId(LocalDate anyDateOfWeek, int studentId) throws IOException {
@@ -880,7 +899,6 @@ public class Session {
      * Allows to request custom data.
      *
      * @see Session#getCustomData(String, Map)
-     *
      * @since 1.0
      */
     public Response getCustomData(String method) throws IOException {
@@ -894,7 +912,6 @@ public class Session {
      *
      * @return {@link Response} with the response from the request
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public Response getCustomData(String method, Map<String, ?> params) throws IOException {
@@ -911,7 +928,6 @@ public class Session {
      * <p>Send an logout request to the server. Throws {@link IOException} if an IO Exception occurs</p>
      *
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public void logout() throws IOException {
@@ -925,7 +941,6 @@ public class Session {
      * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which extends from IOException) if login fails</p>
      *
      * @throws IOException if an IO Exception occurs
-     *
      * @since 1.0
      */
     public void refresh() throws IOException {
@@ -949,7 +964,6 @@ public class Session {
      * Returns the used {@link CacheManager}
      *
      * @return the used {@link CacheManager}
-     *
      * @since 1.1
      */
     public CacheManager getCacheManager() {
@@ -957,21 +971,9 @@ public class Session {
     }
 
     /**
-     * Gets if every request response should be saved in cache
-     *
-     * @return gets if every request response should be saved in cache
-     *
-     * @since 1.1
-     */
-    public boolean isCacheUsed() {
-        return useCache;
-    }
-
-    /**
      * Replaces the current session cache manager with a new one
      *
      * @param cacheManager the new cache manager
-     *
      * @since 1.1
      */
     public void setCacheManager(CacheManager cacheManager) {
@@ -979,72 +981,23 @@ public class Session {
     }
 
     /**
+     * Gets if every request response should be saved in cache
+     *
+     * @return gets if every request response should be saved in cache
+     * @since 1.1
+     */
+    public boolean isCacheUsed() {
+        return useCache;
+    }
+
+    /**
      * Sets if every request response should be saved in cache what returns in better performance
      *
      * @param useCache sets if every request response should be saved in cache
-     *
      * @since 1.1
      */
     public void useCache(boolean useCache) {
         this.useCache = useCache;
-    }
-
-    /**
-     * Logs in to the server.
-     *
-     * <p>Send an login request to the server and returns {@link Session} if the login was successful.
-     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
-     *
-     * @see Session#login(String, String, String, String, String, boolean)
-     */
-    public static Session login(String username, String password, String server, String schoolName) throws IOException {
-        return login(username, password, server, schoolName, "", false);
-    }
-
-    /**
-     * Logs in to the server.
-     *
-     * <p>Send an login request to the server and returns {@link Session} if the login was successful.
-     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
-     *
-     * @see Session#login(String, String, String, String, String, boolean)
-     */
-    public static Session login(String username, String password, String server, String schoolName, boolean useCache) throws IOException {
-        return login(username, password, server, schoolName, "", useCache);
-    }
-
-    /**
-     * Logs in to the server.
-     *
-     * <p>Send an login request to the server and returns {@link Session} if the login was successful.
-     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
-     *
-     * @param server the server from your school as URL
-     * @param schoolName school name of the school you want to connect to
-     * @param username the username used for the API
-     * @param password the password used for the API
-     * @param userAgent the user agent you want to send with
-     * @param useCache sets if every request response should be saved in cache
-     * @return a {@link Session} session
-     * @throws IOException if an IO Exception occurs
-     *
-     * @since 1.0
-     */
-    public static Session login(String username, String password, String server, String schoolName, String userAgent, boolean useCache) throws IOException {
-        Infos infos = new Infos(username, password, server, schoolName, userAgent);
-
-        RequestManager requestManager = new RequestManager(infos);
-
-        HashMap<String, String> params = new HashMap<>();
-        params.put("user", infos.getUsername());
-        params.put("password", infos.getPassword());
-        params.put("client", userAgent);
-
-        if (requestManager.POST(UntisUtils.Method.LOGIN.getMethod(), params).isError()) {
-            throw new LoginException("Failed to login");
-        } else {
-            return new Session(infos, requestManager, useCache);
-        }
     }
 
 }

@@ -4,7 +4,6 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.NAILR
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NAILResponseObject;
 import org.json.JSONObject;
 
-import java.util.Comparator;
 import java.util.HashMap;
 
 /**
@@ -78,12 +77,11 @@ public class Rooms extends NAILResponseList<Rooms.RoomObject> {
         /**
          * Initialize the {@link RoomObject} class
          *
-         * @param name name of the room
-         * @param active if the room is active
-         * @param id id of the room
+         * @param name     name of the room
+         * @param active   if the room is active
+         * @param id       id of the room
          * @param building building in which the room is (i think)
          * @param longName long name of the room
-         *
          * @since 1.0
          */
         public RoomObject(String name, boolean active, int id, String building, String longName) {

@@ -21,7 +21,6 @@ public class TimegridUnits extends ResponseList<TimegridUnits.TimegridUnitObject
      *
      * @param day day of the timegrid unit you want to find
      * @return the time unit
-     *
      * @since 1.0
      */
     public TimegridUnitObject findByDay(int day) {

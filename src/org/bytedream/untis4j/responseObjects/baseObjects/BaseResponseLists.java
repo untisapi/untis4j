@@ -1,9 +1,11 @@
 package org.bytedream.untis4j.responseObjects.baseObjects;
 
+import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NAILResponseObject;
+import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NILResponseObject;
+import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.ResponseObject;
+
 import java.util.ArrayList;
 import java.util.Comparator;
-
-import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.*;
 
 /**
  * Contains all base response list classes
@@ -40,11 +42,46 @@ public class BaseResponseLists {
     public static class NILResponseList<E extends NILResponseObject> extends ResponseList<E> {
 
         /**
+         * Sorts the given list by all names and returns the sorted list
+         *
+         * @param list the list that should be sorted
+         * @return the sorted list
+         * @since 1.1
+         */
+        public static <T extends NILResponseList<? extends NILResponseObject>> T sortByName(T list) {
+            list.sortByName();
+            return list;
+        }
+
+        /**
+         * Sorts the given list by all ids and returns the sorted list
+         *
+         * @param list the list that should be sorted
+         * @return the sorted list
+         * @since 1.1
+         */
+        public static <T extends NILResponseList<? extends NILResponseObject>> T sortById(T list) {
+            list.sortById();
+            return list;
+        }
+
+        /**
+         * Sorts the given list by all long names and returns the sorted list
+         *
+         * @param list the list that should be sorted
+         * @return the sorted list
+         * @since 1.1
+         */
+        public static <T extends NILResponseList<? extends NILResponseObject>> T sortByLongName(T list) {
+            list.sortByLongName();
+            return list;
+        }
+
+        /**
          * Finds an element by its name
          *
          * @param name name of the element you want to find
          * @return the element
-         *
          * @since 1.0
          */
         public E findByName(String name) {
@@ -56,7 +93,6 @@ public class BaseResponseLists {
          *
          * @param id id of the element you want to find
          * @return the element
-         *
          * @since 1.0
          */
         public E findById(int id) {
@@ -68,7 +104,6 @@ public class BaseResponseLists {
          *
          * @param longName long name of the element you want to find
          * @return the element
-         *
          * @since 1.0
          */
         public E findByLongName(String longName) {
@@ -80,7 +115,6 @@ public class BaseResponseLists {
          *
          * @param name name of the element you want to search
          * @return {@link T} with elements that have the {@code name} or a part of it in their name
-         *
          * @since 1.0
          */
         public <T extends NILResponseList<E>> T searchByName(String name) {
@@ -96,7 +130,6 @@ public class BaseResponseLists {
          *
          * @param id id of the element you want to search
          * @return {@link T} with elements that have the {@code id} or a part of it in their id
-         *
          * @since 1.0
          */
         public <T extends NILResponseList<E>> T searchById(int id) {
@@ -112,7 +145,6 @@ public class BaseResponseLists {
          *
          * @param longName long name of the element you want to search
          * @return {@link T} with elements that have the {@code longName} or a part of it in their long name
-         *
          * @since 1.0
          */
         public <T extends NILResponseList<E>> T searchByLongName(String longName) {
@@ -150,45 +182,6 @@ public class BaseResponseLists {
             this.sort((o1, o2) -> o1.getLongName().compareToIgnoreCase(o2.getLongName()));
         }
 
-        /**
-         * Sorts the given list by all names and returns the sorted list
-         *
-         * @param list the list that should be sorted
-         * @return the sorted list
-         *
-         * @since 1.1
-         */
-        public static <T extends NILResponseList<? extends NILResponseObject>> T sortByName(T list) {
-            list.sortByName();
-            return list;
-        }
-
-        /**
-         * Sorts the given list by all ids and returns the sorted list
-         *
-         * @param list the list that should be sorted
-         * @return the sorted list
-         *
-         * @since 1.1
-         */
-        public static <T extends NILResponseList<? extends NILResponseObject>> T sortById(T list) {
-            list.sortById();
-            return list;
-        }
-
-        /**
-         * Sorts the given list by all long names and returns the sorted list
-         *
-         * @param list the list that should be sorted
-         * @return the sorted list
-         *
-         * @since 1.1
-         */
-        public static <T extends NILResponseList<? extends NILResponseObject>> T sortByLongName(T list) {
-            list.sortByLongName();
-            return list;
-        }
-
     }
 
     /**
@@ -200,11 +193,22 @@ public class BaseResponseLists {
     public static class NAILResponseList<E extends NAILResponseObject> extends NILResponseList<E> {
 
         /**
+         * Sorts the given list by all active elements and returns the sorted list
+         *
+         * @param list the list that should be sorted
+         * @return the sorted list
+         * @since 1.1
+         */
+        public static <T extends NILResponseList<? extends NILResponseObject>> T sortByActive(T list) {
+            list.sortByLongName();
+            return list;
+        }
+
+        /**
          * Finds an element if its active or not
          *
          * @param active active state of the element you want to find
          * @return the element
-         *
          * @since 1.0
          */
         public E findByActive(boolean active) {
@@ -216,7 +220,6 @@ public class BaseResponseLists {
          *
          * @param active active state of the element you want to search
          * @return {@link T} with elements that are {@code active}
-         *
          * @since 1.0
          */
         public <T extends NAILResponseList<E>> T searchByActive(boolean active) {
@@ -234,19 +237,6 @@ public class BaseResponseLists {
          */
         public void sortByActive() {
             this.sort((o1, o2) -> Boolean.compare(o1.isActive(), o2.isActive()));
-        }
-
-        /**
-         * Sorts the given list by all active elements and returns the sorted list
-         *
-         * @param list the list that should be sorted
-         * @return the sorted list
-         *
-         * @since 1.1
-         */
-        public static <T extends NILResponseList<? extends NILResponseObject>> T sortByActive(T list) {
-            list.sortByLongName();
-            return list;
         }
 
     }

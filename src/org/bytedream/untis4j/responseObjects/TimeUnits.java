@@ -18,11 +18,46 @@ import java.util.HashMap;
 public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
 
     /**
+     * Sorts the given time units by all names and returns the sorted time units
+     *
+     * @param timeUnits time units that should be sorted
+     * @return the sorted time units
+     * @since 1.1
+     */
+    public static TimeUnits sortByName(TimeUnits timeUnits) {
+        timeUnits.sortByName();
+        return timeUnits;
+    }
+
+    /**
+     * Sorts the given time units by all start times and returns the sorted time units
+     *
+     * @param timeUnits time units that should be sorted
+     * @return the sorted time units
+     * @since 1.1
+     */
+    public static TimeUnits sortByStartTime(TimeUnits timeUnits) {
+        timeUnits.sortByStartTime();
+        return timeUnits;
+    }
+
+    /**
+     * Sorts the given time units by all end times and returns the sorted time units
+     *
+     * @param timeUnits time units that should be sorted
+     * @return the sorted time units
+     * @since 1.1
+     */
+    public static TimeUnits sortByEndTime(TimeUnits timeUnits) {
+        timeUnits.sortByEndTime();
+        return timeUnits;
+    }
+
+    /**
      * Finds a time unit by its name
      *
      * @param name name of the time unit you want to find
      * @return the time unit
-     *
      * @since 1.0
      */
     public TimeUnitObject findByName(String name) {
@@ -34,7 +69,6 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
      *
      * @param startTime start time of the time unit you want to find
      * @return the time unit
-     *
      * @since 1.0
      */
     public TimeUnitObject findByStartTime(LocalTime startTime) {
@@ -46,7 +80,6 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
      *
      * @param endTime end time of the time unit you want to find
      * @return the time unit
-     *
      * @since 1.0
      */
     public TimeUnitObject findByEndTime(LocalTime endTime) {
@@ -58,7 +91,6 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
      *
      * @param name name of the time units you want to search
      * @return {@link TimeUnits} with time units that have the {@code name} or a part of it in their name
-     *
      * @since 1.0
      */
     public TimeUnits searchByName(String name) {
@@ -74,7 +106,6 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
      *
      * @param startTime start time of the time units you want to search
      * @return {@link TimeUnits} with time units that have the {@code startTime} or a part of it in their start time
-     *
      * @since 1.0
      */
     public TimeUnits searchByStartTime(LocalTime startTime) {
@@ -90,7 +121,6 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
      *
      * @param endTime end time of the time units you want to search
      * @return {@link TimeUnits} with time units that have the {@code endTime} or a part of it in their end time
-     *
      * @since 1.0
      */
     public TimeUnits searchByEndTime(LocalTime endTime) {
@@ -129,45 +159,6 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
     }
 
     /**
-     * Sorts the given time units by all names and returns the sorted time units
-     *
-     * @param timeUnits time units that should be sorted
-     * @return the sorted time units
-     *
-     * @since 1.1
-     */
-    public static TimeUnits sortByName(TimeUnits timeUnits) {
-        timeUnits.sortByName();
-        return timeUnits;
-    }
-
-    /**
-     * Sorts the given time units by all start times and returns the sorted time units
-     *
-     * @param timeUnits time units that should be sorted
-     * @return the sorted time units
-     *
-     * @since 1.1
-     */
-    public static TimeUnits sortByStartTime(TimeUnits timeUnits) {
-        timeUnits.sortByStartTime();
-        return timeUnits;
-    }
-
-    /**
-     * Sorts the given time units by all end times and returns the sorted time units
-     *
-     * @param timeUnits time units that should be sorted
-     * @return the sorted time units
-     *
-     * @since 1.1
-     */
-    public static TimeUnits sortByEndTime(TimeUnits timeUnits) {
-        timeUnits.sortByEndTime();
-        return timeUnits;
-    }
-
-    /**
      * Class to get information about a time unit
      *
      * @version 1.0
@@ -183,10 +174,9 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
         /**
          * Initialize the {@link TimeUnitObject} class
          *
-         * @param name name of the time unit
+         * @param name      name of the time unit
          * @param startTime start time of the time unit
-         * @param endTime end time of the time unit
-         *
+         * @param endTime   end time of the time unit
          * @since 1.0
          */
         public TimeUnitObject(String name, LocalTime startTime, LocalTime endTime) {
@@ -199,7 +189,6 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
          * Returns the name of the time unit
          *
          * @return the name of the time unit
-         *
          * @since 1.0
          */
         public String getName() {
@@ -210,7 +199,6 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
          * Returns the start time of the time unit
          *
          * @return the start time of the time unit
-         *
          * @since 1.0
          */
         public LocalTime getStartTime() {
@@ -221,7 +209,6 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
          * Returns the end time of the time unit
          *
          * @return the end time of the time unit
-         *
          * @since 1.0
          */
         public LocalTime getEndTime() {
@@ -232,7 +219,6 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
          * Returns a json parsed string with all information
          *
          * @return a json parsed string with all information
-         *
          * @since 1.0
          */
         @Override

@@ -15,11 +15,46 @@ import java.util.HashMap;
 public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
 
     /**
+     * Sorts the given subjects by all alternative names and returns the sorted subjects
+     *
+     * @param subjects subjects that should be sorted
+     * @return the sorted subjects
+     * @since 1.1
+     */
+    public static Subjects sortByAlternateName(Subjects subjects) {
+        subjects.sortByAlternateName();
+        return subjects;
+    }
+
+    /**
+     * Sorts the given subjects by all fore colors and returns the sorted subjects
+     *
+     * @param subjects subjects that should be sorted
+     * @return the sorted subjects
+     * @since 1.1
+     */
+    public static Subjects sortByForeColor(Subjects subjects) {
+        subjects.sortByForeColor();
+        return subjects;
+    }
+
+    /**
+     * Sorts the given subjects by all back colors and returns the sorted subjects
+     *
+     * @param subjects subjects that should be sorted
+     * @return the sorted subjects
+     * @since 1.1
+     */
+    public static Subjects sortByBackColor(Subjects subjects) {
+        subjects.sortByBackColor();
+        return subjects;
+    }
+
+    /**
      * Finds a subject by its alternative name
      *
      * @param alternateName alternative name of the subject you want to find
      * @return the subject
-     *
      * @since 1.0
      */
     public SubjectObject findByAlternateName(String alternateName) {
@@ -31,7 +66,6 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      *
      * @param backColor back color of the subject you want to find
      * @return the subject
-     *
      * @since 1.0
      */
     public SubjectObject findByBackColor(String backColor) {
@@ -43,7 +77,6 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      *
      * @param foreColor fore color of the subject you want to find
      * @return the subject
-     *
      * @since 1.0
      */
     public SubjectObject findByForeColor(String foreColor) {
@@ -55,7 +88,6 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      *
      * @param alternateName alternative name of the subjects you want to search
      * @return {@link Subjects} with subjects that have the {@code alternateName} or a part of it in their alternative name
-     *
      * @since 1.0
      */
     public Subjects searchByAlternateName(String alternateName) {
@@ -71,7 +103,6 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      *
      * @param backColor back color of the subjects you want to search
      * @return {@link Subjects} with subjects that have the {@code backColor} or a part of it in their back color
-     *
      * @since 1.0
      */
     public Subjects searchByBackColor(String backColor) {
@@ -87,7 +118,6 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      *
      * @param foreColor fore color of the subjects you want to search
      * @return {@link Subjects} with subjects that have the {@code foreColor} or a part of it in their fore color
-     *
      * @since 1.0
      */
     public Subjects searchByForeColor(String foreColor) {
@@ -126,45 +156,6 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
     }
 
     /**
-     * Sorts the given subjects by all alternative names and returns the sorted subjects
-     *
-     * @param subjects subjects that should be sorted
-     * @return the sorted subjects
-     *
-     * @since 1.1
-     */
-    public static Subjects sortByAlternateName(Subjects subjects) {
-        subjects.sortByAlternateName();
-        return subjects;
-    }
-
-    /**
-     * Sorts the given subjects by all fore colors and returns the sorted subjects
-     *
-     * @param subjects subjects that should be sorted
-     * @return the sorted subjects
-     *
-     * @since 1.1
-     */
-    public static Subjects sortByForeColor(Subjects subjects) {
-        subjects.sortByForeColor();
-        return subjects;
-    }
-
-    /**
-     * Sorts the given subjects by all back colors and returns the sorted subjects
-     *
-     * @param subjects subjects that should be sorted
-     * @return the sorted subjects
-     *
-     * @since 1.1
-     */
-    public static Subjects sortByBackColor(Subjects subjects) {
-        subjects.sortByBackColor();
-        return subjects;
-    }
-
-    /**
      * Class to get information about a subject
      *
      * @version 1.0
@@ -179,14 +170,13 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
         /**
          * Initialize the {@link SubjectObject} class
          *
-         * @param name name of the subject
-         * @param active if the subject is active
-         * @param id id of the subject
+         * @param name          name of the subject
+         * @param active        if the subject is active
+         * @param id            id of the subject
          * @param alternateName alternative name for the subject
-         * @param backColor backColor
-         * @param foreColor foreColor
-         * @param longName long name of the subject
-         *
+         * @param backColor     backColor
+         * @param foreColor     foreColor
+         * @param longName      long name of the subject
          * @since 1.0
          */
         public SubjectObject(String name, boolean active, int id, String alternateName, String backColor, String foreColor, String longName) {
@@ -200,7 +190,6 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
          * Returns the alternative name for the subject
          *
          * @return the alternative name for the subject
-         *
          * @since 1.0
          */
         public String getAlternateName() {
@@ -211,7 +200,6 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
          * Returns the back color
          *
          * @return the back color
-         *
          * @since 1.0
          */
         public String getBackColor() {
@@ -222,7 +210,6 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
          * Returns the fore color
          *
          * @return fore color
-         *
          * @since 1.0
          */
         public String getForeColor() {
@@ -233,7 +220,6 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
          * Returns a json parsed string with all information
          *
          * @return a json parsed string with all information
-         *
          * @since 1.0
          */
         @Override

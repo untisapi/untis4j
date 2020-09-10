@@ -1,6 +1,5 @@
 package org.bytedream.untis4j.responseObjects.baseObjects;
 
-import org.bytedream.untis4j.Response;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -42,7 +41,6 @@ public class BaseResponseObjects {
          *
          * @param backColor fore color of the response object
          * @param foreColor back color of the response object
-         *
          * @since 1.0
          */
         public ColorResponseObject(String backColor, String foreColor) {
@@ -54,7 +52,6 @@ public class BaseResponseObjects {
          * Returns the back color of the response object
          *
          * @return the back color of the response object
-         *
          * @since 1.0
          */
         public String getBackColor() {
@@ -65,7 +62,6 @@ public class BaseResponseObjects {
          * Returns the fore color of the response object
          *
          * @return the fore color of the response object
-         *
          * @since 1.0
          */
         public String getForeColor() {
@@ -76,7 +72,6 @@ public class BaseResponseObjects {
          * Returns a json parsed string with all information
          *
          * @return a json parsed string with all information
-         *
          * @since 1.0
          */
         @Override
