@@ -1,13 +1,14 @@
 package org.bytedream.untis4j.responseObjects.baseObjects;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.*;
 
 /**
  * Contains all base response list classes
  *
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 public class BaseResponseLists {
@@ -18,14 +19,22 @@ public class BaseResponseLists {
      * @version 1.0
      * @since 1.0
      */
-    public static class ResponseList<E> extends ArrayList<E> {
+    public static class ResponseList<E extends ResponseObject> extends ArrayList<E> implements BaseResponse {
 
+        public boolean containsResponse(ResponseObject responseObject) {
+            for (ResponseObject containResponseObject : this) {
+                if (containResponseObject.equalsResponse(responseObject)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     /**
      * Base class for almost all response lists
      *
-     * @version 1.0
+     * @version 1.1
      * @since 1.0
      */
     public static class NILResponseList<E extends NILResponseObject> extends ResponseList<E> {
@@ -114,12 +123,78 @@ public class BaseResponseLists {
             return longNameList;
         }
 
+        /**
+         * Sorts the list by all names
+         *
+         * @since 1.1
+         */
+        public void sortByName() {
+            this.sort((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
+        }
+
+        /**
+         * Sorts the list by all ids
+         *
+         * @since 1.1
+         */
+        public void sortById() {
+            this.sort(Comparator.comparingInt(NILResponseObject::getId));
+        }
+
+        /**
+         * Sorts the list by all long names and returns itself
+         *
+         * @since 1.1
+         */
+        public void sortByLongName() {
+            this.sort((o1, o2) -> o1.getLongName().compareToIgnoreCase(o2.getLongName()));
+        }
+
+        /**
+         * Sorts the given list by all names and returns the sorted list
+         *
+         * @param list the list that should be sorted
+         * @return the sorted list
+         *
+         * @since 1.1
+         */
+        public static <T extends NILResponseList<? extends NILResponseObject>> T sortByName(T list) {
+            list.sortByName();
+            return list;
+        }
+
+        /**
+         * Sorts the given list by all ids and returns the sorted list
+         *
+         * @param list the list that should be sorted
+         * @return the sorted list
+         *
+         * @since 1.1
+         */
+        public static <T extends NILResponseList<? extends NILResponseObject>> T sortById(T list) {
+            list.sortById();
+            return list;
+        }
+
+        /**
+         * Sorts the given list by all long names and returns the sorted list
+         *
+         * @param list the list that should be sorted
+         * @return the sorted list
+         *
+         * @since 1.1
+         */
+        public static <T extends NILResponseList<? extends NILResponseObject>> T sortByLongName(T list) {
+            list.sortByLongName();
+            return list;
+        }
+
     }
 
     /**
      * Base class for most of the response lists
      *
-     * @version 1.0
+     * @version 1.1
      * @since 1.0
      */
     public static class NAILResponseList<E extends NAILResponseObject> extends NILResponseList<E> {
@@ -150,6 +225,28 @@ public class BaseResponseLists {
             this.stream().filter(e -> e.isActive() == active).forEach(activeList::add);
 
             return activeList;
+        }
+
+        /**
+         * Sorts the list by all active elements
+         *
+         * @since 1.1
+         */
+        public void sortByActive() {
+            this.sort((o1, o2) -> Boolean.compare(o1.isActive(), o2.isActive()));
+        }
+
+        /**
+         * Sorts the given list by all active elements and returns the sorted list
+         *
+         * @param list the list that should be sorted
+         * @return the sorted list
+         *
+         * @since 1.1
+         */
+        public static <T extends NILResponseList<? extends NILResponseObject>> T sortByActive(T list) {
+            list.sortByLongName();
+            return list;
         }
 
     }
