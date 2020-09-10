@@ -132,8 +132,8 @@ public class UntisUtils {
      * @since 1.0
      */
     public static HashMap<String, String> localDateToParams(LocalDate start, LocalDate end) {
-        if (start.isBefore(end)) {
-            throw new DateTimeException("The start date must end after or on the same day as the end date");
+        if (end.isBefore(start)) {
+            throw new DateTimeException("The end date must end after or on the same day as the start date");
         }
 
         return new HashMap<String, String>() {{
