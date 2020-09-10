@@ -1,6 +1,6 @@
 /*
  * @author ByteDream
- * @version 1.1_beta
+ * @version 1.1
  */
 
 package org.bytedream.untis4j;
