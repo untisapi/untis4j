@@ -35,7 +35,7 @@ public class Main {
 
             session.logout();  //logout
         } catch (LoginException e) {  // this exception get thrown if something went wrong with Session.login
-            System.out.println("Failed to login: ", e.getMessage());
+            System.out.println("Failed to login: " + e.getMessage());
             return;
         } catch (IOException e) {  // if an error appears this get thrown
             e.printStackTrace();
@@ -61,7 +61,7 @@ public class Main {
 
             session.logout();  //logout
         } catch (LoginException e) {  // this exception get thrown if something went wrong with Session.login
-            System.out.println("Failed to login: ", e.getMessage());
+            System.out.println("Failed to login: " + e.getMessage());
             return;
         } catch (IOException e) {  // if an error appears this get thrown
             e.printStackTrace();
@@ -93,7 +93,7 @@ public class Main {
 
             session.logout();  //logout
         } catch (LoginException e) {  // this exception get thrown if something went wrong with Session.login
-            System.out.println("Failed to login: ", e.getMessage());
+            System.out.println("Failed to login: " + e.getMessage());
             return;
         } catch (IOException e) {  // if an error appears this get thrown
             e.printStackTrace();
