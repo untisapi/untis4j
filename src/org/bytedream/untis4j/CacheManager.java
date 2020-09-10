@@ -1,11 +1,11 @@
 package org.bytedream.untis4j;
 
+import org.bytedream.untis4j.responseObjects.Rooms;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.ResponseList;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class to manage cache and minimize server requests and speed up the API
@@ -15,18 +15,18 @@ import java.util.Map;
  */
 public class CacheManager {
 
-    private final HashMap<UntisUtils.Method, BaseResponse> cachedInformation = new HashMap<>();
+    private final HashMap<CacheKeys, BaseResponse> cachedInformation = new HashMap<>();
 
     /**
      * Adds content to the cache
      *
-     * @param method method of the object to cache
+     * @param cacheKeys cache keys of the object to cache
      * @param content content of the cache
      *
      * @since 1.1
      */
-    public <T extends BaseResponse> void add(UntisUtils.Method method, T content) {
-        this.cachedInformation.put(method, content);
+    public <T extends BaseResponse> void add(CacheKeys cacheKeys, T content) {
+        this.cachedInformation.put(cacheKeys, content);
     }
 
     /**
@@ -38,7 +38,7 @@ public class CacheManager {
      * @since 1.1
      */
     public boolean contains(UntisUtils.Method method) {
-        return cachedInformation.containsKey(method);
+        return cachedInformation.containsKey(new CacheKeys(method));
     }
 
     /**
@@ -49,7 +49,7 @@ public class CacheManager {
      * @since 1.1
      */
     public <T extends BaseResponse> T get(UntisUtils.Method method) {
-        return (T) cachedInformation.get(method);
+        return (T) cachedInformation.get(new CacheKeys(method));
     }
 
     /**
@@ -76,11 +76,13 @@ public class CacheManager {
      * @since 1.1
      */
     public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<? extends T> action) throws IOException {
-        if (cachedInformation.containsKey(method)) {
-            return (T) cachedInformation.get(method);
+        CacheKeys cacheKeys = new CacheKeys(method, params);
+
+        if (cachedInformation.containsKey(cacheKeys)) {
+            return (T) cachedInformation.get(cacheKeys);
         } else {
             T response = action.getResponse(requestManager.POST(method.getMethod(), params));
-            this.add(method, response);
+            this.add(cacheKeys, response);
             return response;
         }
     }
@@ -88,27 +90,51 @@ public class CacheManager {
     /**
      * Removes a response from the cache if the given condition is true
      *
-     * @param condition condition you want to check
-     * @param methodToRemove response to remove
+     * @see CacheManager#removeIf(boolean, UntisUtils.Method, Map)
      *
      * @since 1.1
      */
     public void removeIf(boolean condition, UntisUtils.Method methodToRemove) {
+        removeIf(condition, methodToRemove, new HashMap<>());
+    }
+
+    /**
+     * Removes a response from the cache if the given condition is true
+     *
+     * @param condition condition you want to check
+     * @param methodToRemove response to remove
+     * @param params extra parameter for the method
+     *
+     * @since 1.1
+     */
+    public void removeIf(boolean condition, UntisUtils.Method methodToRemove, Map<String, ?> params) {
         if (condition) {
-            cachedInformation.remove(methodToRemove);
+            cachedInformation.remove(new CacheKeys(methodToRemove, params));
         }
     }
 
     /**
      * Updates cache content
      *
-     * @param method method of the object in cache
-     * @param content content of the new cache
+     * @see CacheManager#update(UntisUtils.Method, Map, BaseResponse)
      *
      * @since 1.1
      */
     public <T extends BaseResponse> void update(UntisUtils.Method method, T content) {
-        cachedInformation.replace(method, content);
+        this.update(method, new HashMap<>(), content);
+    }
+
+    /**
+     * Updates cache content
+     *
+     * @param method method of the object in cache
+     * @param params extra parameter of the method
+     * @param content content for the new cache
+     *
+     * @since 1.1
+     */
+    public <T extends BaseResponse> void update(UntisUtils.Method method, Map<String, ?> params, T content) {
+        cachedInformation.replace(new CacheKeys(method, params), content);
     }
 
     /**
@@ -123,7 +149,44 @@ public class CacheManager {
      * @since 1.1
      */
     public void update(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<? extends BaseResponse> action) throws IOException {
-        cachedInformation.replace(method, action.getResponse(requestManager.POST(method.getMethod(), params)));
+        cachedInformation.replace(new CacheKeys(method, params), action.getResponse(requestManager.POST(method.getMethod(), params)));
+    }
+
+    /**
+     * Class to simplify {@link CacheManager} cache control
+     *
+     * @version 1.0
+     * @since 1.1
+     */
+    private static class CacheKeys {
+
+        LinkedHashSet<UntisUtils.Method> keys1 = new LinkedHashSet<>();
+        LinkedHashSet<Map<String, ?>> keys2 = new LinkedHashSet<>();
+
+        /**
+         * Initialize the {@link CacheKeys} class
+         *
+         * @see CacheKeys
+         *
+         * @since 1.1
+         */
+        public CacheKeys(UntisUtils.Method method) {
+            new CacheKeys(method, new HashMap<>());
+        }
+
+        /**
+         * Initialize the {@link CacheKeys} class
+         *
+         * @param method method to cache
+         * @param params extra params to identify the cache keys
+         *
+         * @since 1.1
+         */
+        public CacheKeys(UntisUtils.Method method, Map<String, ?> params) {
+            keys1.add(method);
+            keys2.add(params);
+        }
+
     }
 
 }
