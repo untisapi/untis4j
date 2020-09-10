@@ -6,8 +6,15 @@ import org.json.JSONObject;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.HashMap;
 
+/**
+ * Class to manage {@link TimeUnitObject} objects
+ *
+ * @version 1.1
+ * @since 1.0
+ */
 public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
 
     /**
@@ -91,6 +98,72 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
 
         this.stream().filter(timeUnitObject -> timeUnitObject.getEndTime().format(DateTimeFormatter.ofPattern("HHmmss")).contains(endTime.format(DateTimeFormatter.ofPattern("HHmmss")))).forEach(timeUnits::add);
 
+        return timeUnits;
+    }
+
+    /**
+     * Sorts the time units by all names
+     *
+     * @since 1.1
+     */
+    public void sortByName() {
+        this.sort((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
+    }
+
+    /**
+     * Sorts the time units by all start times
+     *
+     * @since 1.1
+     */
+    public void sortByStartTime() {
+        this.sort(Comparator.comparing(TimeUnitObject::getStartTime));
+    }
+
+    /**
+     * Sorts the time units by all end times
+     *
+     * @since 1.1
+     */
+    public void sortByEndTime() {
+        this.sort(Comparator.comparing(TimeUnitObject::getEndTime));
+    }
+
+    /**
+     * Sorts the given time units by all names and returns the sorted time units
+     *
+     * @param timeUnits time units that should be sorted
+     * @return the sorted time units
+     *
+     * @since 1.1
+     */
+    public static TimeUnits sortByName(TimeUnits timeUnits) {
+        timeUnits.sortByName();
+        return timeUnits;
+    }
+
+    /**
+     * Sorts the given time units by all start times and returns the sorted time units
+     *
+     * @param timeUnits time units that should be sorted
+     * @return the sorted time units
+     *
+     * @since 1.1
+     */
+    public static TimeUnits sortByStartTime(TimeUnits timeUnits) {
+        timeUnits.sortByStartTime();
+        return timeUnits;
+    }
+
+    /**
+     * Sorts the given time units by all end times and returns the sorted time units
+     *
+     * @param timeUnits time units that should be sorted
+     * @return the sorted time units
+     *
+     * @since 1.1
+     */
+    public static TimeUnits sortByEndTime(TimeUnits timeUnits) {
+        timeUnits.sortByEndTime();
         return timeUnits;
     }
 

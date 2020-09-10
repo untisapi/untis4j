@@ -47,7 +47,7 @@ public class UntisUtils {
      *
      * @since 1.0
      */
-    public enum Methods {
+    public enum Method {
         LOGIN ("authenticate"),
         LOGOUT ("logout"),
 
@@ -72,7 +72,7 @@ public class UntisUtils {
 
         private final String method;
 
-        Methods(String method) {
+        Method(String method) {
             this.method = method;
         }
 
@@ -108,7 +108,8 @@ public class UntisUtils {
 
     public enum LessonCode {
         CANCELLED ("cancelled"),
-        IRREGULAR ("irregular");
+        IRREGULAR ("irregular"),
+        REGULAR ("regular");
 
         private final String lessonCode;
 

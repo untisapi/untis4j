@@ -8,9 +8,16 @@ import org.json.JSONObject;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * Class to manage {@link Lesson} objects
+ *
+ * @version 1.1
+ * @since 1.0
+ */
 public class Timetable extends ResponseList<Timetable.Lesson> {
 
     /**
@@ -62,7 +69,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      * @since 1.0
      */
     public Lesson findByKlassenIds(Set<Integer> klassenIds) {
-        return this.stream().filter(lesson -> lesson.getKlassenIds().containsAll(klassenIds)).findAny().orElse(null);
+        return this.stream().filter(lesson -> lesson.getKlassen().containsAll(klassenIds)).findAny().orElse(null);
     }
 
     /**
@@ -74,7 +81,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      * @since 1.0
      */
     public Lesson findByTeacherIds(Set<Integer> teacherIds) {
-        return this.stream().filter(lesson -> lesson.getTeacherIds().containsAll(teacherIds)).findAny().orElse(null);
+        return this.stream().filter(lesson -> lesson.getTeachers().containsAll(teacherIds)).findAny().orElse(null);
     }
 
     /**
@@ -86,7 +93,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      * @since 1.0
      */
     public Lesson findByRoomIds(Set<Integer> roomIds) {
-        return this.stream().filter(lesson -> lesson.getRoomIds().containsAll(roomIds)).findAny().orElse(null);
+        return this.stream().filter(lesson -> lesson.getRooms().containsAll(roomIds)).findAny().orElse(null);
     }
 
     /**
@@ -98,7 +105,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      * @since 1.0
      */
     public Lesson findBySubjectIds(Set<Integer> subjectIds) {
-        return this.stream().filter(lesson -> lesson.getSubjectIds().containsAll(subjectIds)).findAny().orElse(null);
+        return this.stream().filter(lesson -> lesson.getSubjects().containsAll(subjectIds)).findAny().orElse(null);
     }
 
     /**
@@ -184,16 +191,16 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     /**
      * Finds lessons that have the {@code klassenIds} or a part of it in their klassen ids
      *
-     * @param klassenIds klassen ids of the lessons you want to search
+     * @param klassen klassen of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code klassenIds} or a part of it in their klassen ids
      *
      * @since 1.0
      */
-    public Timetable searchByKlassenIds(Set<Integer> klassenIds) {
+    public Timetable searchByKlassen(Klassen klassen) {
         Timetable timetable = new Timetable();
 
         this.forEach(lesson -> {
-            if (UntisUtils.setContainsSetItem(lesson.getKlassenIds(), klassenIds)) {
+            if (lesson.getKlassen().containsAll(klassen)) {
                 timetable.add(lesson);
             }
         });
@@ -204,16 +211,16 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     /**
      * Finds lessons that have the {@code teacherIds} or a part of it in their teacher ids
      *
-     * @param teacherIds teacher ids of the lessons you want to search
+     * @param teachers teachers of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code teacherIds} or a part of it in their teacher ids
      *
      * @since 1.0
      */
-    public Timetable searchByTeacherIds(Set<Integer> teacherIds) {
+    public Timetable searchByTeacherIds(Teachers teachers) {
         Timetable timetable = new Timetable();
 
         this.forEach(lesson -> {
-            if (UntisUtils.setContainsSetItem(lesson.getTeacherIds(), teacherIds)) {
+            if (lesson.getTeachers().containsAll(teachers)) {
                 timetable.add(lesson);
             }
         });
@@ -224,16 +231,16 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     /**
      * Finds lessons that have the {@code roomIds} or a part of it in their room ids
      *
-     * @param roomIds room ids of the lessons you want to search
+     * @param rooms rooms of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code roomIds} or a part of it in their room ids
      *
      * @since 1.0
      */
-    public Timetable searchByRoomIds(Set<Integer> roomIds) {
+    public Timetable searchByRoomIds(Rooms rooms) {
         Timetable timetable = new Timetable();
 
         this.forEach(lesson -> {
-            if (UntisUtils.setContainsSetItem(lesson.getRoomIds(), roomIds)) {
+            if (lesson.getRooms().containsAll(rooms)) {
                 timetable.add(lesson);
             }
         });
@@ -244,16 +251,16 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     /**
      * Finds lessons that have the {@code subjectIds} or a part of it in their subject ids
      *
-     * @param subjectIds subject ids of the lessons you want to search
+     * @param subjects subjects of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code subjectIds} or a part of it in their subject ids
      *
      * @since 1.0
      */
-    public Timetable searchBySubjectIds(Set<Integer> subjectIds) {
+    public Timetable searchBySubjectIds(Subjects subjects) {
         Timetable timetable = new Timetable();
 
         this.forEach(lesson -> {
-            if (UntisUtils.setContainsSetItem(lesson.getSubjectIds(), subjectIds)) {
+            if (lesson.getSubjects().containsAll(subjects)) {
                 timetable.add(lesson);
             }
         });
@@ -294,6 +301,204 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
+     * Sorts the timetable by all dates
+     *
+     * @since 1.1
+     */
+    public void sortByDate() {
+        this.sort(Comparator.comparing(Lesson::getDate));
+    }
+
+    /**
+     * Sorts the timetable by all start times
+     *
+     * @since 1.1
+     */
+    public void sortByStartTime() {
+        this.sort(Comparator.comparing(Lesson::getStartTime));
+    }
+
+    /**
+     * Sorts the timetable by all end times
+     *
+     * @since 1.1
+     */
+    public void sortByEndTime() {
+        this.sort(Comparator.comparing(Lesson::getEndTime));
+    }
+
+    /**
+     * Sorts the timetable by all klassen ids
+     *
+     * @since 1.1
+     */
+    public void sortByKlassenId() {
+        return;
+    }
+
+    /**
+     * Sorts the timetable by all teacher ids
+     *
+     * @since 1.1
+     */
+    public void sortByTeacherId() {
+        return;
+    }
+
+    /**
+     * Sorts the timetable by all room ids
+     *
+     * @since 1.1
+     */
+    public void sortByRoomId() {
+        return;
+    }
+
+    /**
+     * Sorts the timetable by all subject ids
+     *
+     * @since 1.1
+     */
+    public void sortBySubjectId() {
+        return;
+    }
+
+    /**
+     * Sorts the timetable by all codes
+     *
+     * @since 1.1
+     */
+    public void sortByCode() {
+        this.sort(Comparator.comparing(Lesson::getCode));
+    }
+
+    /**
+     * Sorts the timetable by all activity types
+     *
+     * @since 1.1
+     */
+    public void sortByActivityType() {
+        this.sort((o1, o2) -> o1.getActivityType().compareToIgnoreCase(o2.getActivityType()));
+    }
+
+    /**
+     * Sorts the given timetable by all dates and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     *
+     * @since 1.1
+     */
+    public static Timetable sortByDate(Timetable timetable) {
+        timetable.sortByDate();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all start times and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     *
+     * @since 1.1
+     */
+    public static Timetable sortByStartTime(Timetable timetable) {
+        timetable.sortByStartTime();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all end times and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     *
+     * @since 1.1
+     */
+    public static Timetable sortByEndTime(Timetable timetable) {
+        timetable.sortByEndTime();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all klassen ids and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     *
+     * @since 1.1
+     */
+    public static Timetable sortByKlassenId(Timetable timetable) {
+        timetable.sortByKlassenId();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all teacher ids and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     *
+     * @since 1.1
+     */
+    public static Timetable sortByTeacherId(Timetable timetable) {
+        timetable.sortByTeacherId();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all room ids and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     *
+     * @since 1.1
+     */
+    public static Timetable sortByRoomId(Timetable timetable) {
+        timetable.sortByRoomId();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all subject ids and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     *
+     * @since 1.1
+     */
+    public static Timetable sortBySubjectId(Timetable timetable) {
+        timetable.sortBySubjectId();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all codes and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     *
+     * @since 1.1
+     */
+    public static Timetable sortByCode(Timetable timetable) {
+        timetable.sortByCode();
+        return timetable;
+    }
+
+    /**
+     * Sorts the given timetable by all activity types and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     *
+     * @since 1.1
+     */
+    public static Timetable sortByActivityType(Timetable timetable) {
+        timetable.sortByActivityType();
+        return timetable;
+    }
+
+    /**
      * Class to get information about a lesson
      *
      * @version 1.0
@@ -304,10 +509,10 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
         private final LocalDate date;
         private final LocalTime startTime;
         private final LocalTime endTime;
-        private final Set<Integer> klassenIds;
-        private final Set<Integer> teacherIds;
-        private final Set<Integer> roomIds;
-        private final Set<Integer> subjectIds;
+        private final Klassen klassen;
+        private final Teachers teachers;
+        private final Rooms rooms;
+        private final Subjects subjects;
         private final UntisUtils.LessonCode code;
         private final String activityType;
 
@@ -317,10 +522,10 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          * @param date date of the timetable
          * @param startTime time when the lesson start
          * @param endTime time when the lesson end
-         * @param klassenIds ids of the classes
-         * @param teacherId ids of the teachers
-         * @param roomIds ids of the rooms
-         * @param subjectIds ids of the subjects
+         * @param klassen klassen
+         * @param teachers teachers
+         * @param rooms rooms
+         * @param subjects subjects
          * @param code code of the lesson (normally null, {@link UntisUtils.LessonCode#CANCELLED} if the lesson is cancelled, {@code UntisUtils.LessonCode.IRREGULAR} if e.g. a lesson has been moved
          * @param activityType type of the lesson
          *
@@ -329,17 +534,17 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
         public Lesson(LocalDate date,
                       LocalTime startTime,
                       LocalTime endTime,
-                      Set<Integer> klassenIds,
-                      Set<Integer> teacherId,
-                      Set<Integer> roomIds,
-                      Set<Integer> subjectIds,
+                      Klassen klassen,
+                      Teachers teachers,
+                      Rooms rooms,
+                      Subjects subjects,
                       UntisUtils.LessonCode code,
                       String activityType) {
             this.date = date;
-            this.klassenIds = klassenIds;
-            this.teacherIds = teacherId;
-            this.roomIds = roomIds;
-            this.subjectIds = subjectIds;
+            this.klassen = klassen;
+            this.teachers = teachers;
+            this.rooms = rooms;
+            this.subjects = subjects;
             this.code = code;
             this.startTime = startTime;
             this.endTime = endTime;
@@ -380,25 +585,25 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
         }
 
         /**
-         * Returns the id of the klassen that have this lesson
+         * Returns the klassen that have this lesson
          *
-         * @return the id of the klassen that have this lesson
+         * @return the klassen that have this lesson
          *
          * @since 1.0
          */
-        public Set<Integer> getKlassenIds() {
-            return klassenIds;
+        public Klassen getKlassen() {
+            return klassen;
         }
 
         /**
-         * Returns the id of the teachers that have this lesson
+         * Returns the teachers that have this lesson
          *
-         * @return the id of the teachers that have this lesson
+         * @return the teachers that have this lesson
          *
          * @since 1.0
          */
-        public Set<Integer> getTeacherIds() {
-            return teacherIds;
+        public Teachers getTeachers() {
+            return teachers;
         }
 
         /**
@@ -408,19 +613,19 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          *
          * @since 1.0
          */
-        public Set<Integer> getRoomIds() {
-            return roomIds;
+        public Rooms getRooms() {
+            return rooms;
         }
 
         /**
-         * Returns the id of the lesson subjects
+         * Returns the lesson subjects
          *
-         * @return the id of the lesson subjects
+         * @return the lesson subjects
          *
          * @since 1.0
          */
-        public Set<Integer> getSubjectIds() {
-            return subjectIds;
+        public Subjects getSubjects() {
+            return subjects;
         }
 
         /**
@@ -457,16 +662,16 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
             HashMap<String, String> klasseAsMap = new HashMap<>();
 
             klasseAsMap.put("date", date.toString());
-            klasseAsMap.put("kl", klassenIds.toString());
-            klasseAsMap.put("te", teacherIds.toString());
-            klasseAsMap.put("su", subjectIds.toString());
+            klasseAsMap.put("kl", klassen.toString());
+            klasseAsMap.put("te", teachers.toString());
+            klasseAsMap.put("su", subjects.toString());
             if (code != null) {
                 klasseAsMap.put("code", code.getLessonCode());
             }
             klasseAsMap.put("startTime", startTime.format(DateTimeFormatter.ofPattern("HHmm")));
             klasseAsMap.put("endTime", endTime.format(DateTimeFormatter.ofPattern("HHmm")));
             klasseAsMap.put("activityType", activityType);
-            klasseAsMap.put("ro", roomIds.toString());
+            klasseAsMap.put("ro", rooms.toString());
 
             return new JSONObject(klasseAsMap).toString();
         }

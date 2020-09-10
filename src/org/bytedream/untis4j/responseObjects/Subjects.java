@@ -9,7 +9,7 @@ import java.util.HashMap;
 /**
  * Class to manage {@link SubjectObject} objects
  *
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
@@ -98,6 +98,71 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
         return subjects;
     }
 
+    /**
+     * Sorts the subjects by all alternative names
+     *
+     * @since 1.1
+     */
+    public void sortByAlternateName() {
+        this.sort((o1, o2) -> o1.getAlternateName().compareToIgnoreCase(o2.getAlternateName()));
+    }
+
+    /**
+     * Sorts the subjects by all fore colors
+     *
+     * @since 1.1
+     */
+    public void sortByForeColor() {
+        this.sort((o1, o2) -> o1.getAlternateName().compareToIgnoreCase(o2.getAlternateName()));
+    }
+
+    /**
+     * Sorts the subjects by all back colors
+     *
+     * @since 1.1
+     */
+    public void sortByBackColor() {
+        this.sort((o1, o2) -> o1.getAlternateName().compareToIgnoreCase(o2.getAlternateName()));
+    }
+
+    /**
+     * Sorts the given subjects by all alternative names and returns the sorted subjects
+     *
+     * @param subjects subjects that should be sorted
+     * @return the sorted subjects
+     *
+     * @since 1.1
+     */
+    public static Subjects sortByAlternateName(Subjects subjects) {
+        subjects.sortByAlternateName();
+        return subjects;
+    }
+
+    /**
+     * Sorts the given subjects by all fore colors and returns the sorted subjects
+     *
+     * @param subjects subjects that should be sorted
+     * @return the sorted subjects
+     *
+     * @since 1.1
+     */
+    public static Subjects sortByForeColor(Subjects subjects) {
+        subjects.sortByForeColor();
+        return subjects;
+    }
+
+    /**
+     * Sorts the given subjects by all back colors and returns the sorted subjects
+     *
+     * @param subjects subjects that should be sorted
+     * @return the sorted subjects
+     *
+     * @since 1.1
+     */
+    public static Subjects sortByBackColor(Subjects subjects) {
+        subjects.sortByBackColor();
+        return subjects;
+    }
 
     /**
      * Class to get information about a subject

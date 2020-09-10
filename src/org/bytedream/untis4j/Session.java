@@ -1,15 +1,19 @@
 /*
- * @author blueShard
- * @version 1.0
+ * @author ByteDream
+ * @version 1.1_beta
  */
 
 package org.bytedream.untis4j;
 
 import org.bytedream.untis4j.responseObjects.*;
+import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
+import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists;
+import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.math.RoundingMode;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,10 +21,19 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
+/**
+ * Class to control the untis4j API
+ *
+ * @version 1.1
+ * @since 1.0
+ */
 public class Session {
 
     private final Infos infos;
 
+    private int lastChange;
+    private boolean useCache;
+    private CacheManager cacheManager = new CacheManager();
     private RequestManager requestManager;
 
     /**
@@ -30,12 +43,55 @@ public class Session {
      *
      * @param infos infos about the user
      * @param requestManager manager that handles all requests
+     * @param useCache sets if every request response should be saved in cache
      *
      * @since 1.0
      */
-    private Session(Infos infos, RequestManager requestManager) {
+    private Session(Infos infos, RequestManager requestManager, boolean useCache) {
         this.infos = infos;
         this.requestManager = requestManager;
+        this.useCache = useCache;
+
+        try {
+            this.lastChange = getLatestImportTime().getLatestImportTime();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Checks if the cache should be used and depending on the result it calls {@link CacheManager#getOrRequest(UntisUtils.Method, RequestManager, Map, ResponseConsumer)} or request the given method manually
+     *
+     * @see Session#requestSender(UntisUtils.Method, Map, ResponseConsumer)
+     *
+     * @since 1.1
+     */
+    private <T extends BaseResponse> T requestSender(UntisUtils.Method method, ResponseConsumer<? extends T> action) throws IOException {
+        return requestSender(method, new HashMap<>(), action);
+    }
+
+    /**
+     * Checks if the cache should be used and depending on the result it calls {@link CacheManager#getOrRequest(UntisUtils.Method, RequestManager, Map, ResponseConsumer)} or request the given method manually
+     *
+     * @param method the POST method
+     * @param params params you want to send with the request
+     * @param action lambda expression that gets called if the {@code method} is not in the cache manager
+     * @return the response in a {@link BaseResponseLists.ResponseList}
+     * @throws IOException if an IO Exception occurs
+     *
+     * @since 1.1
+     */
+    private <T extends BaseResponse> T requestSender(UntisUtils.Method method, Map<String, ?> params, ResponseConsumer<? extends T> action) throws IOException {
+        if (useCache) {
+            int newLatestImportTime = getLatestImportTime().getLatestImportTime();
+            if (lastChange < newLatestImportTime) {
+                lastChange = newLatestImportTime;
+                cacheManager.update(method, requestManager, params, action);
+            }
+            return cacheManager.getOrRequest(method, requestManager, params, action);
+        } else {
+            return action.getResponse(requestManager.POST(method.getMethod(), params));
+        }
     }
 
     /**
@@ -49,7 +105,7 @@ public class Session {
      * @since 1.0
      */
     public Response getClassRegCategories() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Methods.GETCLASSREGCATEGORIES.getMethod());
+        Response response = requestManager.POST(UntisUtils.Method.GETCLASSREGCATEGORIES.getMethod());
 
         if (response.isError()) {
             throw new IOException(response.getErrorMessage());
@@ -69,7 +125,7 @@ public class Session {
      * @since 1.0
      */
     public Response getClassRegCategoryGroups() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Methods.GETCLASSREGCATEGORYGROUPS.getMethod());
+        Response response = requestManager.POST(UntisUtils.Method.GETCLASSREGCATEGORYGROUPS.getMethod());
 
         if (response.isError()) {
             throw new IOException(response.getErrorMessage());
@@ -107,7 +163,7 @@ public class Session {
             params.put("id", id);
         }
 
-        Response response = requestManager.POST(UntisUtils.Methods.GETCLASSREGEVENTS.getMethod(), params);
+        Response response = requestManager.POST(UntisUtils.Method.GETCLASSREGEVENTS.getMethod(), params);
 
         if (response.isError()) {
             throw new IOException(response.getErrorMessage());
@@ -182,25 +238,25 @@ public class Session {
      * @since 1.0
      */
     public Departments getDepartments() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Methods.GETDEPARTMENTS.getMethod());
+        return requestSender(UntisUtils.Method.GETDEPARTMENTS, response -> {
+            JSONObject jsonResponse = response.getResponse();
 
-        JSONObject jsonResponse = response.getResponse();
+            if (response.isError()) {
+                throw new IOException(response.getErrorMessage());
+            }
+            JSONArray jsonArray = jsonResponse.getJSONArray("result");
 
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-        JSONArray jsonArray = jsonResponse.getJSONArray("result");
+            Departments departments = new Departments();
 
-        Departments departments = new Departments();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject departmentInfo = jsonArray.getJSONObject(i);
+                departments.add(new Departments.DepartmentObject(departmentInfo.getString("name"),
+                        departmentInfo.getInt("id"),
+                        departmentInfo.getString("longName")));
+            }
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject departmentInfo = jsonArray.getJSONObject(i);
-            departments.add(new Departments.DepartmentObject(departmentInfo.getString("name"),
-                    departmentInfo.getInt("id"),
-                    departmentInfo.getString("longName")));
-        }
-
-        return departments;
+            return departments;
+        });
     }
 
     /**
@@ -220,7 +276,7 @@ public class Session {
         Map<String, String> params = UntisUtils.localDateToParams(start, end);
         params.put("examTypeId", String.valueOf(id));
 
-        Response response = requestManager.POST(UntisUtils.Methods.GETEXAMS.getMethod(), params);
+        Response response = requestManager.POST(UntisUtils.Method.GETEXAMS.getMethod(), params);
 
         if (response.isError()) {
             throw new IOException(response.getErrorMessage());
@@ -240,7 +296,7 @@ public class Session {
      * @since 1.0
      */
     public Response getExamTypes() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Methods.GETEXAMTYPES.getMethod());
+        Response response = requestManager.POST(UntisUtils.Method.GETEXAMTYPES.getMethod());
 
         if (response.isError()) {
             throw new IOException(response.getErrorMessage());
@@ -260,27 +316,27 @@ public class Session {
      * @since 1.0
      */
     public Holidays getHolidays() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Methods.GETHOLIDAYS.getMethod());
+        return requestSender(UntisUtils.Method.GETHOLIDAYS, response -> {
+            JSONObject jsonResponse = response.getResponse();
 
-        JSONObject jsonResponse = response.getResponse();
+            if (response.isError()) {
+                throw new IOException(response.getErrorMessage());
+            }
+            JSONArray jsonArray = jsonResponse.getJSONArray("result");
 
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-        JSONArray jsonArray = jsonResponse.getJSONArray("result");
+            Holidays holidays = new Holidays();
 
-        Holidays holidays = new Holidays();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject holidayInfo = jsonArray.getJSONObject(i);
+                holidays.add(new Holidays.HolidaysObject(holidayInfo.getString("name"),
+                        LocalDate.parse(String.valueOf(holidayInfo.getInt("startDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
+                        LocalDate.parse(String.valueOf(holidayInfo.getInt("endDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
+                        holidayInfo.getInt("id"),
+                        holidayInfo.getString("longName")));
+            }
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject holidayInfo = jsonArray.getJSONObject(i);
-            holidays.add(new Holidays.HolidaysObject(holidayInfo.getString("name"),
-                    LocalDate.parse(String.valueOf(holidayInfo.getInt("startDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                    LocalDate.parse(String.valueOf(holidayInfo.getInt("endDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                    holidayInfo.getInt("id"),
-                    holidayInfo.getString("longName")));
-        }
-
-        return holidays;
+            return holidays;
+        });
     }
 
     /**
@@ -309,34 +365,34 @@ public class Session {
      * @since 1.0
      */
     public Klassen getKlassen(Integer schoolYearId) throws IOException {
-        Response response;
+        ResponseConsumer<Klassen> responseConsumer = response -> {
+            JSONObject jsonResponse = response.getResponse();
+
+            if (response.isError()) {
+                throw new IOException(response.getErrorMessage());
+            }
+            JSONArray jsonArray = jsonResponse.getJSONArray("result");
+
+            Klassen klassen = new Klassen();
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject klassenInfo = jsonArray.getJSONObject(i);
+                klassen.add(new Klassen.KlasseObject(klassenInfo.getString("name"),
+                        klassenInfo.getBoolean("active"),
+                        klassenInfo.getInt("id"),
+                        klassenInfo.getString("longName")));
+            }
+
+            return klassen;
+        };
 
         if (schoolYearId != null) {
-            response = requestManager.POST(UntisUtils.Methods.GETKLASSEN.getMethod(), new HashMap<String, Integer>() {{
+            return requestSender(UntisUtils.Method.GETKLASSEN, new HashMap<String, Integer>() {{
                 put("schoolyearId", schoolYearId);
-            }});
+            }}, responseConsumer);
         } else {
-            response = requestManager.POST(UntisUtils.Methods.GETKLASSEN.getMethod());
+            return requestSender(UntisUtils.Method.GETKLASSEN, responseConsumer);
         }
-
-        JSONObject jsonResponse = response.getResponse();
-
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-        JSONArray jsonArray = jsonResponse.getJSONArray("result");
-
-        Klassen klassen = new Klassen();
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject klassenInfo = jsonArray.getJSONObject(i);
-            klassen.add(new Klassen.KlasseObject(klassenInfo.getString("name"),
-                    klassenInfo.getBoolean("active"),
-                    klassenInfo.getInt("id"),
-                    klassenInfo.getString("longName")));
-        }
-
-        return klassen;
     }
 
     /**
@@ -350,7 +406,7 @@ public class Session {
      * @since 1.0
      */
     public LatestImportTime getLatestImportTime() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Methods.GETHOLIDAYS.getMethod());
+        Response response = requestManager.POST(UntisUtils.Method.GETLATESTIMPORTTIME.getMethod());
 
         JSONObject jsonResponse = response.getResponse();
 
@@ -372,27 +428,27 @@ public class Session {
      * @since 1.0
      */
     public Rooms getRooms() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Methods.GETROOMS.getMethod());
+        return requestSender(UntisUtils.Method.GETROOMS, response -> {
+            JSONObject jsonResponse = response.getResponse();
 
-        JSONObject jsonResponse = response.getResponse();
+            if (response.isError()) {
+                throw new IOException(response.getErrorMessage());
+            }
+            JSONArray jsonArray = jsonResponse.getJSONArray("result");
 
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-        JSONArray jsonArray = jsonResponse.getJSONArray("result");
+            Rooms rooms = new Rooms();
 
-        Rooms rooms = new Rooms();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject roomInfo = jsonArray.getJSONObject(i);
+                rooms.add(new Rooms.RoomObject(roomInfo.getString("name"),
+                        roomInfo.getBoolean("active"),
+                        roomInfo.getInt("id"),
+                        roomInfo.getString("building"),
+                        roomInfo.getString("longName")));
+            }
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject roomInfo = jsonArray.getJSONObject(i);
-            rooms.add(new Rooms.RoomObject(roomInfo.getString("name"),
-                    roomInfo.getBoolean("active"),
-                    roomInfo.getInt("id"),
-                    roomInfo.getString("building"),
-                    roomInfo.getString("longName")));
-        }
-
-        return rooms;
+            return rooms;
+        });
     }
 
     /**
@@ -406,26 +462,26 @@ public class Session {
      * @since 1.0
      */
     public SchoolYears getSchoolYears() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Methods.GETSCHOOLYEARS.getMethod());
+        return requestSender(UntisUtils.Method.GETSCHOOLYEARS, response -> {
+            JSONObject jsonResponse = response.getResponse();
 
-        JSONObject jsonResponse = response.getResponse();
+            if (response.isError()) {
+                throw new IOException(response.getErrorMessage());
+            }
+            JSONArray jsonArray = jsonResponse.getJSONArray("result");
 
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-        JSONArray jsonArray = jsonResponse.getJSONArray("result");
+            SchoolYears schoolYears = new SchoolYears();
 
-        SchoolYears schoolYears = new SchoolYears();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject schoolYearInfo = jsonArray.getJSONObject(i);
+                schoolYears.add(new SchoolYears.SchoolYearObject(schoolYearInfo.getString("name"),
+                        LocalDate.parse(String.valueOf(schoolYearInfo.getInt("startDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
+                        LocalDate.parse(String.valueOf(schoolYearInfo.getInt("endDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
+                        schoolYearInfo.getInt("id")));
+            }
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject schoolYearInfo = jsonArray.getJSONObject(i);
-            schoolYears.add(new SchoolYears.SchoolYearObject(schoolYearInfo.getString("name"),
-                    LocalDate.parse(String.valueOf(schoolYearInfo.getInt("startDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                    LocalDate.parse(String.valueOf(schoolYearInfo.getInt("endDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                    schoolYearInfo.getInt("id")));
-        }
-
-        return schoolYears;
+            return schoolYears;
+        });
     }
 
     /**
@@ -439,7 +495,7 @@ public class Session {
      * @since 1.0
      */
     public Response getStatusData() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Methods.GETSTATUSDATA.getMethod());
+        Response response = requestManager.POST(UntisUtils.Method.GETSTATUSDATA.getMethod());
 
         if (response.isError()) {
             throw new IOException(response.getErrorMessage());
@@ -458,29 +514,29 @@ public class Session {
      * @since 1.0
      */
     public Subjects getSubjects() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Methods.GETSUBJECTS.getMethod());
+        return requestSender(UntisUtils.Method.GETSUBJECTS, response -> {
+            JSONObject jsonResponse = response.getResponse();
 
-        JSONObject jsonResponse = response.getResponse();
+            if (response.isError()) {
+                throw new IOException(response.getErrorMessage());
+            }
+            JSONArray jsonArray = jsonResponse.getJSONArray("result");
 
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-        JSONArray jsonArray = jsonResponse.getJSONArray("result");
+            Subjects subjects = new Subjects();
 
-        Subjects subjects = new Subjects();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject subjectInfo = jsonArray.getJSONObject(i);
+                subjects.add(new Subjects.SubjectObject(subjectInfo.getString("name"),
+                        subjectInfo.getBoolean("active"),
+                        subjectInfo.getInt("id"),
+                        subjectInfo.getString("alternateName"),
+                        subjectInfo.getString("backColor"),
+                        subjectInfo.getString("foreColor"),
+                        subjectInfo.getString("longName")));
+            }
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject subjectInfo = jsonArray.getJSONObject(i);
-            subjects.add(new Subjects.SubjectObject(subjectInfo.getString("name"),
-                    subjectInfo.getBoolean("active"),
-                    subjectInfo.getInt("id"),
-                    subjectInfo.getString("alternateName"),
-                    subjectInfo.getString("backColor"),
-                    subjectInfo.getString("foreColor"),
-                    subjectInfo.getString("longName")));
-        }
-
-        return subjects;
+            return subjects;
+        });
     }
 
     /**
@@ -494,28 +550,28 @@ public class Session {
      * @since 1.0
      */
     public Teachers getTeachers() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Methods.GETTEACHERS.getMethod());
+        return requestSender(UntisUtils.Method.GETTEACHERS, response -> {
+            JSONObject jsonResponse = response.getResponse();
 
-        JSONObject jsonResponse = response.getResponse();
+            if (response.isError()) {
+                throw new IOException(response.getErrorMessage());
+            }
+            JSONArray jsonArray = jsonResponse.getJSONArray("result");
 
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-        JSONArray jsonArray = jsonResponse.getJSONArray("result");
+            Teachers teachers = new Teachers();
 
-        Teachers teachers = new Teachers();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject teacherInfo = jsonArray.getJSONObject(i);
+                teachers.add(new Teachers.TeacherObject(teacherInfo.getString("name"),
+                        teacherInfo.getBoolean("active"),
+                        teacherInfo.getInt("id"),
+                        teacherInfo.getString("title"),
+                        teacherInfo.getString("foreName"),
+                        teacherInfo.getString("longName")));
+            }
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject teacherInfo = jsonArray.getJSONObject(i);
-            teachers.add(new Teachers.TeacherObject(teacherInfo.getString("name"),
-                    teacherInfo.getBoolean("active"),
-                    teacherInfo.getInt("id"),
-                    teacherInfo.getString("title"),
-                    teacherInfo.getString("foreName"),
-                    teacherInfo.getString("longName")));
-        }
-
-        return teachers;
+            return teachers;
+        });
     }
 
     /**
@@ -529,51 +585,48 @@ public class Session {
      * @since 1.0
      */
     public TimegridUnits getTimegridUnits() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Methods.GETTIMEGRIDUNTIS.getMethod());
+        return requestSender(UntisUtils.Method.GETTIMEGRIDUNTIS, response -> {
+            JSONObject jsonResponse = response.getResponse();
 
-        JSONObject jsonResponse = response.getResponse();
+            if (response.isError()) {
+                throw new IOException(response.getErrorMessage());
+            }
+            JSONArray jsonArray = jsonResponse.getJSONArray("result");
 
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-        JSONArray jsonArray = jsonResponse.getJSONArray("result");
+            TimegridUnits timegridUnits = new TimegridUnits();
 
-        TimegridUnits timegridUnits = new TimegridUnits();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject timegridUnitInfo = jsonArray.getJSONObject(i);
+                JSONArray timegridUnitInfoArray = timegridUnitInfo.getJSONArray("timeUnits");
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject timegridUnitInfo = jsonArray.getJSONObject(i);
-
-            TimeUnits timeUnits = new TimeUnits();
-
-            JSONArray arrayJsonArray = timegridUnitInfo.getJSONArray("timeUnitObjects");
-            for (int j = 0; j < arrayJsonArray.length(); j++) {
-                JSONObject timegridUnitInfoObject = arrayJsonArray.getJSONObject(j);
+                TimeUnits timeUnits = new TimeUnits();
 
                 LocalTime startTime;
                 LocalTime endTime;
 
-                try {
-                    startTime = LocalTime.parse(String.valueOf(timegridUnitInfoObject.getInt("startTime")), DateTimeFormatter.ofPattern("HHmm"));
-                } catch (DateTimeParseException e) {
-                    startTime = LocalTime.parse(String.valueOf(timegridUnitInfoObject.getInt("startTime")), DateTimeFormatter.ofPattern("Hmm"));
+                for (int j = 0; j < timegridUnitInfoArray.length(); j++) {
+                    JSONObject timegridUntisObject = timegridUnitInfoArray.getJSONObject(j);
+
+                    try {
+                        startTime = LocalTime.parse(String.valueOf(timegridUntisObject.getInt("startTime")), DateTimeFormatter.ofPattern("HHmm"));
+                    } catch (DateTimeParseException e) {
+                        startTime = LocalTime.parse(String.valueOf(timegridUntisObject.getInt("startTime")), DateTimeFormatter.ofPattern("Hmm"));
+                    }
+
+                    try {
+                        endTime = LocalTime.parse(String.valueOf(timegridUntisObject.getInt("endTime")), DateTimeFormatter.ofPattern("HHmm"));
+                    } catch (DateTimeParseException e) {
+                        endTime = LocalTime.parse(String.valueOf(timegridUntisObject.getInt("endTime")), DateTimeFormatter.ofPattern("Hmm"));
+                    }
+
+                    timeUnits.add(new TimeUnits.TimeUnitObject(timegridUntisObject.getString("name"), startTime, endTime));
                 }
 
-                try {
-                    endTime = LocalTime.parse(String.valueOf(timegridUnitInfoObject.getInt("endTime")), DateTimeFormatter.ofPattern("HHmm"));
-                } catch (DateTimeParseException e) {
-                    endTime = LocalTime.parse(String.valueOf(timegridUnitInfoObject.getInt("endTime")), DateTimeFormatter.ofPattern("Hmm"));
-                }
-
-                timeUnits.add(new TimeUnits.TimeUnitObject(timegridUnitInfoObject.getString("name"),
-                        startTime,
-                        endTime));
+                timegridUnits.add(new TimegridUnits.TimegridUnitObject(timegridUnitInfo.getInt("day"), timeUnits));
             }
 
-            timegridUnits.add(new TimegridUnits.TimegridUnitObject(timegridUnitInfo.getInt("day"),
-                    timeUnits));
-        }
-
-        return timegridUnits;
+            return timegridUnits;
+        });
     }
 
     /**
@@ -587,19 +640,19 @@ public class Session {
      * @since 1.0
      */
     public SchoolYears.SchoolYearObject getCurrentSchoolYear() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Methods.GETCURRENTSCHOOLYEAR.getMethod());
+        return requestSender(UntisUtils.Method.GETCURRENTSCHOOLYEAR, response -> {
+            JSONObject jsonResponse = response.getResponse();
 
-        JSONObject jsonResponse = response.getResponse();
+            if (response.isError()) {
+                throw new IOException(response.getErrorMessage());
+            }
+            JSONObject jsonObject = jsonResponse.getJSONObject("result");
 
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-        JSONObject jsonObject = jsonResponse.getJSONObject("result");
-
-        return new SchoolYears.SchoolYearObject(jsonObject.getString("name"),
-                LocalDate.parse(String.valueOf(jsonObject.getInt("startDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                LocalDate.parse(String.valueOf(jsonObject.getInt("endDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                jsonObject.getInt("id"));
+            return new SchoolYears.SchoolYearObject(jsonObject.getString("name"),
+                    LocalDate.parse(String.valueOf(jsonObject.getInt("startDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
+                    LocalDate.parse(String.valueOf(jsonObject.getInt("endDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
+                    jsonObject.getInt("id"));
+        });
     }
 
     /**
@@ -616,71 +669,95 @@ public class Session {
      *
      * @since 1.0
      */
-    public Timetable getTimetable(LocalDate start, LocalDate end, UntisUtils.ElementType elementType, int id) throws IOException {
+    public <E extends BaseResponseObjects.NAILResponseObject> Timetable getTimetable(LocalDate start, LocalDate end, UntisUtils.ElementType elementType, int id) throws IOException {
         HashMap<String, String> params = UntisUtils.localDateToParams(start, end);
 
         params.put("type", String.valueOf(elementType.getElementType()));
         params.put("id", String.valueOf(id));
 
-        Response response = requestManager.POST("getTimetable", params);
+        return requestSender(UntisUtils.Method.GETTIMETABLE, params, response -> {
+            JSONObject jsonResponse = response.getResponse();
 
-        JSONObject jsonResponse = response.getResponse();
+            if (response.isError()) {
+                throw new IOException(response.getErrorMessage());
+            }
+            JSONArray jsonArray = jsonResponse.getJSONArray("result");
 
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-        JSONArray jsonArray = jsonResponse.getJSONArray("result");
+            Timetable timetable = new Timetable();
 
-        Timetable timetable = new Timetable();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject timetableInfos = jsonArray.getJSONObject(i);
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject timetableInfos = jsonArray.getJSONObject(i);
+                Klassen klassen = new Klassen();
+                Teachers teachers = new Teachers();
+                Subjects subjects = new Subjects();
+                Rooms rooms = new Rooms();
 
-            String[] arrayKeys = {"kl", "te", "su", "ro"};
-            HashMap<Integer, HashSet<Integer>> arrayValues = new HashMap<>();
+                String[] arrayKeys = {"kl", "te", "su", "ro"};
 
-            for (int j = 0; j < arrayKeys.length; j++) {
-                JSONArray arrayJSONArray = timetableInfos.getJSONArray(arrayKeys[j]);
-                HashSet<Integer> values = new HashSet<>();
-                for (int k = 0; k < arrayJSONArray.length(); k++) {
-                    values.add(arrayJSONArray.getJSONObject(k).getInt("id"));
+                for (int j = 0; j < arrayKeys.length; j++) {
+                    String currentStringArray = arrayKeys[j];
+                    JSONArray arrayJSONArray = timetableInfos.getJSONArray(currentStringArray);
+                    BaseResponseLists.NAILResponseList<E> values = new BaseResponseLists.NAILResponseList<>();
+
+                    BaseResponseLists.NAILResponseList<E> nailResponseList;
+
+                    switch (currentStringArray) {
+                        case "kl":
+                            Klassen k = getKlassen();
+                            arrayJSONArray.forEach(o -> values.add((E) k.findById(((JSONObject) o).getInt("id"))));
+                            break;
+                        case "te":
+                            Teachers t = getTeachers();
+                            arrayJSONArray.forEach(o -> values.add((E) t.findById(((JSONObject) o).getInt("id"))));
+                            break;
+                        case "su":
+                            Subjects s = getSubjects();
+                            arrayJSONArray.forEach(o -> values.add((E) s.findById(((JSONObject) o).getInt("id"))));
+                            break;
+                        case "ro":
+                            Rooms r = getRooms();
+                            arrayJSONArray.forEach(o -> values.add((E) r.findById(((JSONObject) o).getInt("id"))));
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + currentStringArray);
+                    }
                 }
-                arrayValues.put(j, values);
+
+
+                LocalTime startTime;
+                LocalTime endTime;
+
+                try {
+                    startTime = LocalTime.parse(String.valueOf(timetableInfos.getInt("startTime")), DateTimeFormatter.ofPattern("HHmm"));
+                } catch (DateTimeParseException e) {
+                    startTime = LocalTime.parse(String.valueOf(timetableInfos.getInt("startTime")), DateTimeFormatter.ofPattern("Hmm"));
+                }
+
+                try {
+                    endTime = LocalTime.parse(String.valueOf(timetableInfos.getInt("endTime")), DateTimeFormatter.ofPattern("HHmm"));
+                } catch (DateTimeParseException e) {
+                    endTime = LocalTime.parse(String.valueOf(timetableInfos.getInt("endTime")), DateTimeFormatter.ofPattern("Hmm"));
+                }
+
+                UntisUtils.LessonCode code = UntisUtils.LessonCode.REGULAR;
+                if (timetableInfos.has("code")) {
+                    code = UntisUtils.LessonCode.valueOf(timetableInfos.getString("code").toUpperCase());
+                }
+
+                timetable.add(new Timetable.Lesson(LocalDate.parse(String.valueOf(timetableInfos.getInt("date")), DateTimeFormatter.ofPattern("yyyyMMdd")),
+                        startTime,
+                        endTime,
+                        klassen,
+                        teachers,
+                        rooms,
+                        subjects,
+                        code,
+                        timetableInfos.getString("activityType")));
             }
 
-
-            LocalTime startTime;
-            LocalTime endTime;
-
-            try {
-                startTime = LocalTime.parse(String.valueOf(timetableInfos.getInt("startTime")), DateTimeFormatter.ofPattern("HHmm"));
-            } catch (DateTimeParseException e) {
-                startTime = LocalTime.parse(String.valueOf(timetableInfos.getInt("startTime")), DateTimeFormatter.ofPattern("Hmm"));
-            }
-
-            try {
-                endTime = LocalTime.parse(String.valueOf(timetableInfos.getInt("endTime")), DateTimeFormatter.ofPattern("HHmm"));
-            } catch (DateTimeParseException e) {
-                endTime = LocalTime.parse(String.valueOf(timetableInfos.getInt("endTime")), DateTimeFormatter.ofPattern("Hmm"));
-            }
-
-            UntisUtils.LessonCode code = null;
-            if (timetableInfos.has("code")) {
-                code = UntisUtils.LessonCode.valueOf(timetableInfos.getString("code").toUpperCase());
-            }
-
-            timetable.add(new Timetable.Lesson(LocalDate.parse(String.valueOf(timetableInfos.getInt("date")), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                    startTime,
-                    endTime,
-                    arrayValues.get(0),
-                    arrayValues.get(1),
-                    arrayValues.get(3),
-                    arrayValues.get(2),
-                    code,
-                    timetableInfos.getString("activityType")));
-        }
-
-        return timetable;
+            return timetable;
+        });
     }
 
     /**
@@ -751,7 +828,7 @@ public class Session {
      * @since 1.0
      */
     public Response getTimetableWithAbsence(LocalDate start, LocalDate end) throws IOException {
-        Response response = requestManager.POST(UntisUtils.Methods.GETTIMETABLEWITHABSENCE.getMethod(), new HashMap<String, Object>() {{
+        Response response = requestManager.POST(UntisUtils.Method.GETTIMETABLEWITHABSENCE.getMethod(), new HashMap<String, Object>() {{
             put("options", UntisUtils.localDateToParams(start, end));
         }});
 
@@ -801,7 +878,7 @@ public class Session {
      * @since 1.0
      */
     public void logout() throws IOException {
-        requestManager.POST(UntisUtils.Methods.LOGOUT.getMethod());
+        requestManager.POST(UntisUtils.Method.LOGOUT.getMethod());
     }
 
     /**
@@ -824,7 +901,7 @@ public class Session {
         params.put("password", infos.getPassword());
         params.put("client", "");
 
-        if (requestManager.POST(UntisUtils.Methods.LOGIN.getMethod(), params).isError()) {
+        if (requestManager.POST(UntisUtils.Method.LOGIN.getMethod(), params).isError()) {
             throw new LoginException("Failed to login");
         } else {
             this.requestManager = requestManager;
@@ -837,10 +914,66 @@ public class Session {
      * <p>Send an login request to the server and returns {@link Session} if the login was successful.
      * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
      *
-     * @see Session#login(String, String, String, String, String)
+     * @see Session#login(String, String, String, String, String, boolean)
      */
     public static Session login(String username, String password, String server, String schoolName) throws IOException {
-        return login(username, password, server, schoolName, "");
+        return login(username, password, server, schoolName, "", true);
+    }
+
+    /**
+     * Logs in to the server.
+     *
+     * <p>Send an login request to the server and returns {@link Session} if the login was successful.
+     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
+     *
+     * @see Session#login(String, String, String, String, String, boolean)
+     */
+    public static Session login(String username, String password, String server, String schoolName, boolean useCache) throws IOException {
+        return login(username, password, server, schoolName, "", useCache);
+    }
+
+    /**
+     * Returns the used {@link CacheManager}
+     *
+     * @return the used {@link CacheManager}
+     *
+     * @since 1.1
+     */
+    public CacheManager getCacheManager() {
+        return cacheManager;
+    }
+
+    /**
+     * Gets if every request response should be saved in cache
+     *
+     * @return gets if every request response should be saved in cache
+     *
+     * @since 1.1
+     */
+    public boolean isCacheUsed() {
+        return useCache;
+    }
+
+    /**
+     * Replaces the current session cache manager with a new one
+     *
+     * @param cacheManager the new cache manager
+     *
+     * @since 1.1
+     */
+    public void setCacheManager(CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
+    }
+
+    /**
+     * Sets if every request response should be saved in cache what returns in better performance
+     *
+     * @param useCache sets if every request response should be saved in cache
+     *
+     * @since 1.1
+     */
+    public void useCache(boolean useCache) {
+        this.useCache = useCache;
     }
 
     /**
@@ -854,12 +987,13 @@ public class Session {
      * @param username the username used for the API
      * @param password the password used for the API
      * @param userAgent the user agent you want to send with
+     * @param useCache sets if every request response should be saved in cache
      * @return a {@link Session} session
      * @throws IOException if an IO Exception occurs
      *
      * @since 1.0
      */
-    public static Session login(String username, String password, String server, String schoolName, String userAgent) throws IOException {
+    public static Session login(String username, String password, String server, String schoolName, String userAgent, boolean useCache) throws IOException {
         Infos infos = new Infos(username, password, server, schoolName, userAgent);
 
         RequestManager requestManager = new RequestManager(infos);
@@ -869,10 +1003,10 @@ public class Session {
         params.put("password", infos.getPassword());
         params.put("client", userAgent);
 
-        if (requestManager.POST(UntisUtils.Methods.LOGIN.getMethod(), params).isError()) {
+        if (requestManager.POST(UntisUtils.Method.LOGIN.getMethod(), params).isError()) {
             throw new LoginException("Failed to login");
         } else {
-            return new Session(infos, requestManager);
+            return new Session(infos, requestManager, useCache);
         }
     }
 

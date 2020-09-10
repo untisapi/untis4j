@@ -6,8 +6,15 @@ import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.HashMap;
 
+/**
+ * Class to manage {@link HolidaysObject} objects
+ *
+ * @version 1.1
+ * @since 1.0
+ */
 public class Holidays extends NILResponseList<Holidays.HolidaysObject> {
 
     /**
@@ -63,6 +70,50 @@ public class Holidays extends NILResponseList<Holidays.HolidaysObject> {
 
         this.stream().filter(schoolYearObject -> schoolYearObject.getEndDate().format(DateTimeFormatter.ofPattern("yyyyMMdd")).contains(endDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")))).forEach(holidays::add);
 
+        return holidays;
+    }
+
+    /**
+     * Sorts the holidays by all start dates
+     *
+     * @since 1.1
+     */
+    public void sortByStartDate() {
+        this.sort(Comparator.comparing(HolidaysObject::getStartDate));
+    }
+
+    /**
+     * Sorts the holidays by all end dates
+     *
+     * @since 1.1
+     */
+    public void sortByEndDate() {
+        this.sort(Comparator.comparing(HolidaysObject::getEndDate));
+    }
+
+    /**
+     * Sorts the given holidays by all start dates and returns the sorted holidays
+     *
+     * @param holidays holidays that should be sorted
+     * @return the sorted holidays
+     *
+     * @since 1.1
+     */
+    public static Holidays sortByStartDate(Holidays holidays) {
+        holidays.sortByStartDate();
+        return holidays;
+    }
+
+    /**
+     * Sorts the given holidays by all end dates and returns the sorted holidays
+     *
+     * @param holidays holidays that should be sorted
+     * @return the sorted holidays
+     *
+     * @since 1.1
+     */
+    public static Holidays sortByEndDate(Holidays holidays) {
+        holidays.sortByEndDate();
         return holidays;
     }
 

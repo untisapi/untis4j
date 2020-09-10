@@ -5,12 +5,13 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.Respo
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.ResponseObject;
 import org.json.JSONObject;
 
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
  * Class to manage {@link TimegridUnitObject} objects
  *
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 public class TimegridUnits extends ResponseList<TimegridUnits.TimegridUnitObject> {
@@ -72,6 +73,50 @@ public class TimegridUnits extends ResponseList<TimegridUnits.TimegridUnitObject
             }
         });
 
+        return timegridUnits;
+    }
+
+    /**
+     * Sorts the timegrid units by all days
+     *
+     * @since 1.1
+     */
+    public void sortByDays() {
+        this.sort(Comparator.comparing(TimegridUnitObject::getDay));
+    }
+
+    /**
+     * Sorts the timegrid units by all time units
+     *
+     * @since 1.1
+     */
+    public void sortByTimeUnits() {
+        this.sortByDays();
+    }
+
+    /**
+     * Sorts the given timegrid units by all days and returns the sorted timegrid units
+     *
+     * @param timegridUnits timegrid units that should be sorted
+     * @return the sorted timegrid units
+     *
+     * @since 1.1
+     */
+    public static TimegridUnits sortByDays(TimegridUnits timegridUnits) {
+        timegridUnits.sortByDays();
+        return timegridUnits;
+    }
+
+    /**
+     * Sorts the given timegrid units by all time units and returns the sorted timegrid units
+     *
+     * @param timegridUnits timegrid units that should be sorted
+     * @return the sorted timegrid units
+     *
+     * @since 1.1
+     */
+    public static TimegridUnits sortByTimeUnits(TimegridUnits timegridUnits) {
+        timegridUnits.sortByTimeUnits();
         return timegridUnits;
     }
 

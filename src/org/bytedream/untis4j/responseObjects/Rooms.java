@@ -4,12 +4,13 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.NAILR
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NAILResponseObject;
 import org.json.JSONObject;
 
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
  * Class to manage {@link RoomObject} objects
  *
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 public class Rooms extends NAILResponseList<Rooms.RoomObject> {
@@ -39,6 +40,28 @@ public class Rooms extends NAILResponseList<Rooms.RoomObject> {
 
         this.stream().filter(roomObject -> roomObject.getBuilding().equals(building)).forEach(rooms::add);
 
+        return rooms;
+    }
+
+    /**
+     * Sorts the list by all buildings
+     *
+     * @since 1.1
+     */
+    public void sortByBuilding() {
+        this.sort((o1, o2) -> o1.getBuilding().compareToIgnoreCase(o2.getBuilding()));
+    }
+
+    /**
+     * Sorts the given rooms by all end dates and returns the sorted rooms
+     *
+     * @param rooms rooms that should be sorted
+     * @return the sorted rooms
+     *
+     * @since 1.1
+     */
+    public static Rooms sortByBuilding(Rooms rooms) {
+        rooms.sortByBuilding();
         return rooms;
     }
 

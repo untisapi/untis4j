@@ -1,17 +1,19 @@
 package org.bytedream.untis4j.responseObjects;
 
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.ResponseList;
+import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.ResponseObject;
 import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
  * Class to manage {@link SchoolYearObject} objects
  *
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
@@ -125,6 +127,89 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
 
         this.stream().filter(schoolYearObject -> String.valueOf(schoolYearObject.getId()).contains(String.valueOf(id))).forEach(schoolYears::add);
 
+        return schoolYears;
+    }
+
+    public void sortByName() {
+        this.sort((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
+    }
+
+    /**
+     * Sorts the school years by all start dates
+     *
+     * @since 1.1
+     */
+    public void sortByStartDate() {
+        this.sort(Comparator.comparing(SchoolYearObject::getStartDate));
+    }
+
+    /**
+     * Sorts the school years by all end dates
+     *
+     * @since 1.1
+     */
+    public void sortByEndDate() {
+        this.sort(Comparator.comparing(SchoolYearObject::getEndDate));
+    }
+
+    /**
+     * Sorts the list by ids
+     *
+     * @since 1.1
+     */
+    public void sortById() {
+        this.sort(Comparator.comparingInt(SchoolYearObject::getId));
+    }
+
+    /**
+     * Sorts the given school years by all names and returns the sorted school years
+     *
+     * @param schoolYears school years that should be sorted
+     * @return the sorted school years
+     *
+     * @since 1.1
+     */
+    public static SchoolYears sortByName(SchoolYears schoolYears) {
+        schoolYears.sortByName();
+        return schoolYears;
+    }
+
+    /**
+     * Sorts the given school years by all start dates and returns the sorted school years
+     *
+     * @param schoolYears school years that should be sorted
+     * @return the sorted school years
+     *
+     * @since 1.1
+     */
+    public static SchoolYears sortByStartDate(SchoolYears schoolYears) {
+        schoolYears.sortByStartDate();
+        return schoolYears;
+    }
+
+    /**
+     * Sorts the given school years by all end dates and returns the sorted school years
+     *
+     * @param schoolYears school years that should be sorted
+     * @return the sorted school years
+     *
+     * @since 1.1
+     */
+    public static SchoolYears sortByEndDate(SchoolYears schoolYears) {
+        schoolYears.sortByEndDate();
+        return schoolYears;
+    }
+
+    /**
+     * Sorts the given school years by all ids and returns the sorted school years
+     *
+     * @param schoolYears school years that should be sorted
+     * @return the sorted school years
+     *
+     * @since 1.1
+     */
+    public static SchoolYears sortById(SchoolYears schoolYears) {
+        schoolYears.sortById();
         return schoolYears;
     }
 

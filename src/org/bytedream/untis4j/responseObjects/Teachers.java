@@ -4,12 +4,13 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.NAILR
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NAILResponseObject;
 import org.json.JSONObject;
 
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
  * Class to manage {@link TeacherObject} objects
  *
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
@@ -95,6 +96,72 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
 
         this.stream().filter(subject -> subject.getForename().contains(fullName)).forEach(teachers::add);
 
+        return teachers;
+    }
+
+    /**
+     * Sorts the teachers by all titles
+     *
+     * @since 1.1
+     */
+    public void sortByTitle() {
+        this.sort((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
+    }
+
+    /**
+     * Sorts the teachers by all fore names
+     *
+     * @since 1.1
+     */
+    public void sortByForeName() {
+        this.sort((o1, o2) -> o1.getForename().compareToIgnoreCase(o2.getForename()));
+    }
+
+    /**
+     * Sorts the teachers by all full names
+     *
+     * @since 1.1
+     */
+    public void sortByFullName() {
+        this.sort((o1, o2) -> o1.getFullName().compareToIgnoreCase(o2.getFullName()));
+    }
+
+    /**
+     * Sorts the given teachers by all titles and returns the sorted teachers
+     *
+     * @param teachers teachers that should be sorted
+     * @return the sorted teachers
+     *
+     * @since 1.1
+     */
+    public static Teachers sortByTitle(Teachers teachers) {
+        teachers.sortByTitle();
+        return teachers;
+    }
+
+    /**
+     * Sorts the given teachers by all fore names and returns the sorted teachers
+     *
+     * @param teachers teachers that should be sorted
+     * @return the sorted teachers
+     *
+     * @since 1.1
+     */
+    public static Teachers sortByForeName(Teachers teachers) {
+        teachers.sortByForeName();
+        return teachers;
+    }
+
+    /**
+     * Sorts the given teachers by all full names and returns the sorted teachers
+     *
+     * @param teachers teachers that should be sorted
+     * @return the sorted teachers
+     *
+     * @since 1.1
+     */
+    public static Teachers sortByFullName(Teachers teachers) {
+        teachers.sortByFullName();
         return teachers;
     }
 
