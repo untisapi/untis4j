@@ -65,7 +65,7 @@ public class RequestManager {
      */
     public Response POST(String method, Map<String, ?> params) throws IOException {
 
-        if (loggedIn || method.equals(UntisUtils.Methods.LOGIN.getMethod())) {
+        if (loggedIn || method.equals(UntisUtils.Method.LOGIN.getMethod())) {
             boolean error;
             URL url = new URL(this.url);
             String requestBody = UntisUtils.processParams(method, params);
@@ -76,7 +76,7 @@ public class RequestManager {
             connection.setRequestProperty("User-Agent", infos.getUserAgent());
             connection.setRequestProperty("Content-Type", "application/json");
 
-            if (sessionId != null && !method.equals(UntisUtils.Methods.LOGIN.getMethod())) {
+            if (sessionId != null && !method.equals(UntisUtils.Method.LOGIN.getMethod())) {
                 connection.setRequestProperty("Cookie", "JSESSIONID=" + sessionId + "; schoolname=" + infos.getSchoolName());
             }
 
@@ -112,10 +112,10 @@ public class RequestManager {
                 throw new ConnectException("An unexpected exception occurred: " + stringBuilder.toString());
             }
 
-            if (method.equals(UntisUtils.Methods.LOGIN.getMethod()) && !loggedIn && !error) {
+            if (method.equals(UntisUtils.Method.LOGIN.getMethod()) && !loggedIn && !error) {
                 sessionId = jsonObject.getJSONObject("result").getString("sessionId");
                 loggedIn = true;
-            } else if (method.equals(UntisUtils.Methods.LOGOUT.getMethod()) && loggedIn && !error) {
+            } else if (method.equals(UntisUtils.Method.LOGOUT.getMethod()) && loggedIn && !error) {
                 loggedIn = false;
             }
 
