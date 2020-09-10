@@ -1,5 +1,6 @@
 package org.bytedream.untis4j;
 
+import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
 import org.json.JSONObject;
 
 /**
@@ -8,7 +9,7 @@ import org.json.JSONObject;
  * @version 1.0
  * @since 1.0
  */
-public class Response {
+public class Response implements BaseResponse {
 
     private final int code;
     private final JSONObject response;
