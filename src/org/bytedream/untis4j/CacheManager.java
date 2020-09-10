@@ -114,17 +114,6 @@ public class CacheManager {
     /**
      * Updates cache content with a lambda expression
      *
-     * @see CacheManager#update(UntisUtils.Method, RequestManager, Map, ResponseConsumer)
-     *
-     * @since 1.1
-     */
-    public <T extends BaseResponse> void update(UntisUtils.Method method, RequestManager requestManager, ResponseConsumer<? extends T> action) throws IOException {
-        cachedInformation.replace(method, action.getResponse(requestManager.POST(method.getMethod())));
-    }
-
-    /**
-     * Updates cache content with a lambda expression
-     *
      * @param requestManager request manager through which the POST requests are sent
      * @param method the POST method
      * @param params params you want to send with the request
