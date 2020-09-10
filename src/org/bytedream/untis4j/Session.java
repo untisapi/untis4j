@@ -13,8 +13,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.math.RoundingMode;
 import java.time.DateTimeException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -83,10 +83,13 @@ public class Session {
      */
     private <T extends BaseResponse> T requestSender(UntisUtils.Method method, Map<String, ?> params, ResponseConsumer<? extends T> action) throws IOException {
         if (useCache) {
-            int newLatestImportTime = getLatestImportTime().getLatestImportTime();
-            if (lastChange < newLatestImportTime) {
-                lastChange = newLatestImportTime;
-                cacheManager.update(method, requestManager, params, action);
+            try {
+                int newLatestImportTime = this.getLatestImportTime().getLatestImportTime();
+                if (lastChange < newLatestImportTime) {
+                    lastChange = newLatestImportTime;
+                    cacheManager.update(method, requestManager, params, action);
+                }
+            } catch (IOException ignore){
             }
             return cacheManager.getOrRequest(method, requestManager, params, action);
         } else {
@@ -105,13 +108,7 @@ public class Session {
      * @since 1.0
      */
     public Response getClassRegCategories() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Method.GETCLASSREGCATEGORIES.getMethod());
-
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-
-        return response;
+        return requestSender(UntisUtils.Method.GETCLASSREGCATEGORIES, response -> response);
     }
 
     /**
@@ -125,13 +122,7 @@ public class Session {
      * @since 1.0
      */
     public Response getClassRegCategoryGroups() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Method.GETCLASSREGCATEGORYGROUPS.getMethod());
-
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-
-        return response;
+        return requestSender(UntisUtils.Method.GETCLASSREGCATEGORYGROUPS, response -> response);
     }
 
     /**
@@ -163,13 +154,7 @@ public class Session {
             params.put("id", id);
         }
 
-        Response response = requestManager.POST(UntisUtils.Method.GETCLASSREGEVENTS.getMethod(), params);
-
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-
-        return response;
+        return requestSender(UntisUtils.Method.GETCLASSREGEVENTS, params, response -> response);
     }
 
     /**
@@ -276,13 +261,7 @@ public class Session {
         Map<String, String> params = UntisUtils.localDateToParams(start, end);
         params.put("examTypeId", String.valueOf(id));
 
-        Response response = requestManager.POST(UntisUtils.Method.GETEXAMS.getMethod(), params);
-
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-
-        return response;
+        return requestSender(UntisUtils.Method.GETEXAMS, params, response -> response);
     }
 
     /**
@@ -296,13 +275,7 @@ public class Session {
      * @since 1.0
      */
     public Response getExamTypes() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Method.GETEXAMTYPES.getMethod());
-
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-
-        return response;
+        return requestSender(UntisUtils.Method.GETEXAMTYPES, response -> response);
     }
 
     /**
@@ -495,12 +468,7 @@ public class Session {
      * @since 1.0
      */
     public Response getStatusData() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Method.GETSTATUSDATA.getMethod());
-
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
-        return response;
+        return requestSender(UntisUtils.Method.GETSTATUSDATA, response -> response);
     }
 
     /**
@@ -700,8 +668,6 @@ public class Session {
                     JSONArray arrayJSONArray = timetableInfos.getJSONArray(currentStringArray);
                     BaseResponseLists.NAILResponseList<E> values = new BaseResponseLists.NAILResponseList<>();
 
-                    BaseResponseLists.NAILResponseList<E> nailResponseList;
-
                     switch (currentStringArray) {
                         case "kl":
                             Klassen k = getKlassen();
@@ -828,15 +794,86 @@ public class Session {
      * @since 1.0
      */
     public Response getTimetableWithAbsence(LocalDate start, LocalDate end) throws IOException {
-        Response response = requestManager.POST(UntisUtils.Method.GETTIMETABLEWITHABSENCE.getMethod(), new HashMap<String, Object>() {{
+        return requestSender(UntisUtils.Method.GETTIMETABLEWITHABSENCE,  new HashMap<String, Object>() {{
             put("options", UntisUtils.localDateToParams(start, end));
-        }});
+        }}, response -> response);
+    }
 
-        if (response.isError()) {
-            throw new IOException(response.getErrorMessage());
-        }
+    /**
+     * Requests the timetable for a whole week
+     *
+     * @param anyDateOfWeek any day of the week you want to get the timetable from
+     * @param elementType type on which the timetable should be oriented
+     * @param id id of the {@code elementType}
+     * @return the weekly timetable
+     * @throws IOException if an IO Exception occurs
+     *
+     * @since 1.1
+     */
+    public WeeklyTimetable getWeeklyTimetable(LocalDate anyDateOfWeek, UntisUtils.ElementType elementType, int id) throws IOException {
+        LocalDate monday = anyDateOfWeek.minusDays(anyDateOfWeek.getDayOfWeek().getValue() - 1);
+        LocalDate sunday = monday.plusDays(DayOfWeek.SUNDAY.getValue());
 
-        return response;
+        Timetable[] timetables = {new Timetable(), new Timetable(), new Timetable(), new Timetable(), new Timetable(), new Timetable(), new Timetable()};
+
+        this.getTimetable(monday, sunday, elementType, id).forEach(lesson -> timetables[lesson.getDate().getDayOfWeek().getValue() - 1].add(lesson));
+
+        return new WeeklyTimetable(monday, timetables[0], timetables[1], timetables[2], timetables[3], timetables[4], timetables[5], timetables[6]);
+    }
+
+    /**
+     * Requests the timetable for a whole week and a klasse id
+     *
+     * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
+     *
+     * @since 1.1
+     */
+    public WeeklyTimetable getWeeklyTimetableFromKlasseId(LocalDate anyDateOfWeek, int klasseId) throws IOException {
+        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.KLASSE, klasseId);
+    }
+
+    /**
+     * Requests the timetable for a whole week and a teacher id
+     *
+     * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
+     *
+     * @since 1.1
+     */
+    public WeeklyTimetable getWeeklyTimetableFromTeacherId(LocalDate anyDateOfWeek, int teacherId) throws IOException {
+        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.KLASSE, teacherId);
+    }
+
+    /**
+     * Requests the timetable for a whole week and a subject id
+     *
+     * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
+     *
+     * @since 1.1
+     */
+    public WeeklyTimetable getWeeklyTimetableFromSubjectId(LocalDate anyDateOfWeek, int subjectId) throws IOException {
+        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.KLASSE, subjectId);
+    }
+
+    /**
+     * Requests the timetable for a whole week and a room id
+     *
+     * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
+     *
+     * @since 1.1
+     */
+    public WeeklyTimetable getWeeklyTimetableFromRoomId(LocalDate anyDateOfWeek, int roomId) throws IOException {
+        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.KLASSE, roomId);
+    }
+
+    /**
+     * Requests the timetable for a whole week and a student id
+     *
+     * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
+     *
+     * @since 1.1
+     */
+    public WeeklyTimetable getWeeklyTimetableFromStudentId(LocalDate anyDateOfWeek, int studentId) throws IOException {
+        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.KLASSE, studentId);
     }
 
     /**
@@ -909,30 +946,6 @@ public class Session {
     }
 
     /**
-     * Logs in to the server.
-     *
-     * <p>Send an login request to the server and returns {@link Session} if the login was successful.
-     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
-     *
-     * @see Session#login(String, String, String, String, String, boolean)
-     */
-    public static Session login(String username, String password, String server, String schoolName) throws IOException {
-        return login(username, password, server, schoolName, "", true);
-    }
-
-    /**
-     * Logs in to the server.
-     *
-     * <p>Send an login request to the server and returns {@link Session} if the login was successful.
-     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
-     *
-     * @see Session#login(String, String, String, String, String, boolean)
-     */
-    public static Session login(String username, String password, String server, String schoolName, boolean useCache) throws IOException {
-        return login(username, password, server, schoolName, "", useCache);
-    }
-
-    /**
      * Returns the used {@link CacheManager}
      *
      * @return the used {@link CacheManager}
@@ -974,6 +987,30 @@ public class Session {
      */
     public void useCache(boolean useCache) {
         this.useCache = useCache;
+    }
+
+    /**
+     * Logs in to the server.
+     *
+     * <p>Send an login request to the server and returns {@link Session} if the login was successful.
+     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
+     *
+     * @see Session#login(String, String, String, String, String, boolean)
+     */
+    public static Session login(String username, String password, String server, String schoolName) throws IOException {
+        return login(username, password, server, schoolName, "", false);
+    }
+
+    /**
+     * Logs in to the server.
+     *
+     * <p>Send an login request to the server and returns {@link Session} if the login was successful.
+     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
+     *
+     * @see Session#login(String, String, String, String, String, boolean)
+     */
+    public static Session login(String username, String password, String server, String schoolName, boolean useCache) throws IOException {
+        return login(username, password, server, schoolName, "", useCache);
     }
 
     /**
