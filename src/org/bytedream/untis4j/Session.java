@@ -694,8 +694,7 @@ public class Session {
 
                 String[] arrayKeys = {"kl", "te", "su", "ro"};
 
-                for (int j = 0; j < arrayKeys.length; j++) {
-                    String currentStringArray = arrayKeys[j];
+                for (String currentStringArray : arrayKeys) {
                     JSONArray arrayJSONArray = timetableInfos.getJSONArray(currentStringArray);
                     BaseResponseLists.NAILResponseList<E> values = new BaseResponseLists.NAILResponseList<>();
 
