@@ -1,5 +1,7 @@
 **_untis4j_** - a java API for webuntis
 
+[Click here to get the latest version of the API (dependencies included)](https://github.com/ByteDream/untis4j/releases/download/v1.0/untis4j-1.0.jar)
+
 # Introduction
 
 **untis4j** is a java API for the webuntis timetable / schedule software and is inspired from the [python webuntis api](https://github.com/python-webuntis/python-webuntis)
@@ -23,8 +25,7 @@ To get an overview about all classes and methods, read the [docs](https://bytedr
 ## Simple timetable
 
 ```java
-public class Main {
-
+import org.bytedream.untis4j.responseObjects.Klassen;import org.bytedream.untis4j.responseObjects.Timetable;public class Main {
     public static void main(String[] args) {
         try { 
             Session session = Session.login("your webuntis username", "your webuntis password", "webuntis.grupet.at", "demo_inf");  // create a new webuntis session
@@ -102,6 +103,21 @@ public class Main {
     }
 }
 ```
+
+#Information
+
+## Web Scraping
+
+The API use [web scraping](https://en.wikipedia.org/wiki/Web_scraping) to receive the necessary data.
+Theoretically, web scraping is illegal, but I've never heard of anybody getting any webuntis disadvantages because of it (ban or something like that).
+You can use [caching](#Caching) to minimize your server requests and the risc of being discovered by an admin
+
+## Caching
+
+Caching is available since version `1.1` and allows to use saved request responses.
+However, caching is slower than sending a new request to the server.
+The only advantages of caching at the moment is that the server does not have to send as much data and in case of internet loss data can still be accessed.
+Caching is deactivated by default. You can use `Session.useCache(...)` to enable / disable it
 
 # Licence
 
