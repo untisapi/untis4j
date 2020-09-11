@@ -5,12 +5,13 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NIL
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.ResponseObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 
 /**
  * Contains all base response list classes
  *
- * @version 1.1
+ * @version 1.2
  * @since 1.0
  */
 public class BaseResponseLists {
@@ -18,11 +19,36 @@ public class BaseResponseLists {
     /**
      * Base class for all response lists. Has no real use
      *
-     * @version 1.0
+     * @version 1.2
      * @since 1.0
      */
     public static class ResponseList<E extends ResponseObject> extends ArrayList<E> implements BaseResponse {
 
+        /**
+         * Checks if a collection of given responses are in this list
+         *
+         * @param responseObjects response objects to check
+         * @return if this list contains all given response objects
+         *
+         * @since 1.2
+         */
+        public boolean containsAllResponse(Collection<ResponseObject> responseObjects) {
+            for (ResponseObject responseObject: responseObjects) {
+                if (!this.containsResponse(responseObject)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /**
+         * Checks if a given response is in this list
+         *
+         * @param responseObject response object to check
+         * @return if this list contains the given response
+         *
+         * @since 1.1
+         */
         public boolean containsResponse(ResponseObject responseObject) {
             for (ResponseObject containResponseObject : this) {
                 if (containResponseObject.equalsResponse(responseObject)) {
