@@ -168,45 +168,45 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     /**
      * Finds a lesson by its klassen ids
      *
-     * @param klassenIds klassen ids of the lesson you want to find
+     * @param klassen klassen of the lesson you want to find
      * @return the lesson
      * @since 1.0
      */
-    public Lesson findByKlassenIds(Set<Integer> klassenIds) {
-        return this.stream().filter(lesson -> lesson.getKlassen().containsAll(klassenIds)).findAny().orElse(null);
+    public Lesson findByKlassen(Klassen klassen) {
+        return this.stream().filter(lesson -> lesson.getKlassen().containsAll(klassen)).findAny().orElse(null);
     }
 
     /**
      * Finds a lesson by its teacher ids
      *
-     * @param teacherIds teacher ids of the lesson you want to find
+     * @param teachers teachers of the lesson you want to find
      * @return the lesson
      * @since 1.0
      */
-    public Lesson findByTeacherIds(Set<Integer> teacherIds) {
-        return this.stream().filter(lesson -> lesson.getTeachers().containsAll(teacherIds)).findAny().orElse(null);
+    public Lesson findByTeachers(Teachers teachers) {
+        return this.stream().filter(lesson -> lesson.getTeachers().containsAll(teachers)).findAny().orElse(null);
     }
 
     /**
      * Finds a lesson by its room ids
      *
-     * @param roomIds room ids of the lesson you want to find
+     * @param rooms rooms of the lesson you want to find
      * @return the lesson
      * @since 1.0
      */
-    public Lesson findByRoomIds(Set<Integer> roomIds) {
-        return this.stream().filter(lesson -> lesson.getRooms().containsAll(roomIds)).findAny().orElse(null);
+    public Lesson findByRooms(Rooms rooms) {
+        return this.stream().filter(lesson -> lesson.getRooms().containsAll(rooms)).findAny().orElse(null);
     }
 
     /**
      * Finds a lesson by its subject ids
      *
-     * @param subjectIds subject ids of the lesson you want to find
+     * @param subjects subjects of the lesson you want to find
      * @return the lesson
      * @since 1.0
      */
-    public Lesson findBySubjectIds(Set<Integer> subjectIds) {
-        return this.stream().filter(lesson -> lesson.getSubjects().containsAll(subjectIds)).findAny().orElse(null);
+    public Lesson findBySubjects(Subjects subjects) {
+        return this.stream().filter(lesson -> lesson.getSubjects().containsAll(subjects)).findAny().orElse(null);
     }
 
     /**
@@ -310,7 +310,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      * @return {@link Timetable} with lessons that have the {@code teacherIds} or a part of it in their teacher ids
      * @since 1.0
      */
-    public Timetable searchByTeacherIds(Teachers teachers) {
+    public Timetable searchByTeachers(Teachers teachers) {
         Timetable timetable = new Timetable();
 
         this.forEach(lesson -> {
@@ -329,7 +329,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      * @return {@link Timetable} with lessons that have the {@code roomIds} or a part of it in their room ids
      * @since 1.0
      */
-    public Timetable searchByRoomIds(Rooms rooms) {
+    public Timetable searchByRooms(Rooms rooms) {
         Timetable timetable = new Timetable();
 
         this.forEach(lesson -> {
@@ -348,7 +348,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      * @return {@link Timetable} with lessons that have the {@code subjectIds} or a part of it in their subject ids
      * @since 1.0
      */
-    public Timetable searchBySubjectIds(Subjects subjects) {
+    public Timetable searchBySubjects(Subjects subjects) {
         Timetable timetable = new Timetable();
 
         this.forEach(lesson -> {
@@ -423,7 +423,22 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      * @since 1.1
      */
     public void sortByKlassen() {
-        return;
+        this.sort((o1, o2) -> {
+            Klassen o1Klassen = o1.getKlassen();
+            Klassen o2Klassen = o2.getKlassen();
+
+            int o1Index = 0;
+            int o2Index = 0;
+
+            if (o1Klassen.size() != 0) {
+                o1Index = o1Klassen.get(0).getId();
+            }
+            if (o2Klassen.size() != 0) {
+                o2Index = o2Klassen.get(0).getId();
+            }
+
+            return o1Index - o2Index;
+        });
     }
 
     /**
@@ -432,7 +447,22 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      * @since 1.1
      */
     public void sortByTeachers() {
-        return;
+        this.sort((o1, o2) -> {
+            Teachers o1Teachers = o1.getTeachers();
+            Teachers o2Teachers = o2.getTeachers();
+
+            int o1Index = 0;
+            int o2Index = 0;
+
+            if (o1Teachers.size() != 0) {
+                o1Index = o1Teachers.get(0).getId();
+            }
+            if (o2Teachers.size() != 0) {
+                o2Index = o2Teachers.get(0).getId();
+            }
+
+            return o1Index - o2Index;
+        });
     }
 
     /**
@@ -441,7 +471,22 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      * @since 1.1
      */
     public void sortByRooms() {
-        return;
+        this.sort((o1, o2) -> {
+            Teachers o1Teachers = o1.getTeachers();
+            Teachers o2Teachers = o2.getTeachers();
+
+            int o1Index = 0;
+            int o2Index = 0;
+
+            if (o1Teachers.size() != 0) {
+                o1Index = o1Teachers.get(0).getId();
+            }
+            if (o2Teachers.size() != 0) {
+                o2Index = o2Teachers.get(0).getId();
+            }
+
+            return o1Index - o2Index;
+        });
     }
 
     /**
@@ -450,7 +495,22 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      * @since 1.1
      */
     public void sortBySubjects() {
-        return;
+        this.sort((o1, o2) -> {
+            Subjects o1Subjects = o1.getSubjects();
+            Subjects o2Subjects = o2.getSubjects();
+
+            int o1Index = 0;
+            int o2Index = 0;
+
+            if (o1Subjects.size() != 0) {
+                o1Index = o1Subjects.get(0).getId();
+            }
+            if (o2Subjects.size() != 0) {
+                o2Index = o2Subjects.get(0).getId();
+            }
+
+            return o1Index - o2Index;
+        });
     }
 
     /**
