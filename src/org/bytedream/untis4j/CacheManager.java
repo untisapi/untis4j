@@ -4,6 +4,7 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.ResponseList;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.Map;
  */
 public class CacheManager {
 
-    private final HashMap<CacheKeys, BaseResponse> cachedInformation = new HashMap<>();
+    private final Map<CacheKeys, BaseResponse> cachedInformation = Collections.synchronizedMap(new HashMap<>());
 
     /**
      * Adds content to the cache
