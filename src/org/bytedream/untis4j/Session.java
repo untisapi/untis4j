@@ -668,7 +668,7 @@ public class Session {
      * @throws IOException if an IO Exception occurs
      * @since 1.0
      */
-    public <E extends BaseResponseObjects.NAILResponseObject> Timetable getTimetable(LocalDate start, LocalDate end, UntisUtils.ElementType elementType, int id) throws IOException {
+    public Timetable getTimetable(LocalDate start, LocalDate end, UntisUtils.ElementType elementType, int id) throws IOException {
         HashMap<String, String> params = UntisUtils.localDateToParams(start, end);
 
         params.put("type", String.valueOf(elementType.getElementType()));
@@ -696,24 +696,23 @@ public class Session {
 
                 for (String currentStringArray : arrayKeys) {
                     JSONArray arrayJSONArray = timetableInfos.getJSONArray(currentStringArray);
-                    BaseResponseLists.NAILResponseList<E> values = new BaseResponseLists.NAILResponseList<>();
 
                     switch (currentStringArray) {
                         case "kl":
                             Klassen k = getKlassen();
-                            arrayJSONArray.forEach(o -> values.add((E) k.findById(((JSONObject) o).getInt("id"))));
+                            arrayJSONArray.forEach(o -> klassen.add(k.findById(((JSONObject) o).getInt("id"))));
                             break;
                         case "te":
                             Teachers t = getTeachers();
-                            arrayJSONArray.forEach(o -> values.add((E) t.findById(((JSONObject) o).getInt("id"))));
+                            arrayJSONArray.forEach(o -> teachers.add(t.findById(((JSONObject) o).getInt("id"))));
                             break;
                         case "su":
                             Subjects s = getSubjects();
-                            arrayJSONArray.forEach(o -> values.add((E) s.findById(((JSONObject) o).getInt("id"))));
+                            arrayJSONArray.forEach(o -> subjects.add(s.findById(((JSONObject) o).getInt("id"))));
                             break;
                         case "ro":
                             Rooms r = getRooms();
-                            arrayJSONArray.forEach(o -> values.add((E) r.findById(((JSONObject) o).getInt("id"))));
+                            arrayJSONArray.forEach(o -> rooms.add(r.findById(((JSONObject) o).getInt("id"))));
                             break;
                         default:
                             throw new IllegalStateException("Unexpected value: " + currentStringArray);
@@ -755,7 +754,7 @@ public class Session {
             return timetable;
         });
     }
-
+    
     /**
      * Returns the lessons / timetable for a specific time period and klasse id.
      *
