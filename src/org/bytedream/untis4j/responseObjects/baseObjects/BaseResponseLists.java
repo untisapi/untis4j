@@ -11,7 +11,7 @@ import java.util.Comparator;
 /**
  * Contains all base response list classes
  *
- * @version 1.2
+ * @version 1.1
  * @since 1.0
  */
 public class BaseResponseLists {
@@ -19,7 +19,7 @@ public class BaseResponseLists {
     /**
      * Base class for all response lists. Has no real use
      *
-     * @version 1.2
+     * @version 1.1
      * @since 1.0
      */
     public static class ResponseList<E extends ResponseObject> extends ArrayList<E> implements BaseResponse {
@@ -30,7 +30,7 @@ public class BaseResponseLists {
          * @param responseObjects response objects to check
          * @return if this list contains all given response objects
          *
-         * @since 1.2
+         * @since 1.1
          */
         public boolean containsAllResponse(Collection<ResponseObject> responseObjects) {
             for (ResponseObject responseObject: responseObjects) {
