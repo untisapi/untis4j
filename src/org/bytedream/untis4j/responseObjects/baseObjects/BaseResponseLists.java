@@ -208,6 +208,50 @@ public class BaseResponseLists {
             this.sort((o1, o2) -> o1.getLongName().compareToIgnoreCase(o2.getLongName()));
         }
 
+        /**
+         * Returns all names that are saved in the list
+         *
+         * @return all names
+         * @since 1.1
+         */
+        public ArrayList<String> getNames() {
+            ArrayList<String> names = new ArrayList<>();
+
+            this.stream().map(E::getName).forEach(names::add);
+
+            return names;
+        }
+
+        /**
+         * Returns all ids that are saved in the list
+         *
+         * @return all ids
+         *
+         * @since 1.1
+         */
+        public ArrayList<Integer> getIds() {
+            ArrayList<Integer> ids = new ArrayList<>();
+
+            this.stream().map(E::getId).forEach(ids::add);
+
+            return ids;
+        }
+
+        /**
+         * Returns all long names that are saved in the list
+         *
+         * @return all long names
+         *
+         * @since 1.1
+         */
+        public ArrayList<String> getLongNames() {
+            ArrayList<String> longNames = new ArrayList<>();
+
+            this.stream().map(E::getLongName).forEach(longNames::add);
+
+            return longNames;
+        }
+
     }
 
     /**
@@ -263,6 +307,21 @@ public class BaseResponseLists {
          */
         public void sortByActive() {
             this.sort((o1, o2) -> Boolean.compare(o1.isActive(), o2.isActive()));
+        }
+
+        /**
+         * Returns all activity types that are saved in the list
+         *
+         * @return all activity types
+         *
+         * @since 1.1
+         */
+        public ArrayList<Boolean> getActiveTypes() {
+            ArrayList<Boolean> activeTypes = new ArrayList<>();
+
+            this.stream().map(E::isActive).forEach(activeTypes::add);
+
+            return activeTypes;
         }
 
     }

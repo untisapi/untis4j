@@ -8,9 +8,9 @@ import org.json.JSONObject;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * Class to manage {@link Lesson} objects
@@ -532,6 +532,132 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
+     * Returns all dates that are saved in the lessons
+     *
+     * @return all dates
+     * @since 1.1
+     */
+    public ArrayList<LocalDate> getDates() {
+        ArrayList<LocalDate> dates = new ArrayList<>();
+
+        this.stream().map(Lesson::getDate).forEach(dates::add);
+
+        return dates;
+    }
+
+    /**
+     * Returns all start times that are saved in the lessons
+     *
+     * @return all start times
+     * @since 1.1
+     */
+    public ArrayList<LocalTime> getStartTimes() {
+        ArrayList<LocalTime> startTimes = new ArrayList<>();
+
+        this.stream().map(Lesson::getStartTime).forEach(startTimes::add);
+
+        return startTimes;
+    }
+
+    /**
+     * Returns all end times that are saved in the lessons
+     *
+     * @return all end times
+     * @since 1.1
+     */
+    public ArrayList<LocalTime> getEndTimes() {
+        ArrayList<LocalTime> endTimes = new ArrayList<>();
+
+        this.stream().map(Lesson::getStartTime).forEach(endTimes::add);
+
+        return endTimes;
+    }
+
+    /**
+     * Returns all klassen that are saved in the lessons
+     *
+     * @return all klassen
+     * @since 1.1
+     */
+    public Klassen getKlassen() {
+        Klassen klassen = new Klassen();
+
+        this.stream().map(Lesson::getKlassen).forEach(klassen::addAll);
+
+        return klassen;
+    }
+
+    /**
+     * Returns all teachers that are saved in the lessons
+     *
+     * @return all teachers
+     * @since 1.1
+     */
+    public Teachers getTeachers() {
+        Teachers teachers = new Teachers();
+
+        this.stream().map(Lesson::getTeachers).forEach(teachers::addAll);
+
+        return teachers;
+    }
+
+    /**
+     * Returns all rooms that are saved in the lessons
+     *
+     * @return all rooms
+     * @since 1.1
+     */
+    public Rooms getRooms() {
+        Rooms rooms = new Rooms();
+
+        this.stream().map(Lesson::getRooms).forEach(rooms::addAll);
+
+        return rooms;
+    }
+
+    /**
+     * Returns all subjects that are saved in the lessons
+     *
+     * @return all subjects
+     * @since 1.1
+     */
+    public Subjects getSubjects() {
+        Subjects subjects = new Subjects();
+
+        this.stream().map(Lesson::getSubjects).forEach(subjects::addAll);
+
+        return subjects;
+    }
+
+    /**
+     * Returns all lesson codes that are saved in the lessons
+     *
+     * @return all lesson codes
+     * @since 1.1
+     */
+    public ArrayList<UntisUtils.LessonCode> getLessonCodes() {
+        ArrayList<UntisUtils.LessonCode> codes = new ArrayList<>();
+
+        this.stream().map(Lesson::getCode).forEach(codes::add);
+
+        return codes;
+    }
+
+    /**
+     * Returns all activity types that are saved in the lessons
+     *
+     * @return all activity types
+     * @since 1.1
+     */
+    public ArrayList<String> getActivityTypes() {
+        ArrayList<String> activityTypes = new ArrayList<>();
+
+        this.stream().map(Lesson::getActivityType).forEach(activityTypes::add);
+
+        return activityTypes;
+    }
+
+    /**
      * Class to get information about a lesson
      *
      * @version 1.0
@@ -681,19 +807,17 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          */
         @Override
         public String toString() {
-            HashMap<String, String> klasseAsMap = new HashMap<>();
+            HashMap<String, Object> klasseAsMap = new HashMap<>();
 
-            klasseAsMap.put("date", date.toString());
-            klasseAsMap.put("kl", klassen.toString());
-            klasseAsMap.put("te", teachers.toString());
-            klasseAsMap.put("su", subjects.toString());
-            if (code != null) {
-                klasseAsMap.put("code", code.getLessonCode());
-            }
+            klasseAsMap.put("date", date);
+            klasseAsMap.put("klassen", klassen);
+            klasseAsMap.put("teachers", teachers);
+            klasseAsMap.put("rooms", rooms);
+            klasseAsMap.put("subjects", subjects);
+            klasseAsMap.put("code", code);
             klasseAsMap.put("startTime", startTime.format(DateTimeFormatter.ofPattern("HHmm")));
             klasseAsMap.put("endTime", endTime.format(DateTimeFormatter.ofPattern("HHmm")));
             klasseAsMap.put("activityType", activityType);
-            klasseAsMap.put("ro", rooms.toString());
 
             return new JSONObject(klasseAsMap).toString();
         }

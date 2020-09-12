@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -201,31 +202,88 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
     }
 
     /**
+     * Returns all names that are saved in the list
+     *
+     * @return all names
+     * @since 1.1
+     */
+    public ArrayList<String> getNames() {
+        ArrayList<String> names = new ArrayList<>();
+
+        this.stream().map(SchoolYearObject::getName).forEach(names::add);
+
+        return names;
+    }
+
+    /**
+     * Returns all ids that are saved in the list
+     *
+     * @return all ids
+     * @since 1.1
+     */
+    public ArrayList<Integer> getIds() {
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        this.stream().map(SchoolYearObject::getId).forEach(ids::add);
+
+        return ids;
+    }
+
+    /**
+     * Returns all start dates that are saved in the list
+     *
+     * @return all start dates
+     * @since 1.1
+     */
+    public ArrayList<LocalDate> getStartDates() {
+        ArrayList<LocalDate> startDates = new ArrayList<>();
+
+        this.stream().map(SchoolYearObject::getStartDate).forEach(startDates::add);
+
+        return startDates;
+    }
+
+    /**
+     * Returns all end dates that are saved in the list
+     *
+     * @return all end dates
+     * @since 1.1
+     */
+    public ArrayList<LocalDate> getEndDates() {
+        ArrayList<LocalDate> endDates = new ArrayList<>();
+
+        this.stream().map(SchoolYearObject::getStartDate).forEach(endDates::add);
+
+        return endDates;
+    }
+
+    /**
      * Class to get information about the a school year
      *
-     * @version 1.0
+     * @version 1.1
      * @since 1.0
      */
     public static class SchoolYearObject extends ResponseObject {
 
         private final String name;
+        private final int id;
         private final LocalDate startDate;
         private final LocalDate endDate;
-        private final int id;
 
         /**
          * Initialize the {@link SchoolYearObject} class
          *
-         * @param name      name of the department
+         * @param name      name of the school year
+         * @param id        id of the school year
          * @param startDate date when the school year began
          * @param endDate   date when the school year will end
          * @since 1.0
          */
-        public SchoolYearObject(String name, LocalDate startDate, LocalDate endDate, int id) {
+        public SchoolYearObject(String name, int id, LocalDate startDate, LocalDate endDate) {
             this.name = name;
+            this.id = id;
             this.startDate = startDate;
             this.endDate = endDate;
-            this.id = id;
         }
 
         /**
@@ -236,6 +294,16 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
          */
         public String getName() {
             return name;
+        }
+
+        /**
+         * Returns the id of the school year
+         *
+         * @return the id of the school year
+         * @since 1.0
+         */
+        public int getId() {
+            return id;
         }
 
         /**
@@ -259,16 +327,6 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
         }
 
         /**
-         * Returns the id of the school year
-         *
-         * @return the id of the school year
-         * @since 1.0
-         */
-        public int getId() {
-            return id;
-        }
-
-        /**
          * Returns a json parsed string with all information
          *
          * @return a json parsed string with all information
@@ -279,6 +337,7 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
             HashMap<String, Object> currentSchoolYearAsMap = new HashMap<>();
 
             currentSchoolYearAsMap.put("name", name);
+            currentSchoolYearAsMap.put("id", id);
             currentSchoolYearAsMap.put("startDate", startDate);
             currentSchoolYearAsMap.put("endDate", endDate);
 

@@ -4,6 +4,8 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.NAILR
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NAILResponseObject;
 import org.json.JSONObject;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -105,10 +107,10 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      * @return {@link Subjects} with subjects that have the {@code backColor} or a part of it in their back color
      * @since 1.0
      */
-    public Subjects searchByBackColor(String backColor) {
+    public Subjects searchByBackColor(Color backColor) {
         Subjects subjects = new Subjects();
 
-        this.stream().filter(subjectObject -> subjectObject.getBackColor().contains(backColor)).forEach(subjects::add);
+        this.stream().filter(subjectObject -> subjectObject.getBackColor().toString().contains(backColor.toString())).forEach(subjects::add);
 
         return subjects;
     }
@@ -120,10 +122,10 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      * @return {@link Subjects} with subjects that have the {@code foreColor} or a part of it in their fore color
      * @since 1.0
      */
-    public Subjects searchByForeColor(String foreColor) {
+    public Subjects searchByForeColor(Color foreColor) {
         Subjects subjects = new Subjects();
 
-        this.stream().filter(subjectObject -> subjectObject.getBackColor().contains(foreColor)).forEach(subjects::add);
+        this.stream().filter(subjectObject -> subjectObject.getBackColor().toString().contains(foreColor.toString())).forEach(subjects::add);
 
         return subjects;
     }
@@ -156,16 +158,58 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
     }
 
     /**
+     * Returns all alternate names that are saved in the list
+     *
+     * @return all alternate names
+     * @since 1.1
+     */
+    public ArrayList<String> getAlternateNames() {
+        ArrayList<String> alternateNames = new ArrayList<>();
+
+        this.stream().map(SubjectObject::getAlternateName).forEach(alternateNames::add);
+
+        return alternateNames;
+    }
+
+    /**
+     * Returns all back colors that are saved in the list
+     *
+     * @return all back colors
+     * @since 1.1
+     */
+    public ArrayList<Color> getBackColors() {
+        ArrayList<Color> backColors = new ArrayList<>();
+
+        this.stream().map(SubjectObject::getBackColor).forEach(backColors::add);
+
+        return backColors;
+    }
+
+    /**
+     * Returns all fore colors that are saved in the list
+     *
+     * @return all fore colors
+     * @since 1.1
+     */
+    public ArrayList<Color> getForeColors() {
+        ArrayList<Color> foreColors = new ArrayList<>();
+
+        this.stream().map(SubjectObject::getForeColor).forEach(foreColors::add);
+
+        return foreColors;
+    }
+
+    /**
      * Class to get information about a subject
      *
-     * @version 1.0
+     * @version 1.1
      * @since 1.0
      */
     public static class SubjectObject extends NAILResponseObject {
 
-        private final String backColor;
         private final String alternateName;
-        private final String foreColor;
+        private final Color backColor;
+        private final Color foreColor;
 
         /**
          * Initialize the {@link SubjectObject} class
@@ -173,23 +217,23 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
          * @param name          name of the subject
          * @param active        if the subject is active
          * @param id            id of the subject
-         * @param alternateName alternative name for the subject
+         * @param longName      long name of the subject
+         * @param alternateName alternate name for the subject
          * @param backColor     backColor
          * @param foreColor     foreColor
-         * @param longName      long name of the subject
          * @since 1.0
          */
-        public SubjectObject(String name, boolean active, int id, String alternateName, String backColor, String foreColor, String longName) {
+        public SubjectObject(String name, boolean active, int id, String longName, String alternateName, String backColor, String foreColor) {
             super(name, active, id, longName);
-            this.backColor = backColor;
             this.alternateName = alternateName;
-            this.foreColor = foreColor;
+            this.backColor = Color.decode(backColor);
+            this.foreColor = Color.decode(foreColor);
         }
 
         /**
-         * Returns the alternative name for the subject
+         * Returns the alternate name for the subject
          *
-         * @return the alternative name for the subject
+         * @return the alternate name for the subject
          * @since 1.0
          */
         public String getAlternateName() {
@@ -202,7 +246,7 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
          * @return the back color
          * @since 1.0
          */
-        public String getBackColor() {
+        public Color getBackColor() {
             return backColor;
         }
 
@@ -212,7 +256,7 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
          * @return fore color
          * @since 1.0
          */
-        public String getForeColor() {
+        public Color getForeColor() {
             return foreColor;
         }
 
@@ -224,15 +268,15 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
          */
         @Override
         public String toString() {
-            HashMap<String, String> subjectAsMap = new HashMap<>();
+            HashMap<String, Object> subjectAsMap = new HashMap<>();
 
             subjectAsMap.put("name", this.getName());
-            subjectAsMap.put("isActive", String.valueOf(this.isActive()));
+            subjectAsMap.put("isActive", this.isActive());
+            subjectAsMap.put("id", this.getId());
+            subjectAsMap.put("longName", this.getLongName());
             subjectAsMap.put("alternateName", alternateName);
-            subjectAsMap.put("id", String.valueOf(this.getId()));
             subjectAsMap.put("backColor", backColor);
             subjectAsMap.put("foreColor", foreColor);
-            subjectAsMap.put("longName", this.getLongName());
 
             return new JSONObject(subjectAsMap).toString();
         }

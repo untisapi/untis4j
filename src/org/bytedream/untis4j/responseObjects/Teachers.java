@@ -4,6 +4,7 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.NAILR
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NAILResponseObject;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -156,6 +157,48 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
     }
 
     /**
+     * Returns all titles that are saved in the list
+     *
+     * @return all titles
+     * @since 1.1
+     */
+    public ArrayList<String> getTitles() {
+        ArrayList<String> titles = new ArrayList<>();
+
+        this.stream().map(TeacherObject::getTitle).forEach(titles::add);
+
+        return titles;
+    }
+
+    /**
+     * Returns all fore names that are saved in the list
+     *
+     * @return all fore names
+     * @since 1.1
+     */
+    public ArrayList<String> getForeNames() {
+        ArrayList<String> foreNames = new ArrayList<>();
+
+        this.stream().map(TeacherObject::getForename).forEach(foreNames::add);
+
+        return foreNames;
+    }
+
+    /**
+     * Returns all full names that are saved in the list
+     *
+     * @return all full names
+     * @since 1.1
+     */
+    public ArrayList<String> getFullNames() {
+        ArrayList<String> fullNames = new ArrayList<>();
+
+        this.stream().map(TeacherObject::getFullName).forEach(fullNames::add);
+
+        return fullNames;
+    }
+
+    /**
      * Class to get information about a teacher
      *
      * @version 1.0
@@ -173,12 +216,12 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
          * @param name     name of the teacher
          * @param active   if the teacher is active
          * @param id       id of the teacher
+         * @param longName long name of the teacher
          * @param title    title of the teacher
          * @param foreName fore name of the teacher
-         * @param longName long name of the teacher
          * @since 1.0
          */
-        public TeacherObject(String name, boolean active, int id, String title, String foreName, String longName) {
+        public TeacherObject(String name, boolean active, int id, String longName, String title, String foreName) {
             super(name, active, id, longName);
             this.title = title;
             this.forename = foreName;
@@ -224,14 +267,14 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
          */
         @Override
         public String toString() {
-            HashMap<String, String> teacherAsMap = new HashMap<>();
+            HashMap<String, Object> teacherAsMap = new HashMap<>();
 
             teacherAsMap.put("name", this.getName());
-            teacherAsMap.put("isActive", String.valueOf(this.isActive()));
-            teacherAsMap.put("id", String.valueOf(this.getId()));
+            teacherAsMap.put("isActive", this.isActive());
+            teacherAsMap.put("id", this.getId());
+            teacherAsMap.put("longName", this.getLongName());
             teacherAsMap.put("title", title);
             teacherAsMap.put("foreName", title);
-            teacherAsMap.put("longName", this.getLongName());
             teacherAsMap.put("fullName", fullName);
 
             return new JSONObject(teacherAsMap).toString();

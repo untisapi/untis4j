@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -156,6 +157,48 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
      */
     public void sortByEndTime() {
         this.sort(Comparator.comparing(TimeUnitObject::getEndTime));
+    }
+
+    /**
+     * Returns all names that are saved in the list
+     *
+     * @return all names
+     * @since 1.1
+     */
+    public ArrayList<String> getNames() {
+        ArrayList<String> names = new ArrayList<>();
+
+        this.stream().map(TimeUnitObject::getName).forEach(names::add);
+
+        return names;
+    }
+
+    /**
+     * Returns all start times that are saved in the list
+     *
+     * @return all start times
+     * @since 1.1
+     */
+    public ArrayList<LocalTime> getStartTimes() {
+        ArrayList<LocalTime> startTimes = new ArrayList<>();
+
+        this.stream().map(TimeUnitObject::getStartTime).forEach(startTimes::add);
+
+        return startTimes;
+    }
+
+    /**
+     * Returns all end times that are saved in the list
+     *
+     * @return all end times
+     * @since 1.1
+     */
+    public ArrayList<LocalTime> getEndTimes() {
+        ArrayList<LocalTime> endTimes = new ArrayList<>();
+
+        this.stream().map(TimeUnitObject::getEndTime).forEach(endTimes::add);
+
+        return endTimes;
     }
 
     /**

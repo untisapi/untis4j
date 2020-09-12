@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -112,27 +113,55 @@ public class Holidays extends NILResponseList<Holidays.HolidaysObject> {
     }
 
     /**
+     * Returns all start dates that are saved in the list
+     *
+     * @return all start dates
+     * @since 1.1
+     */
+    public ArrayList<LocalDate> getStartDates() {
+        ArrayList<LocalDate> startDates = new ArrayList<>();
+
+        this.stream().map(HolidaysObject::getStartDate).forEach(startDates::add);
+
+        return startDates;
+    }
+
+    /**
+     * Returns all end dates that are saved in the list
+     *
+     * @return all end dates
+     * @since 1.1
+     */
+    public ArrayList<LocalDate> getEndDates() {
+        ArrayList<LocalDate> endDates = new ArrayList<>();
+
+        this.stream().map(HolidaysObject::getStartDate).forEach(endDates::add);
+
+        return endDates;
+    }
+
+    /**
      * Class to get information about holidays
      *
-     * @version 1.0
+     * @version 1.1
      * @since 1.0
      */
     public static class HolidaysObject extends NILResponseObject {
 
-        private final LocalDate endDate;
         private final LocalDate startDate;
+        private final LocalDate endDate;
 
         /**
          * Initialize the {@link HolidaysObject} class
          *
-         * @param endDate   end of the holidays
          * @param name      name of the teacher
          * @param id        id of the teacher
-         * @param startDate start of the holidays
          * @param longName  long name of the teacher
+         * @param startDate start of the holidays
+         * @param endDate   end of the holidays
          * @since 1.0
          */
-        public HolidaysObject(String name, LocalDate startDate, LocalDate endDate, int id, String longName) {
+        public HolidaysObject(String name, int id, String longName, LocalDate startDate, LocalDate endDate) {
             super(name, id, longName);
             this.startDate = startDate;
             this.endDate = endDate;
@@ -169,10 +198,10 @@ public class Holidays extends NILResponseList<Holidays.HolidaysObject> {
             HashMap<String, Object> holidaysAsMap = new HashMap<>();
 
             holidaysAsMap.put("name", this.getName());
-            holidaysAsMap.put("startDate", startDate);
-            holidaysAsMap.put("endDate", endDate);
             holidaysAsMap.put("id", this.getId());
             holidaysAsMap.put("longName", this.getLongName());
+            holidaysAsMap.put("startDate", startDate);
+            holidaysAsMap.put("endDate", endDate);
 
             return new JSONObject(holidaysAsMap).toString();
         }

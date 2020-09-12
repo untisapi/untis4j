@@ -66,26 +66,26 @@ public class WeeklyTimetable implements BaseResponse {
     }
 
     /**
-     * Returns the size of the weekly timetable (always 7)
+     * Returns the size of the weekly timetable
      *
      * @return size
      * @since 1.1
      */
     public int size() {
-        return 7;
+        return timetables.length;
     }
 
     @Override
     public String toString() {
-        HashMap<String, String> weeklyTimetableAsMap = new HashMap<>();
+        HashMap<String, Object> weeklyTimetableAsMap = new HashMap<>();
 
-        weeklyTimetableAsMap.put("1", timetables[0].toString());
-        weeklyTimetableAsMap.put("2", timetables[1].toString());
-        weeklyTimetableAsMap.put("3", timetables[2].toString());
-        weeklyTimetableAsMap.put("4", timetables[3].toString());
-        weeklyTimetableAsMap.put("5", timetables[4].toString());
-        weeklyTimetableAsMap.put("6", timetables[5].toString());
-        weeklyTimetableAsMap.put("7", timetables[6].toString());
+        weeklyTimetableAsMap.put("1", timetables[0]);
+        weeklyTimetableAsMap.put("2", timetables[1]);
+        weeklyTimetableAsMap.put("3", timetables[2]);
+        weeklyTimetableAsMap.put("4", timetables[3]);
+        weeklyTimetableAsMap.put("5", timetables[4]);
+        weeklyTimetableAsMap.put("6", timetables[5]);
+        weeklyTimetableAsMap.put("7", timetables[6]);
 
         return new JSONObject(weeklyTimetableAsMap).toString();
     }

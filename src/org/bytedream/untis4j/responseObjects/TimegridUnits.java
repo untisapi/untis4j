@@ -5,6 +5,7 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.Respo
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.ResponseObject;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -15,6 +16,30 @@ import java.util.HashMap;
  * @since 1.0
  */
 public class TimegridUnits extends ResponseList<TimegridUnits.TimegridUnitObject> {
+
+    /**
+     * Sorts the given timegrid units by all days and returns the sorted timegrid units
+     *
+     * @param timegridUnits timegrid units that should be sorted
+     * @return the sorted timegrid units
+     * @since 1.1
+     */
+    public static TimegridUnits sortByDays(TimegridUnits timegridUnits) {
+        timegridUnits.sortByDays();
+        return timegridUnits;
+    }
+
+    /**
+     * Sorts the given timegrid units by all time units and returns the sorted timegrid units
+     *
+     * @param timegridUnits timegrid units that should be sorted
+     * @return the sorted timegrid units
+     * @since 1.1
+     */
+    public static TimegridUnits sortByTimeUnits(TimegridUnits timegridUnits) {
+        timegridUnits.sortByTimeUnits();
+        return timegridUnits;
+    }
 
     /**
      * Finds a timegrid unit by its day
@@ -32,7 +57,6 @@ public class TimegridUnits extends ResponseList<TimegridUnits.TimegridUnitObject
      *
      * @param timeUnits time units of the timegrid unit you want to find
      * @return the time unit
-     *
      * @since 1.0
      */
     public TimegridUnitObject findByTimeUnits(TimeUnits timeUnits) {
@@ -44,7 +68,6 @@ public class TimegridUnits extends ResponseList<TimegridUnits.TimegridUnitObject
      *
      * @param day day of the timegrid units you want to search
      * @return {@link TimeUnits} with timegrid units that have the {@code day} or a part of it in their day
-     *
      * @since 1.0
      */
     public TimegridUnits searchByDay(int day) {
@@ -60,7 +83,6 @@ public class TimegridUnits extends ResponseList<TimegridUnits.TimegridUnitObject
      *
      * @param timeUnits time units of the timegrid units you want to search
      * @return {@link TimeUnits} with timegrid units that have the {@code timeUnits} or a part of it in their time units
-     *
      * @since 1.0
      */
     public TimegridUnits searchByTimeUnits(TimeUnits timeUnits) {
@@ -94,29 +116,31 @@ public class TimegridUnits extends ResponseList<TimegridUnits.TimegridUnitObject
     }
 
     /**
-     * Sorts the given timegrid units by all days and returns the sorted timegrid units
+     * Returns all days that are saved in the list
      *
-     * @param timegridUnits timegrid units that should be sorted
-     * @return the sorted timegrid units
-     *
+     * @return all days
      * @since 1.1
      */
-    public static TimegridUnits sortByDays(TimegridUnits timegridUnits) {
-        timegridUnits.sortByDays();
-        return timegridUnits;
+    public ArrayList<Integer> getDays() {
+        ArrayList<Integer> days = new ArrayList<>();
+
+        this.stream().map(TimegridUnitObject::getDay).forEach(days::add);
+
+        return days;
     }
 
     /**
-     * Sorts the given timegrid units by all time units and returns the sorted timegrid units
+     * Returns all time units that are saved in the list
      *
-     * @param timegridUnits timegrid units that should be sorted
-     * @return the sorted timegrid units
-     *
+     * @return all time units
      * @since 1.1
      */
-    public static TimegridUnits sortByTimeUnits(TimegridUnits timegridUnits) {
-        timegridUnits.sortByTimeUnits();
-        return timegridUnits;
+    public TimeUnits getTimeUnits() {
+        TimeUnits timeUnits = new TimeUnits();
+
+        this.stream().map(TimegridUnitObject::getTimeUnits).forEach(timeUnits::addAll);
+
+        return timeUnits;
     }
 
     /**
@@ -133,9 +157,8 @@ public class TimegridUnits extends ResponseList<TimegridUnits.TimegridUnitObject
         /**
          * Initialize the {@link TimegridUnitObject} class
          *
-         * @param day day of the timegrid unit
+         * @param day       day of the timegrid unit
          * @param timeUnits all time untis on the given day
-         *
          * @since 1.0
          */
         public TimegridUnitObject(int day, TimeUnits timeUnits) {
@@ -147,7 +170,6 @@ public class TimegridUnits extends ResponseList<TimegridUnits.TimegridUnitObject
          * Returns the day of the timegrid unit
          *
          * @return the day of the timegrid unit
-         *
          * @since 1.0
          */
         public int getDay() {
@@ -158,7 +180,6 @@ public class TimegridUnits extends ResponseList<TimegridUnits.TimegridUnitObject
          * Returns the time units
          *
          * @return the time units
-         *
          * @since 1.0
          */
         public TimeUnits getTimeUnits() {
@@ -169,7 +190,6 @@ public class TimegridUnits extends ResponseList<TimegridUnits.TimegridUnitObject
          * Returns a json parsed string with all information
          *
          * @return a json parsed string with all information
-         *
          * @since 1.0
          */
         @Override
