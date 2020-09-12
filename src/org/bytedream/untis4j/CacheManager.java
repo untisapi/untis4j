@@ -4,9 +4,9 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.ResponseList;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Class to manage cache and minimize server requests and speed up the API
@@ -15,8 +15,8 @@ import java.util.Map;
  * @since 1.1
  */
 public class CacheManager {
-    
-    private final HashMap<Object[], BaseResponse> cachedInformation = new HashMap<Object[], BaseResponse>() {
+
+    private final ConcurrentHashMap<Object[], BaseResponse> cachedInformation = new ConcurrentHashMap<Object[], BaseResponse>() {
         @Override
         public boolean containsKey(Object key) {
             Object[] realKey = (Object[]) key;
@@ -33,6 +33,7 @@ public class CacheManager {
             }
         }
     };
+    private boolean threadSafe = true;
 
     /**
      * Adds content to the cache
@@ -72,7 +73,7 @@ public class CacheManager {
      * @see CacheManager#getOrRequest(UntisUtils.Method, RequestManager, Map, ResponseConsumer)
      * @since 1.1
      */
-    public <T extends BaseResponse> BaseResponse getOrRequest(UntisUtils.Method method, RequestManager requestManager, ResponseConsumer<? extends T> action) throws IOException {
+    public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, ResponseConsumer<? extends T> action) throws IOException {
         return getOrRequest(method, requestManager, new HashMap<>(), action);
     }
 
@@ -87,15 +88,25 @@ public class CacheManager {
      * @throws IOException if an IO Exception occurs
      * @since 1.1
      */
-    public <T extends BaseResponse> BaseResponse getOrRequest(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<T> action) throws IOException {
+    public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<T> action) throws IOException {
         Object[] key = {method, params};
 
-        if (cachedInformation.containsKey(key)) {
-            return cachedInformation.get(key);
+        if (threadSafe) {
+            return (T) cachedInformation.computeIfAbsent(key, objects -> {
+                try {
+                    return action.getResponse(requestManager.POST(method.getMethod(), params));
+                } catch (IOException e) {
+                    return null;
+                }
+            });
         } else {
-            T response = action.getResponse(requestManager.POST(method.getMethod(), params));
-            this.add(key, response);
-            return response;
+            if (cachedInformation.containsKey(key)) {
+                return (T) cachedInformation.get(key);
+            } else {
+                T response = action.getResponse(requestManager.POST(method.getMethod(), params));
+                this.add(key, response);
+                return response;
+            }
         }
     }
 
@@ -157,6 +168,26 @@ public class CacheManager {
      */
     public void update(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<? extends BaseResponse> action) throws IOException {
         cachedInformation.replace(new Object[]{method, params}, action.getResponse(requestManager.POST(method.getMethod(), params)));
+    }
+
+    /**
+     * Returns if the cache manager operates thread safe or not
+     *
+     * @return thread save or not
+     * @since 1.1
+     */
+    public boolean isThreadSafe() {
+        return threadSafe;
+    }
+
+    /**
+     * Sets if the cache manager should operate thread safe or not
+     *
+     * @param threadSafe set thread safe or not
+     * @since 1.1
+     */
+    public void setThreadSafe(boolean threadSafe) {
+        this.threadSafe = threadSafe;
     }
 
 }

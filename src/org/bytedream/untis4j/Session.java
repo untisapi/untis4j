@@ -145,7 +145,7 @@ public class Session {
                 }
             } catch (IOException ignore) {
             }
-            return (T) cacheManager.getOrRequest(method, requestManager, params, action);
+            return cacheManager.getOrRequest(method, requestManager, params, action);
         } else {
             return action.getResponse(requestManager.POST(method.getMethod(), params));
         }
@@ -994,6 +994,26 @@ public class Session {
      */
     public void useCache(boolean useCache) {
         this.useCache = useCache;
+    }
+
+    /**
+     * Returns if the cache manager operates thread safe or not
+     *
+     * @return thread save or not
+     * @since 1.1
+     */
+    public boolean isCacheThreadSafe() {
+        return cacheManager.isThreadSafe();
+    }
+
+    /**
+     * Sets if the cache manager should operate thread safe or not
+     *
+     * @param threadSafe set thread safe or not
+     * @since 1.1
+     */
+    public void setCacheThreadSafe(boolean threadSafe) {
+        cacheManager.setThreadSafe(threadSafe);
     }
 
 }
