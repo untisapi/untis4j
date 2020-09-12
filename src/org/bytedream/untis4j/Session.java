@@ -67,7 +67,7 @@ public class Session {
      * @see Session#login(String, String, String, String, String, boolean)
      */
     public static Session login(String username, String password, String server, String schoolName) throws IOException {
-        return login(username, password, server, schoolName, "", false);
+        return login(username, password, server, schoolName, "", true);
     }
 
     /**
@@ -344,10 +344,10 @@ public class Session {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject holidayInfo = jsonArray.getJSONObject(i);
                 holidays.add(new Holidays.HolidaysObject(holidayInfo.getString("name"),
-                        LocalDate.parse(String.valueOf(holidayInfo.getInt("startDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                        LocalDate.parse(String.valueOf(holidayInfo.getInt("endDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
                         holidayInfo.getInt("id"),
-                        holidayInfo.getString("longName")));
+                        holidayInfo.getString("longName"),
+                        LocalDate.parse(String.valueOf(holidayInfo.getInt("startDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
+                        LocalDate.parse(String.valueOf(holidayInfo.getInt("endDate")), DateTimeFormatter.ofPattern("yyyyMMdd"))));
             }
 
             return holidays;
@@ -453,8 +453,8 @@ public class Session {
                 rooms.add(new Rooms.RoomObject(roomInfo.getString("name"),
                         roomInfo.getBoolean("active"),
                         roomInfo.getInt("id"),
-                        roomInfo.getString("building"),
-                        roomInfo.getString("longName")));
+                        roomInfo.getString("longName"),
+                        roomInfo.getString("building")));
             }
 
             return rooms;
@@ -484,9 +484,9 @@ public class Session {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject schoolYearInfo = jsonArray.getJSONObject(i);
                 schoolYears.add(new SchoolYears.SchoolYearObject(schoolYearInfo.getString("name"),
+                        schoolYearInfo.getInt("id"),
                         LocalDate.parse(String.valueOf(schoolYearInfo.getInt("startDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                        LocalDate.parse(String.valueOf(schoolYearInfo.getInt("endDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                        schoolYearInfo.getInt("id")));
+                        LocalDate.parse(String.valueOf(schoolYearInfo.getInt("endDate")), DateTimeFormatter.ofPattern("yyyyMMdd"))));
             }
 
             return schoolYears;
@@ -531,10 +531,10 @@ public class Session {
                 subjects.add(new Subjects.SubjectObject(subjectInfo.getString("name"),
                         subjectInfo.getBoolean("active"),
                         subjectInfo.getInt("id"),
+                        subjectInfo.getString("longName"),
                         subjectInfo.getString("alternateName"),
                         subjectInfo.getString("backColor"),
-                        subjectInfo.getString("foreColor"),
-                        subjectInfo.getString("longName")));
+                        subjectInfo.getString("foreColor")));
             }
 
             return subjects;
@@ -566,9 +566,9 @@ public class Session {
                 teachers.add(new Teachers.TeacherObject(teacherInfo.getString("name"),
                         teacherInfo.getBoolean("active"),
                         teacherInfo.getInt("id"),
+                        teacherInfo.getString("longName"),
                         teacherInfo.getString("title"),
-                        teacherInfo.getString("foreName"),
-                        teacherInfo.getString("longName")));
+                        teacherInfo.getString("foreName")));
             }
 
             return teachers;
@@ -648,9 +648,9 @@ public class Session {
             JSONObject jsonObject = jsonResponse.getJSONObject("result");
 
             return new SchoolYears.SchoolYearObject(jsonObject.getString("name"),
+                    jsonObject.getInt("id"),
                     LocalDate.parse(String.valueOf(jsonObject.getInt("startDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                    LocalDate.parse(String.valueOf(jsonObject.getInt("endDate")), DateTimeFormatter.ofPattern("yyyyMMdd")),
-                    jsonObject.getInt("id"));
+                    LocalDate.parse(String.valueOf(jsonObject.getInt("endDate")), DateTimeFormatter.ofPattern("yyyyMMdd")));
         });
     }
 
@@ -735,7 +735,7 @@ public class Session {
 
                 UntisUtils.LessonCode code = UntisUtils.LessonCode.REGULAR;
                 if (timetableInfos.has("code")) {
-                    code = UntisUtils.LessonCode.valueOf(timetableInfos.getString("code").toUpperCase());
+                    code = UntisUtils.LessonCode.valueOf(timetableInfos.getString("code").toLowerCase());
                 }
 
                 timetable.add(new Timetable.Lesson(LocalDate.parse(String.valueOf(timetableInfos.getInt("date")), DateTimeFormatter.ofPattern("yyyyMMdd")),
@@ -752,7 +752,7 @@ public class Session {
             return timetable;
         });
     }
-    
+
     /**
      * Returns the lessons / timetable for a specific time period and klasse id.
      *

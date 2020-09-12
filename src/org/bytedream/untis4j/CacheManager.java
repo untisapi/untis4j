@@ -4,9 +4,9 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.ResponseList;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class to manage cache and minimize server requests and speed up the API
@@ -37,8 +37,8 @@ public class CacheManager {
     /**
      * Adds content to the cache
      *
-     * @param keys      keys of the object to cache
-     * @param content   content of the cache
+     * @param keys    keys of the object to cache
+     * @param content content of the cache
      * @since 1.1
      */
     public <T extends BaseResponse> void add(Object[] keys, T content) {
