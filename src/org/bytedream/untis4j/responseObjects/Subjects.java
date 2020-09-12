@@ -226,8 +226,8 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
         public SubjectObject(String name, boolean active, int id, String longName, String alternateName, String backColor, String foreColor) {
             super(name, active, id, longName);
             this.alternateName = alternateName;
-            this.backColor = Color.decode(backColor);
-            this.foreColor = Color.decode(foreColor);
+            this.backColor = Color.decode("#" + backColor);
+            this.foreColor = Color.decode("#" + foreColor);
         }
 
         /**
@@ -275,8 +275,8 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
             subjectAsMap.put("id", this.getId());
             subjectAsMap.put("longName", this.getLongName());
             subjectAsMap.put("alternateName", alternateName);
-            subjectAsMap.put("backColor", backColor);
-            subjectAsMap.put("foreColor", foreColor);
+            subjectAsMap.put("backColor", "#" + Integer.toHexString(backColor.getRGB()).substring(2));
+            subjectAsMap.put("foreColor", "#" + Integer.toHexString(foreColor.getRGB()).substring(2));
 
             return new JSONObject(subjectAsMap).toString();
         }
