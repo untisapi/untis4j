@@ -15,8 +15,8 @@ import java.util.Map;
  * @since 1.1
  */
 public class CacheManager {
-
-    private final Map<Object[], BaseResponse> cachedInformation = Collections.synchronizedMap(new HashMap<Object[], BaseResponse>() {
+    
+    private final HashMap<Object[], BaseResponse> cachedInformation = new HashMap<Object[], BaseResponse>() {
         @Override
         public boolean containsKey(Object key) {
             Object[] realKey = (Object[]) key;
@@ -32,7 +32,7 @@ public class CacheManager {
                 return null;
             }
         }
-    });
+    };
 
     /**
      * Adds content to the cache
@@ -72,26 +72,26 @@ public class CacheManager {
      * @see CacheManager#getOrRequest(UntisUtils.Method, RequestManager, Map, ResponseConsumer)
      * @since 1.1
      */
-    public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, ResponseConsumer<? extends T> action) throws IOException {
+    public <T extends BaseResponse> BaseResponse getOrRequest(UntisUtils.Method method, RequestManager requestManager, ResponseConsumer<? extends T> action) throws IOException {
         return getOrRequest(method, requestManager, new HashMap<>(), action);
     }
 
     /**
      * Checks if the given method is in cache and depending on the result it returns the cached object or a the response of a new request
      *
-     * @param requestManager request manager through which the POST requests are sent
      * @param method         the POST method
+     * @param requestManager request manager through which the POST requests are sent
      * @param params         params you want to send with the request
      * @param action         lambda expression that gets called if the {@code method} is not in the cache manager
      * @return the response in a {@link ResponseList}
      * @throws IOException if an IO Exception occurs
      * @since 1.1
      */
-    public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<? extends T> action) throws IOException {
+    public <T extends BaseResponse> BaseResponse getOrRequest(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<T> action) throws IOException {
         Object[] key = {method, params};
 
         if (cachedInformation.containsKey(key)) {
-            return (T) cachedInformation.get(key);
+            return cachedInformation.get(key);
         } else {
             T response = action.getResponse(requestManager.POST(method.getMethod(), params));
             this.add(key, response);

@@ -145,7 +145,7 @@ public class Session {
                 }
             } catch (IOException ignore) {
             }
-            return cacheManager.getOrRequest(method, requestManager, params, action);
+            return (T) cacheManager.getOrRequest(method, requestManager, params, action);
         } else {
             return action.getResponse(requestManager.POST(method.getMethod(), params));
         }
@@ -735,7 +735,7 @@ public class Session {
 
                 UntisUtils.LessonCode code = UntisUtils.LessonCode.REGULAR;
                 if (timetableInfos.has("code")) {
-                    code = UntisUtils.LessonCode.valueOf(timetableInfos.getString("code").toLowerCase());
+                    code = UntisUtils.LessonCode.valueOf(timetableInfos.getString("code").toUpperCase());
                 }
 
                 timetable.add(new Timetable.Lesson(LocalDate.parse(String.valueOf(timetableInfos.getInt("date")), DateTimeFormatter.ofPattern("yyyyMMdd")),
