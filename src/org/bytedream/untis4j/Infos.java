@@ -1,5 +1,9 @@
 package org.bytedream.untis4j;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
 /**
  * Class to store information about the api user
  *
@@ -118,5 +122,21 @@ public class Infos {
      */
     public int getKlasseId() {
         return klasseId;
+    }
+
+    @Override
+    public String toString() {
+        HashMap<String, Object> infosAsMap = new HashMap<>();
+
+        infosAsMap.put("username", username);
+        infosAsMap.put("password", password);
+        infosAsMap.put("server", server);
+        infosAsMap.put("schoolName", schoolName);
+        infosAsMap.put("userAgent", userAgent);
+        infosAsMap.put("sessionId", sessionId);
+        infosAsMap.put("personType", personType);
+        infosAsMap.put("klasseId", klasseId);
+
+        return new JSONObject(infosAsMap).toString();
     }
 }

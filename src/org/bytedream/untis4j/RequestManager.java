@@ -183,12 +183,12 @@ public class RequestManager {
 
         JSONObject result = jsonObject.getJSONObject("result");
 
-        int personId = result.getInt("persionId");
+        int personId = result.getInt("personId");
 
         UntisUtils.ElementType elementType = null;
         UntisUtils.ElementType[] elementTypes = UntisUtils.ElementType.values();
-        for (int i = 1; i < 6; i++) {
-            if (elementTypes[i].getElementType() == personId) {
+        for (int i = 0; i < 5; i++) {
+            if (elementTypes[i].getElementType() == personId - 1) {
                 elementType = elementTypes[i];
                 break;
             }
