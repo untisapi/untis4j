@@ -99,20 +99,11 @@ public class Session {
      * @since 1.0
      */
     public static Session login(String username, String password, String server, String schoolName, String userAgent, boolean useCache) throws IOException {
-        Infos infos = new Infos(username, password, server, schoolName, userAgent);
+        Infos infos = RequestManager.generateUserInfosAndLogin(username, password, server, schoolName, userAgent);
 
         RequestManager requestManager = new RequestManager(infos);
 
-        HashMap<String, String> params = new HashMap<>();
-        params.put("user", infos.getUsername());
-        params.put("password", infos.getPassword());
-        params.put("client", userAgent);
-
-        if (requestManager.POST(UntisUtils.Method.LOGIN.getMethod(), params).isError()) {
-            throw new LoginException("Failed to login");
-        } else {
-            return new Session(infos, requestManager, useCache);
-        }
+        return new Session(infos, requestManager, useCache);
     }
 
     /**
@@ -954,6 +945,16 @@ public class Session {
         } else {
             this.requestManager = requestManager;
         }
+    }
+
+    /**
+     * Returns the user infos
+     *
+     * @return the user infos
+     * @since 1.1
+     */
+    public Infos getInfos() {
+        return infos;
     }
 
     /**

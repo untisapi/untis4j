@@ -14,6 +14,10 @@ public class Infos {
     private final String schoolName;
     private final String userAgent;
 
+    private final String sessionId;
+    private final UntisUtils.ElementType personType;
+    private final int klasseId;
+
     /**
      * Initialize the {@link Infos} class
      *
@@ -21,14 +25,19 @@ public class Infos {
      * @param password   the password used for the api
      * @param server     the server used for the api
      * @param schoolName the school name used for the api
+     * @param userAgent  the user agent used for the api
      * @since 1.0
      */
-    public Infos(String username, String password, String server, String schoolName, String userAgent) {
+    public Infos(String username, String password, String server, String schoolName, String userAgent, String sessionId, UntisUtils.ElementType personType, int klasseId) {
         this.username = username;
         this.password = password;
         this.server = server;
         this.schoolName = schoolName;
         this.userAgent = userAgent;
+
+        this.sessionId = sessionId;
+        this.personType = personType;
+        this.klasseId = klasseId;
     }
 
     /**
@@ -79,5 +88,35 @@ public class Infos {
      */
     public String getUserAgent() {
         return userAgent;
+    }
+
+    /**
+     * Returns the session id used for the api
+     *
+     * @return the session id used for the api
+     * @since 1.1
+     */
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    /**
+     * Returns the server used for the api
+     *
+     * @return the server used for the api
+     * @since 1.1
+     */
+    public UntisUtils.ElementType getPersonType() {
+        return personType;
+    }
+
+    /**
+     * Returns the klasse id used for the api
+     *
+     * @return the klasse id used for the api
+     * @since 1.1
+     */
+    public int getKlasseId() {
+        return klasseId;
     }
 }

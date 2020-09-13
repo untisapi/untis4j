@@ -22,10 +22,9 @@ import java.util.Map;
 public class RequestManager {
 
     private final Infos infos;
-    private final String baseURL = "/WebUntis/jsonrpc.do";
+    private static final String baseURL = "/WebUntis/jsonrpc.do";
     private final String url;
-    private boolean loggedIn = false;
-    private String sessionId = null;
+    private boolean loggedIn = true;
 
     /**
      * Initialize the {@link RequestManager} class
@@ -71,9 +70,7 @@ public class RequestManager {
             connection.setRequestProperty("User-Agent", infos.getUserAgent());
             connection.setRequestProperty("Content-Type", "application/json");
 
-            if (sessionId != null && !method.equals(UntisUtils.Method.LOGIN.getMethod())) {
-                connection.setRequestProperty("Cookie", "JSESSIONID=" + sessionId + "; schoolname=" + infos.getSchoolName());
-            }
+            connection.setRequestProperty("Cookie", "JSESSIONID=" + infos.getSessionId() + "; schoolname=" + infos.getSchoolName());
 
             DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
             outputStream.writeBytes(requestBody);
@@ -107,16 +104,13 @@ public class RequestManager {
                 throw new ConnectException("An unexpected exception occurred: " + stringBuilder.toString());
             }
 
-            if (method.equals(UntisUtils.Method.LOGIN.getMethod()) && !loggedIn && !error) {
-                sessionId = jsonObject.getJSONObject("result").getString("sessionId");
-                loggedIn = true;
-            } else if (method.equals(UntisUtils.Method.LOGOUT.getMethod()) && loggedIn && !error) {
+            if (method.equals(UntisUtils.Method.LOGOUT.getMethod()) && loggedIn && !error) {
                 loggedIn = false;
             }
 
             return new Response(connection.getResponseCode(), jsonObject);
         } else {
-            throw new ConnectException("Not logged in");
+            throw new LoginException("Not logged in");
         }
 
     }
@@ -129,6 +123,78 @@ public class RequestManager {
      */
     public String getURL() {
         return url;
+    }
+
+    /**
+     * A method to generate user infos and logging in
+     *
+     * @param username   the username used for the api
+     * @param password   the password used for the api
+     * @param server     the server used for the api
+     * @param schoolName the school name used for the api
+     * @param userAgent  the user agent used for the api
+     * @return the generated infos
+     * @throws IOException if an IO Exception occurs
+     * @since 1.1
+     */
+    public static Infos generateUserInfosAndLogin(String username, String password, String server, String schoolName, String userAgent) throws IOException {
+        URL url = new URL(server + baseURL + "?school=" + schoolName);
+        String requestBody = UntisUtils.processParams(UntisUtils.Method.LOGIN.getMethod(), new HashMap<String, String>() {{
+            put("user", username);
+            put("password", password);
+            put("client", userAgent);
+        }});
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+
+        connection.setRequestMethod("POST");
+        connection.setDoOutput(true);
+        connection.setRequestProperty("User-Agent", userAgent);
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+        outputStream.writeBytes(requestBody);
+
+        BufferedReader input;
+
+        if (connection.getResponseCode() > 299) {
+            input = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+        } else {
+            input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        while ((line = input.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+
+        JSONObject jsonObject;
+
+        try {
+            jsonObject = new JSONObject(stringBuilder.toString());
+
+            if (jsonObject.has("error")) {
+                JSONObject errorObject = jsonObject.getJSONObject("error");
+                throw new ConnectException("The response contains an error (" + errorObject.getInt("errorObject") + "): " + errorObject.getString("message"));
+            }
+        } catch (JSONException e) {
+            throw new ConnectException("An unexpected exception occurred: " + stringBuilder.toString());
+        }
+
+        JSONObject result = jsonObject.getJSONObject("result");
+
+        int personId = result.getInt("persionId");
+
+        UntisUtils.ElementType elementType = null;
+        UntisUtils.ElementType[] elementTypes = UntisUtils.ElementType.values();
+        for (int i = 1; i < 6; i++) {
+            if (elementTypes[i].getElementType() == personId) {
+                elementType = elementTypes[i];
+                break;
+            }
+        }
+
+        return new Infos(username, password, server, schoolName, userAgent, result.getString("sessionId"), elementType, result.getInt("klasseId"));
     }
 
 }
