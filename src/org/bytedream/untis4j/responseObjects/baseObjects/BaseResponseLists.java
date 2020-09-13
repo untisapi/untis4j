@@ -1,5 +1,6 @@
 package org.bytedream.untis4j.responseObjects.baseObjects;
 
+import org.bytedream.untis4j.Response;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NAILResponseObject;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NILResponseObject;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.ResponseObject;
@@ -23,40 +24,6 @@ public class BaseResponseLists {
      * @since 1.0
      */
     public static class ResponseList<E extends ResponseObject> extends ArrayList<E> implements BaseResponse {
-
-        /**
-         * Checks if a collection of given responses are in this list
-         *
-         * @param responseObjects response objects to check
-         * @return if this list contains all given response objects
-         *
-         * @since 1.1
-         */
-        public boolean containsAllResponse(Collection<ResponseObject> responseObjects) {
-            for (ResponseObject responseObject: responseObjects) {
-                if (!this.containsResponse(responseObject)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /**
-         * Checks if a given response is in this list
-         *
-         * @param responseObject response object to check
-         * @return if this list contains the given response
-         *
-         * @since 1.1
-         */
-        public boolean containsResponse(ResponseObject responseObject) {
-            for (ResponseObject containResponseObject : this) {
-                if (containResponseObject.equalsResponse(responseObject)) {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 
     /**

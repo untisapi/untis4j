@@ -19,10 +19,6 @@ public class BaseResponseObjects {
      * @since 1.0
      */
     public static class ResponseObject implements BaseResponse {
-
-        public boolean equalsResponse(ResponseObject responseObject) {
-            return this.toString().equals(responseObject.toString());
-        }
     }
 
     /**
