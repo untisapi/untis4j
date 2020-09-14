@@ -57,6 +57,18 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
+     * Sorts the given timetable by all time unit object and returns the sorted timetable
+     *
+     * @param timetable timetable that should be sorted
+     * @return the sorted timetable
+     * @since 1.1
+     */
+    public static Timetable sortByTimeUnits(Timetable timetable) {
+        timetable.sortByTimeUnitObjects();
+        return timetable;
+    }
+
+    /**
      * Sorts the given timetable by all klassen and returns the sorted timetable
      *
      * @param timetable timetable that should be sorted
@@ -163,6 +175,17 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      */
     public Lesson findByEndTime(LocalTime endTime) {
         return this.stream().filter(lesson -> lesson.getEndTime().equals(endTime)).findAny().orElse(null);
+    }
+
+    /**
+     * Finds a lesson by its time unit object
+     *
+     * @param timeUnitObject time unit object of the lesson you want to find
+     * @return the lesson
+     * @since 1.1
+     */
+    public Lesson findByTimeUnitObject(TimeUnits.TimeUnitObject timeUnitObject) {
+        return this.stream().filter(lesson -> lesson.getTimeUnitObject().equals(timeUnitObject)).findAny().orElse(null);
     }
 
     /**
@@ -285,7 +308,22 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
-     * Finds lessons that have the {@code klassenIds} or a part of it in their klassen ids
+     * Finds lessons that have the {@code timeUnitObject} or a part of it in their time unit object
+     *
+     * @param timeUnitObject time unit object of the lessons you want to search
+     * @return {@link Timetable} with lessons that have the {@code endTime} or a part of it in their end time
+     * @since 1.1
+     */
+    public Timetable searchByTimeUnits(TimeUnits.TimeUnitObject timeUnitObject) {
+        Timetable timetable = new Timetable();
+
+        this.stream().filter(lesson -> lesson.getTimeUnitObject().equals(timeUnitObject)).forEach(timetable::add);
+
+        return timetable;
+    }
+
+    /**
+     * Finds lessons that have the {@code klassenIds} or a part of it in their klassen
      *
      * @param klassen klassen of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code klassenIds} or a part of it in their klassen ids
@@ -304,7 +342,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
-     * Finds lessons that have the {@code teacherIds} or a part of it in their teacher ids
+     * Finds lessons that have the {@code teacherIds} or a part of it in their teachers
      *
      * @param teachers teachers of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code teacherIds} or a part of it in their teacher ids
@@ -323,7 +361,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
-     * Finds lessons that have the {@code roomIds} or a part of it in their room ids
+     * Finds lessons that have the {@code roomIds} or a part of it in their rooms
      *
      * @param rooms rooms of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code roomIds} or a part of it in their room ids
@@ -342,7 +380,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
-     * Finds lessons that have the {@code subjectIds} or a part of it in their subject ids
+     * Finds lessons that have the {@code subjectIds} or a part of it in their subjects
      *
      * @param subjects subjects of the lessons you want to search
      * @return {@link Timetable} with lessons that have the {@code subjectIds} or a part of it in their subject ids
@@ -415,6 +453,15 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
      */
     public void sortByEndTime() {
         this.sort(Comparator.comparing(Lesson::getEndTime));
+    }
+
+    /**
+     * Sorts the timetable by all time unit objects
+     *
+     * @since 1.1
+     */
+    public void sortByTimeUnitObjects() {
+        this.sort(Comparator.comparing(o -> o.getTimeUnitObject().getStartTime()));
     }
 
     /**
@@ -574,6 +621,20 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
+     * Returns all time units that are saved in the lessons
+     *
+     * @return all time units
+     * @since 1.1
+     */
+    public TimeUnits getTimeUnits() {
+        TimeUnits timeUnits = new TimeUnits();
+
+        this.stream().map(Lesson::getTimeUnitObject).forEach(timeUnits::add);
+
+        return timeUnits;
+    }
+
+    /**
      * Returns all klassen that are saved in the lessons
      *
      * @return all klassen
@@ -668,6 +729,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
         private final LocalDate date;
         private final LocalTime startTime;
         private final LocalTime endTime;
+        private final TimeUnits.TimeUnitObject timeUnitObject;
         private final Klassen klassen;
         private final Teachers teachers;
         private final Rooms rooms;
@@ -692,6 +754,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
         public Lesson(LocalDate date,
                       LocalTime startTime,
                       LocalTime endTime,
+                      TimeUnits.TimeUnitObject timeUnitObject,
                       Klassen klassen,
                       Teachers teachers,
                       Rooms rooms,
@@ -699,13 +762,14 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
                       UntisUtils.LessonCode code,
                       String activityType) {
             this.date = date;
+            this.startTime = startTime;
+            this.endTime = endTime;
+            this.timeUnitObject = timeUnitObject;
             this.klassen = klassen;
             this.teachers = teachers;
             this.rooms = rooms;
             this.subjects = subjects;
             this.code = code;
-            this.startTime = startTime;
-            this.endTime = endTime;
             this.activityType = activityType;
         }
 
@@ -737,6 +801,16 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          */
         public LocalTime getEndTime() {
             return endTime;
+        }
+
+        /**
+         * Returns the time unit
+         *
+         * @return the time unit
+         * @since 1.1
+         */
+        public TimeUnits.TimeUnitObject getTimeUnitObject() {
+            return timeUnitObject;
         }
 
         /**

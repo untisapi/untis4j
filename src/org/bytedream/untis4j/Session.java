@@ -732,6 +732,7 @@ public class Session {
                 timetable.add(new Timetable.Lesson(LocalDate.parse(String.valueOf(timetableInfos.getInt("date")), DateTimeFormatter.ofPattern("yyyyMMdd")),
                         startTime,
                         endTime,
+                        getTimegridUnits().get(0).getTimeUnits().findByStartTime(startTime),
                         klassen,
                         teachers,
                         rooms,
