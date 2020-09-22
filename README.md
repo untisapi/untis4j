@@ -1,6 +1,6 @@
 **_untis4j_** - a java API for webuntis
 
-[Click here to get the latest version of the API (dependencies included)](https://github.com/ByteDream/untis4j/releases/download/v1.0/untis4j-1.0.jar)
+[Click here to get the latest version of the API (dependencies NOT included)](https://github.com/ByteDream/untis4j/releases/download/v1.0/untis4j-1.0.jar)
 
 # Introduction
 
