@@ -25,7 +25,7 @@ To get an overview about all classes and methods, read the [docs](https://bytedr
 ## Simple timetable
 
 ```java
-import org.bytedream.untis4j.responseObjects.Klassen;import org.bytedream.untis4j.responseObjects.Timetable;public class Main {
+public class Main {
     public static void main(String[] args) {
         try { 
             Session session = Session.login("your webuntis username", "your webuntis password", "webuntis.grupet.at", "demo_inf");  // create a new webuntis session
@@ -114,7 +114,7 @@ You can use [caching](#Caching) to minimize your server requests and the risc of
 
 ## Caching
 
-Caching is available since version `1.1` and allows to use saved request responses.
+Caching is available since the last few commits and allows to use saved request responses.
 The advantages of caching are the obviously faster answer when the same things are requested, that the server does not have to send as much data and in case of internet loss data can still be accessed.
 Caching is activated by default. You can use `Session.useCache(...)` to enable / disable it.
 
