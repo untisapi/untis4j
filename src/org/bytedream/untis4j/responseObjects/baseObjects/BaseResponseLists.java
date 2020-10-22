@@ -191,7 +191,6 @@ public class BaseResponseLists {
          * Returns all ids that are saved in the list
          *
          * @return all ids
-         *
          * @since 1.1
          */
         public ArrayList<Integer> getIds() {
@@ -206,7 +205,6 @@ public class BaseResponseLists {
          * Returns all long names that are saved in the list
          *
          * @return all long names
-         *
          * @since 1.1
          */
         public ArrayList<String> getLongNames() {
@@ -278,7 +276,6 @@ public class BaseResponseLists {
          * Returns all activity types that are saved in the list
          *
          * @return all activity types
-         *
          * @since 1.1
          */
         public ArrayList<Boolean> getActiveTypes() {

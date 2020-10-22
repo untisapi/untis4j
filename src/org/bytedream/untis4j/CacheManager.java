@@ -4,7 +4,6 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.ResponseList;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -73,14 +72,12 @@ public class CacheManager {
      * @since 1.1
      */
     public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<T> action) throws IOException {
-        System.out.println("Enter..." + method + ";");
         Object[] key = {method, params};
 
         Function<Object[], BaseResponse> function = (objects) -> {
             try {
                 BaseResponse response = action.getResponse(requestManager.POST(method.getMethod(), params));
                 this.add(key, response);
-                System.out.println("Exit..." + method + ";");
                 return response;
             } catch (IOException e) {
                 return null;
