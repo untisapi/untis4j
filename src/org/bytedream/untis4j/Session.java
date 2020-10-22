@@ -695,6 +695,8 @@ public class Session {
             Subjects s = getSubjects();
             Rooms r = getRooms();
 
+            TimeUnits timeUnits = getTimegridUnits().get(0).getTimeUnits();
+
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject timetableInfos = jsonArray.getJSONObject(i);
 
@@ -748,7 +750,7 @@ public class Session {
                 timetable.add(new Timetable.Lesson(LocalDate.parse(String.valueOf(timetableInfos.getInt("date")), DateTimeFormatter.ofPattern("yyyyMMdd")),
                         startTime,
                         endTime,
-                        getTimegridUnits().get(0).getTimeUnits().findByStartTime(startTime),
+                        timeUnits.findByStartTime(startTime),
                         klassen,
                         teachers,
                         rooms,
@@ -1001,26 +1003,6 @@ public class Session {
      */
     public void useCache(boolean useCache) {
         this.useCache = useCache;
-    }
-
-    /**
-     * Returns if the cache manager operates thread safe or not
-     *
-     * @return thread save or not
-     * @since 1.1
-     */
-    public boolean isCacheThreadSafe() {
-        return cacheManager.isThreadSafe();
-    }
-
-    /**
-     * Sets if the cache manager should operate thread safe or not
-     *
-     * @param threadSafe set thread safe or not
-     * @since 1.1
-     */
-    public void setCacheThreadSafe(boolean threadSafe) {
-        cacheManager.setThreadSafe(threadSafe);
     }
 
 }
