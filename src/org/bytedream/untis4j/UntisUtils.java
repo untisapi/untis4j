@@ -110,12 +110,38 @@ public class UntisUtils {
 
         private final int elementType;
 
+        /**
+         * Private {@link ElementType} initializer
+         *
+         * @param elementType element type int
+         * @since 1.0
+         */
         ElementType(int elementType) {
             this.elementType = elementType;
         }
 
+        /**
+         * Returns the id of the element type
+         *
+         * @return the id of the element type
+         * @since 1.0
+         */
         public int getElementType() {
             return elementType;
+        }
+
+        /**
+         * Returns an {@link ElementType} based on the given value
+         *
+         * @param elementType element type int from which you want to get the {@link ElementType}
+         * @return the {@link ElementType}
+         * @since 1.1
+         */
+        public static ElementType of(int elementType) {
+            if (1 > elementType || elementType > 6) {
+                throw new EnumConstantNotPresentException(ElementType.class, "Invalid value for ElementType: " + elementType);
+            }
+            return ElementType.values()[elementType - 1];
         }
     }
 
@@ -151,10 +177,22 @@ public class UntisUtils {
 
         private final String method;
 
+        /**
+         * Private {@link Method} initializer
+         *
+         * @param method method string
+         * @since 1.0
+         */
         Method(String method) {
             this.method = method;
         }
 
+        /**
+         * Returns the string of the method
+         *
+         * @return the string of the method
+         * @since 1.0
+         */
         public String getMethod() {
             return method;
         }
