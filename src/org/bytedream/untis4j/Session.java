@@ -9,6 +9,7 @@ import org.bytedream.untis4j.responseObjects.*;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -65,6 +66,7 @@ public class Session {
      * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
      *
      * @see Session#login(String, String, String, String, String, boolean)
+     * @since 1.0
      */
     public static Session login(String username, String password, String server, String schoolName) throws IOException {
         return login(username, password, server, schoolName, "", true);
@@ -77,6 +79,7 @@ public class Session {
      * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
      *
      * @see Session#login(String, String, String, String, String, boolean)
+     * @since 1.1
      */
     public static Session login(String username, String password, String server, String schoolName, boolean useCache) throws IOException {
         return login(username, password, server, schoolName, "", useCache);
@@ -519,13 +522,26 @@ public class Session {
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject subjectInfo = jsonArray.getJSONObject(i);
+
+                String backColor = "b1b3b4";
+                String foreColor = "b1b3b4";
+
+                try {
+                    backColor = subjectInfo.getString("backColor");
+                } catch (JSONException ignore) {
+                }
+                try {
+                    foreColor = subjectInfo.getString("foreColor");
+                } catch (JSONException ignore) {
+                }
+
                 subjects.add(new Subjects.SubjectObject(subjectInfo.getString("name"),
                         subjectInfo.getBoolean("active"),
                         subjectInfo.getInt("id"),
                         subjectInfo.getString("longName"),
                         subjectInfo.getString("alternateName"),
-                        subjectInfo.getString("backColor"),
-                        subjectInfo.getString("foreColor")));
+                        backColor,
+                        foreColor));
             }
 
             return subjects;
@@ -923,7 +939,7 @@ public class Session {
     }
 
     /**
-     * Refreshes the session.
+     * Reconnects the session.
      *
      * <p>Logs out and then logs in again. If this works the {@link RequestManager} gets refreshed.
      * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which extends from IOException) if login fails</p>
@@ -931,21 +947,10 @@ public class Session {
      * @throws IOException if an IO Exception occurs
      * @since 1.0
      */
-    public void refresh() throws IOException {
+    public void reconnect() throws IOException {
         logout();
 
-        RequestManager requestManager = new RequestManager(infos);
-
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("user", infos.getUsername());
-        params.put("password", infos.getPassword());
-        params.put("client", "");
-
-        if (requestManager.POST(UntisUtils.Method.LOGIN.getMethod(), params).isError()) {
-            throw new LoginException("Failed to login");
-        } else {
-            this.requestManager = requestManager;
-        }
+        this.requestManager = new RequestManager(RequestManager.generateUserInfosAndLogin(infos.getUsername(), infos.getPassword(), infos.getServer(), infos.getSchoolName(), infos.getUserAgent()));
     }
 
     /**

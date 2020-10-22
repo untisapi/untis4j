@@ -1,12 +1,10 @@
 package org.bytedream.untis4j.responseObjects.baseObjects;
 
-import org.bytedream.untis4j.Response;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NAILResponseObject;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NILResponseObject;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.ResponseObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 
 /**

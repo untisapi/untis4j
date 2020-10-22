@@ -175,24 +175,15 @@ public class RequestManager {
 
             if (jsonObject.has("error")) {
                 JSONObject errorObject = jsonObject.getJSONObject("error");
-                throw new ConnectException("The response contains an error (" + errorObject.getInt("errorObject") + "): " + errorObject.getString("message"));
+                throw new LoginException("The response contains an error (" + errorObject.getInt("errorObject") + "): " + errorObject.getString("message"));
             }
         } catch (JSONException e) {
-            throw new ConnectException("An unexpected exception occurred: " + stringBuilder.toString());
+            throw new IOException("An unexpected exception occurred: " + stringBuilder.toString());
         }
 
         JSONObject result = jsonObject.getJSONObject("result");
 
-        int personId = result.getInt("personId");
-
-        UntisUtils.ElementType elementType = null;
-        UntisUtils.ElementType[] elementTypes = UntisUtils.ElementType.values();
-        for (int i = 0; i < 5; i++) {
-            if (elementTypes[i].getElementType() == personId - 1) {
-                elementType = elementTypes[i];
-                break;
-            }
-        }
+        UntisUtils.ElementType elementType = UntisUtils.ElementType.of(result.getInt("personType"));
 
         return new Infos(username, password, server, schoolName, userAgent, result.getString("sessionId"), elementType, result.getInt("klasseId"));
     }

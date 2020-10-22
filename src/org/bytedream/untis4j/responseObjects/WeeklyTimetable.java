@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -13,10 +14,10 @@ import java.util.HashMap;
  * @version 1.0
  * @since 1.1
  */
-public class WeeklyTimetable implements BaseResponse {
+public class WeeklyTimetable extends ArrayList<Timetable> implements BaseResponse {
 
     private final LocalDate startOfWeek;
-    private final Timetable[] timetables = new Timetable[7];
+    private final ArrayList<Timetable> timetables = new ArrayList<>();
 
     /**
      * Initialize the {@link WeeklyTimetable} class
@@ -34,13 +35,13 @@ public class WeeklyTimetable implements BaseResponse {
     public WeeklyTimetable(LocalDate startOfWeek, Timetable monday, Timetable tuesday, Timetable wednesday, Timetable thursday, Timetable friday, Timetable saturday, Timetable sunday) {
         this.startOfWeek = startOfWeek;
 
-        timetables[0] = monday;
-        timetables[1] = tuesday;
-        timetables[2] = wednesday;
-        timetables[3] = thursday;
-        timetables[4] = friday;
-        timetables[5] = saturday;
-        timetables[6] = sunday;
+        timetables.add(monday);
+        timetables.add(tuesday);
+        timetables.add(wednesday);
+        timetables.add(thursday);
+        timetables.add(friday);
+        timetables.add(saturday);
+        timetables.add(sunday);
     }
 
     /**
@@ -62,7 +63,7 @@ public class WeeklyTimetable implements BaseResponse {
      * @since 1.1
      */
     public Timetable getTimetable(DayOfWeek dayOfWeek) {
-        return timetables[dayOfWeek.getValue() - 1];
+        return timetables.get(dayOfWeek.getValue() - 1);
     }
 
     /**
@@ -72,20 +73,20 @@ public class WeeklyTimetable implements BaseResponse {
      * @since 1.1
      */
     public int size() {
-        return timetables.length;
+        return timetables.size();
     }
 
     @Override
     public String toString() {
         HashMap<String, Object> weeklyTimetableAsMap = new HashMap<>();
 
-        weeklyTimetableAsMap.put("1", timetables[0]);
-        weeklyTimetableAsMap.put("2", timetables[1]);
-        weeklyTimetableAsMap.put("3", timetables[2]);
-        weeklyTimetableAsMap.put("4", timetables[3]);
-        weeklyTimetableAsMap.put("5", timetables[4]);
-        weeklyTimetableAsMap.put("6", timetables[5]);
-        weeklyTimetableAsMap.put("7", timetables[6]);
+        weeklyTimetableAsMap.put("1", timetables.get(0));
+        weeklyTimetableAsMap.put("2", timetables.get(1));
+        weeklyTimetableAsMap.put("3", timetables.get(2));
+        weeklyTimetableAsMap.put("4", timetables.get(3));
+        weeklyTimetableAsMap.put("5", timetables.get(4));
+        weeklyTimetableAsMap.put("6", timetables.get(5));
+        weeklyTimetableAsMap.put("7", timetables.get(6));
 
         return new JSONObject(weeklyTimetableAsMap).toString();
     }

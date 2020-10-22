@@ -226,7 +226,7 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
             this.title = title;
             this.forename = foreName;
 
-            fullName = title + foreName + longName;
+            fullName = title + " " + foreName + " " + longName;
         }
 
         /**

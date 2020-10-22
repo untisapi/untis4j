@@ -19,6 +19,11 @@ public class BaseResponseObjects {
      * @since 1.0
      */
     public static class ResponseObject implements BaseResponse {
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj.toString().equals(this.toString());
+        }
     }
 
     /**
