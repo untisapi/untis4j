@@ -116,9 +116,7 @@ You can use [caching](#Caching) to minimize your server requests and the risc of
 
 Caching is available since the last few commits and allows to use saved request responses.
 The advantages of caching are the obviously faster answer when the same things are requested, that the server does not have to send as much data and in case of internet loss data can still be accessed.
-Caching is activated by default. You can use `Session.useCache(...)` to enable / disable it.
-
-NOTE: Caching is NOT thread-safe
+Caching is activated by default, but can use `Session.useCache(...)` to enable / disable it.
 
 # Licence
 
