@@ -121,16 +121,6 @@ public class UntisUtils {
         }
 
         /**
-         * Returns the id of the element type
-         *
-         * @return the id of the element type
-         * @since 1.0
-         */
-        public int getElementType() {
-            return elementType;
-        }
-
-        /**
          * Returns an {@link ElementType} based on the given value
          *
          * @param elementType element type int from which you want to get the {@link ElementType}
@@ -142,6 +132,16 @@ public class UntisUtils {
                 throw new EnumConstantNotPresentException(ElementType.class, "Invalid value for ElementType: " + elementType);
             }
             return ElementType.values()[elementType - 1];
+        }
+
+        /**
+         * Returns the id of the element type
+         *
+         * @return the id of the element type
+         * @since 1.0
+         */
+        public int getElementType() {
+            return elementType;
         }
     }
 

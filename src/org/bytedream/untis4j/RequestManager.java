@@ -21,8 +21,8 @@ import java.util.Map;
  */
 public class RequestManager {
 
-    private final Infos infos;
     private static final String baseURL = "/WebUntis/jsonrpc.do";
+    private final Infos infos;
     private final String url;
     private boolean loggedIn = true;
 
@@ -36,6 +36,69 @@ public class RequestManager {
         this.infos = infos;
 
         url = infos.getServer() + baseURL + "?school=" + infos.getSchoolName();
+    }
+
+    /**
+     * A method to generate user infos and logging in
+     *
+     * @param username   the username used for the api
+     * @param password   the password used for the api
+     * @param server     the server used for the api
+     * @param schoolName the school name used for the api
+     * @param userAgent  the user agent used for the api
+     * @return the generated infos
+     * @throws IOException if an IO Exception occurs
+     * @since 1.1
+     */
+    public static Infos generateUserInfosAndLogin(String username, String password, String server, String schoolName, String userAgent) throws IOException {
+        URL url = new URL(server + baseURL + "?school=" + schoolName);
+        String requestBody = UntisUtils.processParams(UntisUtils.Method.LOGIN.getMethod(), new HashMap<String, String>() {{
+            put("user", username);
+            put("password", password);
+            put("client", userAgent);
+        }});
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+
+        connection.setRequestMethod("POST");
+        connection.setDoOutput(true);
+        connection.setRequestProperty("User-Agent", userAgent);
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+        outputStream.writeBytes(requestBody);
+
+        BufferedReader input;
+
+        if (connection.getResponseCode() > 299) {
+            input = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+        } else {
+            input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        while ((line = input.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+
+        JSONObject jsonObject;
+
+        try {
+            jsonObject = new JSONObject(stringBuilder.toString());
+
+            if (jsonObject.has("error")) {
+                JSONObject errorObject = jsonObject.getJSONObject("error");
+                throw new LoginException("The response contains an error (" + errorObject.getInt("errorObject") + "): " + errorObject.getString("message"));
+            }
+        } catch (JSONException e) {
+            throw new IOException("An unexpected exception occurred: " + stringBuilder.toString());
+        }
+
+        JSONObject result = jsonObject.getJSONObject("result");
+
+        UntisUtils.ElementType elementType = UntisUtils.ElementType.of(result.getInt("personType"));
+
+        return new Infos(username, password, server, schoolName, userAgent, result.getString("sessionId"), elementType, result.getInt("klasseId"));
     }
 
     /**
@@ -123,69 +186,6 @@ public class RequestManager {
      */
     public String getURL() {
         return url;
-    }
-
-    /**
-     * A method to generate user infos and logging in
-     *
-     * @param username   the username used for the api
-     * @param password   the password used for the api
-     * @param server     the server used for the api
-     * @param schoolName the school name used for the api
-     * @param userAgent  the user agent used for the api
-     * @return the generated infos
-     * @throws IOException if an IO Exception occurs
-     * @since 1.1
-     */
-    public static Infos generateUserInfosAndLogin(String username, String password, String server, String schoolName, String userAgent) throws IOException {
-        URL url = new URL(server + baseURL + "?school=" + schoolName);
-        String requestBody = UntisUtils.processParams(UntisUtils.Method.LOGIN.getMethod(), new HashMap<String, String>() {{
-            put("user", username);
-            put("password", password);
-            put("client", userAgent);
-        }});
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
-        connection.setRequestProperty("User-Agent", userAgent);
-        connection.setRequestProperty("Content-Type", "application/json");
-
-        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-        outputStream.writeBytes(requestBody);
-
-        BufferedReader input;
-
-        if (connection.getResponseCode() > 299) {
-            input = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-        } else {
-            input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        }
-
-        StringBuilder stringBuilder = new StringBuilder();
-        String line;
-        while ((line = input.readLine()) != null) {
-            stringBuilder.append(line);
-        }
-
-        JSONObject jsonObject;
-
-        try {
-            jsonObject = new JSONObject(stringBuilder.toString());
-
-            if (jsonObject.has("error")) {
-                JSONObject errorObject = jsonObject.getJSONObject("error");
-                throw new LoginException("The response contains an error (" + errorObject.getInt("errorObject") + "): " + errorObject.getString("message"));
-            }
-        } catch (JSONException e) {
-            throw new IOException("An unexpected exception occurred: " + stringBuilder.toString());
-        }
-
-        JSONObject result = jsonObject.getJSONObject("result");
-
-        UntisUtils.ElementType elementType = UntisUtils.ElementType.of(result.getInt("personType"));
-
-        return new Infos(username, password, server, schoolName, userAgent, result.getString("sessionId"), elementType, result.getInt("klasseId"));
     }
 
 }
