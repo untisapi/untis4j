@@ -102,6 +102,9 @@ public class Session {
      * @since 1.0
      */
     public static Session login(String username, String password, String server, String schoolName, String userAgent, boolean useCache) throws IOException {
+        if (!server.startsWith("http://") && !server.startsWith("https://")) {
+            server = "https://" + server;
+        }
         Infos infos = RequestManager.generateUserInfosAndLogin(username, password, server, schoolName, userAgent);
 
         RequestManager requestManager = new RequestManager(infos);

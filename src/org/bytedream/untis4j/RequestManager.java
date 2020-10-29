@@ -3,12 +3,12 @@ package org.bytedream.untis4j;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ConnectException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,9 +57,10 @@ public class RequestManager {
             put("password", password);
             put("client", userAgent);
         }});
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod("POST");
+        connection.setInstanceFollowRedirects(true);
         connection.setDoOutput(true);
         connection.setRequestProperty("User-Agent", userAgent);
         connection.setRequestProperty("Content-Type", "application/json");
@@ -69,10 +70,10 @@ public class RequestManager {
 
         BufferedReader input;
 
-        if (connection.getResponseCode() > 299) {
-            input = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-        } else {
+        try {
             input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        } catch (NullPointerException e) {
+            input = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -126,9 +127,10 @@ public class RequestManager {
             boolean error;
             URL url = new URL(this.url);
             String requestBody = UntisUtils.processParams(method, params);
-            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setRequestMethod("POST");
+            connection.setInstanceFollowRedirects(true);
             connection.setDoOutput(true);
             connection.setRequestProperty("User-Agent", infos.getUserAgent());
             connection.setRequestProperty("Content-Type", "application/json");
@@ -140,12 +142,12 @@ public class RequestManager {
 
             BufferedReader input;
 
-            if (connection.getResponseCode() > 299) {
+            try {
+                input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                error = false;
+            } catch (NullPointerException e) {
                 error = true;
                 input = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-            } else {
-                error = false;
-                input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             }
 
             StringBuilder stringBuilder = new StringBuilder();

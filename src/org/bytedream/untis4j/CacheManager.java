@@ -4,6 +4,7 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.ResponseList;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -16,7 +17,7 @@ import java.util.function.Function;
  */
 public class CacheManager {
 
-    private final HashMap<Object[], BaseResponse> cachedInformation = new HashMap<>();
+    private final HashMap<Integer, BaseResponse> cachedInformation = new HashMap<>();
 
     /**
      * Adds content to the cache
@@ -26,7 +27,7 @@ public class CacheManager {
      * @since 1.1
      */
     public <T extends BaseResponse> void add(Object[] keys, T content) {
-        this.cachedInformation.put(keys, content);
+        this.cachedInformation.put(Arrays.hashCode(keys), content);
     }
 
     /**
@@ -37,7 +38,7 @@ public class CacheManager {
      * @since 1.1
      */
     public boolean contains(UntisUtils.Method method) {
-        return cachedInformation.containsKey(new Object[]{method, new HashMap<>()});
+        return cachedInformation.containsKey(Arrays.hashCode(new Object[]{method, new HashMap<>()}));
     }
 
     /**
@@ -47,7 +48,7 @@ public class CacheManager {
      * @since 1.1
      */
     public <T extends BaseResponse> T get(UntisUtils.Method method) {
-        return (T) cachedInformation.get(new Object[]{method, new HashMap<>()});
+        return (T) cachedInformation.get(Arrays.hashCode(new Object[]{method, new HashMap<>()}));
     }
 
     /**
@@ -72,19 +73,19 @@ public class CacheManager {
      * @since 1.1
      */
     public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<T> action) throws IOException {
-        Object[] key = {method, params};
+        int keyHashCode = Arrays.hashCode(new Object[]{method, params});
 
-        Function<Object[], BaseResponse> function = (objects) -> {
+        Function<Integer, BaseResponse> function = (objects) -> {
             try {
                 BaseResponse response = action.getResponse(requestManager.POST(method.getMethod(), params));
-                this.add(key, response);
+                cachedInformation.put(keyHashCode, response);
                 return response;
             } catch (IOException e) {
                 return null;
             }
         };
 
-        return (T) cachedInformation.computeIfAbsent(key, function);
+        return (T) cachedInformation.computeIfAbsent(keyHashCode, function);
     }
 
     /**
@@ -107,7 +108,7 @@ public class CacheManager {
      */
     public void removeIf(boolean condition, UntisUtils.Method methodToRemove, Map<String, ?> params) {
         if (condition) {
-            cachedInformation.remove(new Object[]{methodToRemove, params});
+            cachedInformation.remove(Arrays.hashCode(new Object[]{methodToRemove, params}));
         }
     }
 
@@ -130,7 +131,7 @@ public class CacheManager {
      * @since 1.1
      */
     public <T extends BaseResponse> void update(UntisUtils.Method method, Map<String, ?> params, T content) {
-        cachedInformation.replace(new Object[]{method, params}, content);
+        cachedInformation.replace(Arrays.hashCode(new Object[]{method, params}), content);
     }
 
     /**
@@ -144,7 +145,7 @@ public class CacheManager {
      * @since 1.1
      */
     public void update(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<? extends BaseResponse> action) throws IOException {
-        cachedInformation.replace(new Object[]{method, params}, action.getResponse(requestManager.POST(method.getMethod(), params)));
+        cachedInformation.replace(Arrays.hashCode(new Object[]{method, params}), action.getResponse(requestManager.POST(method.getMethod(), params)));
     }
 
 }
