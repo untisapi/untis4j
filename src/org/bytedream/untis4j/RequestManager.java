@@ -123,7 +123,7 @@ public class RequestManager {
      */
     public Response POST(String method, Map<String, ?> params) throws IOException {
 
-        if (loggedIn || method.equals(UntisUtils.Method.LOGIN.getMethod())) {
+        if (loggedIn) {
             boolean error;
             URL url = new URL(this.url);
             String requestBody = UntisUtils.processParams(method, params);

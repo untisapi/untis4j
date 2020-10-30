@@ -33,7 +33,7 @@ public class Session {
     private final Infos infos;
 
     private int lastChange;
-    private boolean useCache;
+    private boolean useCache = true;
     private CacheManager cacheManager = new CacheManager();
     private RequestManager requestManager;
 
@@ -44,13 +44,11 @@ public class Session {
      *
      * @param infos          infos about the user
      * @param requestManager manager that handles all requests
-     * @param useCache       sets if every request response should be saved in cache
      * @since 1.0
      */
-    private Session(Infos infos, RequestManager requestManager, boolean useCache) {
+    private Session(Infos infos, RequestManager requestManager) {
         this.infos = infos;
         this.requestManager = requestManager;
-        this.useCache = useCache;
 
         try {
             this.lastChange = getLatestImportTime().getLatestImportTime();
@@ -65,24 +63,11 @@ public class Session {
      * <p>Send an login request to the server and returns {@link Session} if the login was successful.
      * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
      *
-     * @see Session#login(String, String, String, String, String, boolean)
+     * @see Session#login(String, String, String, String, String)
      * @since 1.0
      */
     public static Session login(String username, String password, String server, String schoolName) throws IOException {
-        return login(username, password, server, schoolName, "", true);
-    }
-
-    /**
-     * Logs in to the server.
-     *
-     * <p>Send an login request to the server and returns {@link Session} if the login was successful.
-     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
-     *
-     * @see Session#login(String, String, String, String, String, boolean)
-     * @since 1.1
-     */
-    public static Session login(String username, String password, String server, String schoolName, boolean useCache) throws IOException {
-        return login(username, password, server, schoolName, "", useCache);
+        return login(username, password, server, schoolName, "");
     }
 
     /**
@@ -96,12 +81,11 @@ public class Session {
      * @param username   the username used for the API
      * @param password   the password used for the API
      * @param userAgent  the user agent you want to send with
-     * @param useCache   sets if every request response should be saved in cache
      * @return a {@link Session} session
      * @throws IOException if an IO Exception occurs
      * @since 1.0
      */
-    public static Session login(String username, String password, String server, String schoolName, String userAgent, boolean useCache) throws IOException {
+    public static Session login(String username, String password, String server, String schoolName, String userAgent) throws IOException {
         if (!server.startsWith("http://") && !server.startsWith("https://")) {
             server = "https://" + server;
         }
@@ -109,7 +93,34 @@ public class Session {
 
         RequestManager requestManager = new RequestManager(infos);
 
-        return new Session(infos, requestManager, useCache);
+        return new Session(infos, requestManager);
+    }
+
+    /**
+     * Logs out from the server.
+     *
+     * <p>Send an logout request to the server. Throws {@link IOException} if an IO Exception occurs</p>
+     *
+     * @throws IOException if an IO Exception occurs
+     * @since 1.0
+     */
+    public void logout() throws IOException {
+        requestManager.POST(UntisUtils.Method.LOGOUT.getMethod());
+    }
+
+    /**
+     * Reconnects the session.
+     *
+     * <p>Logs out and then logs in again. If this works the {@link RequestManager} gets refreshed.
+     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which extends from IOException) if login fails</p>
+     *
+     * @throws IOException if an IO Exception occurs
+     * @since 1.0
+     */
+    public void reconnect() throws IOException {
+        logout();
+
+        this.requestManager = new RequestManager(RequestManager.generateUserInfosAndLogin(infos.getUsername(), infos.getPassword(), infos.getServer(), infos.getSchoolName(), infos.getUserAgent()));
     }
 
     /**
@@ -929,33 +940,6 @@ public class Session {
         } else {
             return requestManager.POST(method);
         }
-    }
-
-    /**
-     * Logs out from the server.
-     *
-     * <p>Send an logout request to the server. Throws {@link IOException} if an IO Exception occurs</p>
-     *
-     * @throws IOException if an IO Exception occurs
-     * @since 1.0
-     */
-    public void logout() throws IOException {
-        requestManager.POST(UntisUtils.Method.LOGOUT.getMethod());
-    }
-
-    /**
-     * Reconnects the session.
-     *
-     * <p>Logs out and then logs in again. If this works the {@link RequestManager} gets refreshed.
-     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which extends from IOException) if login fails</p>
-     *
-     * @throws IOException if an IO Exception occurs
-     * @since 1.0
-     */
-    public void reconnect() throws IOException {
-        logout();
-
-        this.requestManager = new RequestManager(RequestManager.generateUserInfosAndLogin(infos.getUsername(), infos.getPassword(), infos.getServer(), infos.getSchoolName(), infos.getUserAgent()));
     }
 
     /**
