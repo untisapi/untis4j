@@ -1,11 +1,13 @@
 **_untis4j_** - a java API for webuntis
 
-[Click here to get the latest version of the API (dependencies included)](https://github.com/ByteDream/untis4j/releases/download/v1.2/untis4j-1.2-withDependencies.jar)
+[Click here to get the latest version of the API (dependencies included)](https://github.com/ByteDream/untis4j/releases/download/v1.1/untis4j-1.1-withDependencies.jar)
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/415176566ce24467a7a3f0fbf2b932cf)](https://www.codacy.com/gh/ByteDream/untis4j/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ByteDream/untis4j&amp;utm_campaign=Badge_Grade)
 [![Download Badge](https://img.shields.io/github/downloads/ByteDream/untis4j/total)](https://github.com/ByteDream/untis4j)
 
 # Introduction
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/903fc37d59734fb5a3d5bbd071e9ff75)](https://app.codacy.com/gh/ByteDream/untis4j?utm_source=github.com&utm_medium=referral&utm_content=ByteDream/untis4j&utm_campaign=Badge_Grade_Settings)
 
 **untis4j** is a rich java API for the webuntis timetable / schedule software and is inspired from the [python webuntis api](https://github.com/python-webuntis/python-webuntis)
 and another [java webuntis api](https://github.com/FearlessTobi/WebUntis-Java).
@@ -19,7 +21,7 @@ you can easily implement the method yourself with the `Session.getCustomData(...
 
 # Installation
 
-Just download the latest [untis4j.jar](https://github.com/ByteDream/untis4j/releases/download/v1.2/untis4j-1.2-withDependencies.jar) file, implement it into your project and start coding :)
+Just download the latest [untis4j.jar](https://github.com/ByteDream/untis4j/releases/download/v1.1/untis4j-1.1-withDependencies.jar) file, implement it into your project and start coding :)
 
 # Examples
 
