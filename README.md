@@ -2,6 +2,9 @@
 
 [Click here to get the latest version of the API (dependencies included)](https://github.com/ByteDream/untis4j/releases/download/v1.1/untis4j-1.1-withDependencies.jar)
 
+[![Codacy Badge](https://img.shields.io/codacy/grade/415176566ce24467a7a3f0fbf2b932cf)](https://www.codacy.com/gh/ByteDream/untis4j/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ByteDream/untis4j&amp;utm_campaign=Badge_Grade)
+[![Download Badge](https://img.shields.io/github/downloads/ByteDream/untis4j/total)](https://github.com/ByteDream/untis4j)
+
 # Introduction
 
 **untis4j** is a rich java API for the webuntis timetable / schedule software and is inspired from the [python webuntis api](https://github.com/python-webuntis/python-webuntis)
