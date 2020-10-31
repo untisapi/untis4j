@@ -700,6 +700,8 @@ public class Session {
             if (response.isError()) {
                 throw new IOException(response.getErrorMessage());
             }
+            System.out.println(jsonResponse);
+
             JSONArray jsonArray = jsonResponse.getJSONArray("result");
 
             Timetable timetable = new Timetable();
@@ -722,22 +724,24 @@ public class Session {
                 String[] arrayKeys = {"kl", "te", "su", "ro"};
 
                 for (String currentStringArray : arrayKeys) {
-                    JSONArray arrayJSONArray = timetableInfos.getJSONArray(currentStringArray);
-                    switch (currentStringArray) {
-                        case "kl":
-                            arrayJSONArray.forEach(o -> klassen.add(k.findById(((JSONObject) o).getInt("id"))));
-                            break;
-                        case "te":
-                            arrayJSONArray.forEach(o -> teachers.add(t.findById(((JSONObject) o).getInt("id"))));
-                            break;
-                        case "su":
-                            arrayJSONArray.forEach(o -> subjects.add(s.findById(((JSONObject) o).getInt("id"))));
-                            break;
-                        case "ro":
-                            arrayJSONArray.forEach(o -> rooms.add(r.findById(((JSONObject) o).getInt("id"))));
-                            break;
-                        default:
-                            throw new IllegalStateException("Unexpected value: " + currentStringArray);
+                    if (timetableInfos.has(currentStringArray)) { // some schools haven't specified their rooms or teachers
+                        JSONArray arrayJSONArray = timetableInfos.getJSONArray(currentStringArray);
+                        switch (currentStringArray) {
+                            case "kl":
+                                arrayJSONArray.forEach(o -> klassen.add(k.findById(((JSONObject) o).getInt("id"))));
+                                break;
+                            case "te":
+                                arrayJSONArray.forEach(o -> teachers.add(t.findById(((JSONObject) o).getInt("id"))));
+                                break;
+                            case "su":
+                                arrayJSONArray.forEach(o -> subjects.add(s.findById(((JSONObject) o).getInt("id"))));
+                                break;
+                            case "ro":
+                                arrayJSONArray.forEach(o -> rooms.add(r.findById(((JSONObject) o).getInt("id"))));
+                                break;
+                            default:
+                                throw new IllegalStateException("Unexpected value: " + currentStringArray);
+                        }
                     }
                 }
 
