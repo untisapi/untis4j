@@ -7,8 +7,6 @@
 
 # Introduction
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/903fc37d59734fb5a3d5bbd071e9ff75)](https://app.codacy.com/gh/ByteDream/untis4j?utm_source=github.com&utm_medium=referral&utm_content=ByteDream/untis4j&utm_campaign=Badge_Grade_Settings)
-
 **untis4j** is a rich java API for the webuntis timetable / schedule software and is inspired from the [python webuntis api](https://github.com/python-webuntis/python-webuntis)
 and another [java webuntis api](https://github.com/FearlessTobi/WebUntis-Java).
 It support almost all webuntis request and is easy to use. If a request method is missing,
