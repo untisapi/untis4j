@@ -700,7 +700,6 @@ public class Session {
             if (response.isError()) {
                 throw new IOException(response.getErrorMessage());
             }
-            System.out.println(jsonResponse);
 
             JSONArray jsonArray = jsonResponse.getJSONArray("result");
 
