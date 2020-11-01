@@ -20,17 +20,6 @@ public class CacheManager {
     private final HashMap<Integer, BaseResponse> cachedInformation = new HashMap<>();
 
     /**
-     * Adds content to the cache
-     *
-     * @param keys    keys of the object to cache
-     * @param content content of the cache
-     * @since 1.1
-     */
-    public <T extends BaseResponse> void add(Object[] keys, T content) {
-        this.cachedInformation.put(Arrays.hashCode(keys), content);
-    }
-
-    /**
      * Checks if a method is cached
      *
      * @param method method of the cached object you want to check
@@ -38,17 +27,7 @@ public class CacheManager {
      * @since 1.1
      */
     public boolean contains(UntisUtils.Method method) {
-        return cachedInformation.containsKey(Arrays.hashCode(new Object[]{method, new HashMap<>()}));
-    }
-
-    /**
-     * Gets content from the cache
-     *
-     * @param method method of the object in cache
-     * @since 1.1
-     */
-    public <T extends BaseResponse> T get(UntisUtils.Method method) {
-        return (T) cachedInformation.get(Arrays.hashCode(new Object[]{method, new HashMap<>()}));
+        return cachedInformation.containsKey(mapCode(method, new HashMap<>()));
     }
 
     /**
@@ -73,7 +52,7 @@ public class CacheManager {
      * @since 1.1
      */
     public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<T> action) throws IOException {
-        int keyHashCode = Arrays.hashCode(new Object[]{method, params});
+        int keyHashCode = mapCode(method, params);
 
         Function<Integer, BaseResponse> function = (objects) -> {
             try {
@@ -89,52 +68,6 @@ public class CacheManager {
     }
 
     /**
-     * Removes a response from the cache if the given condition is true
-     *
-     * @see CacheManager#removeIf(boolean, UntisUtils.Method, Map)
-     * @since 1.1
-     */
-    public void removeIf(boolean condition, UntisUtils.Method methodToRemove) {
-        removeIf(condition, methodToRemove, new HashMap<>());
-    }
-
-    /**
-     * Removes a response from the cache if the given condition is true
-     *
-     * @param condition      condition you want to check
-     * @param methodToRemove response to remove
-     * @param params         extra parameter for the method
-     * @since 1.1
-     */
-    public void removeIf(boolean condition, UntisUtils.Method methodToRemove, Map<String, ?> params) {
-        if (condition) {
-            cachedInformation.remove(Arrays.hashCode(new Object[]{methodToRemove, params}));
-        }
-    }
-
-    /**
-     * Updates cache content
-     *
-     * @see CacheManager#update(UntisUtils.Method, Map, BaseResponse)
-     * @since 1.1
-     */
-    public <T extends BaseResponse> void update(UntisUtils.Method method, T content) {
-        this.update(method, new HashMap<>(), content);
-    }
-
-    /**
-     * Updates cache content
-     *
-     * @param method  method of the object in cache
-     * @param params  extra parameter of the method
-     * @param content content for the new cache
-     * @since 1.1
-     */
-    public <T extends BaseResponse> void update(UntisUtils.Method method, Map<String, ?> params, T content) {
-        cachedInformation.replace(Arrays.hashCode(new Object[]{method, params}), content);
-    }
-
-    /**
      * Updates cache content with a lambda expression
      *
      * @param requestManager request manager through which the POST requests are sent
@@ -145,7 +78,19 @@ public class CacheManager {
      * @since 1.1
      */
     public void update(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<? extends BaseResponse> action) throws IOException {
-        cachedInformation.replace(Arrays.hashCode(new Object[]{method, params}), action.getResponse(requestManager.POST(method.getMethod(), params)));
+        cachedInformation.replace(mapCode(method, params), action.getResponse(requestManager.POST(method.getMethod(), params)));
+    }
+
+    /**
+     * Generates a individual code for every method param pair
+     *
+     * @param method method to generate code from
+     * @param params params to generate code from
+     * @return the code
+     * @since 1.1
+     */
+    private int mapCode(UntisUtils.Method method, Map<String, ?> params) {
+        return Arrays.toString(new Object[]{method, params}).hashCode();
     }
 
 }
