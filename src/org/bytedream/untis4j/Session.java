@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class Session {
 
-    private final Infos infos;
+    private Infos infos;
 
     private int lastChange;
     private boolean useCache = true;
@@ -118,9 +118,13 @@ public class Session {
      * @since 1.0
      */
     public void reconnect() throws IOException {
-        logout();
+        try {
+            logout();
+        } catch (IOException ignore) {
+        }
 
-        this.requestManager = new RequestManager(RequestManager.generateUserInfosAndLogin(infos.getUsername(), infos.getPassword(), infos.getServer(), infos.getSchoolName(), infos.getUserAgent()));
+        infos = RequestManager.generateUserInfosAndLogin(infos.getUsername(), infos.getPassword(), infos.getServer(), infos.getSchoolName(), infos.getUserAgent());
+        requestManager = new RequestManager(infos);
     }
 
     /**

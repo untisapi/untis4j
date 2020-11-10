@@ -36,7 +36,7 @@ public class CacheManager {
      * @see CacheManager#getOrRequest(UntisUtils.Method, RequestManager, Map, ResponseConsumer)
      * @since 1.1
      */
-    public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, ResponseConsumer<? extends T> action) throws IOException {
+    public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, ResponseConsumer<? extends T> action) {
         return getOrRequest(method, requestManager, new HashMap<>(), action);
     }
 
@@ -48,10 +48,9 @@ public class CacheManager {
      * @param params         params you want to send with the request
      * @param action         lambda expression that gets called if the {@code method} is not in the cache manager
      * @return the response in a {@link ResponseList}
-     * @throws IOException if an IO Exception occurs
      * @since 1.1
      */
-    public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<T> action) throws IOException {
+    public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<T> action) {
         int keyHashCode = mapCode(method, params);
 
         Function<Integer, BaseResponse> function = (objects) -> {
