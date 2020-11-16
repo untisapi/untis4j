@@ -76,7 +76,7 @@ public class BaseResponseLists {
          * @since 1.0
          */
         public E findByName(String name) {
-            return this.stream().filter(e -> e.getName().equals(name)).findAny().orElse(null);
+            return this.stream().filter(e -> e.getName().equalsIgnoreCase(name.trim())).findAny().orElse(null);
         }
 
         /**
@@ -98,7 +98,7 @@ public class BaseResponseLists {
          * @since 1.0
          */
         public E findByLongName(String longName) {
-            return this.stream().filter(e -> e.getLongName().equals(longName)).findAny().orElse(null);
+            return this.stream().filter(e -> e.getLongName().equalsIgnoreCase(longName.trim())).findAny().orElse(null);
         }
 
         /**
@@ -111,7 +111,7 @@ public class BaseResponseLists {
         public <T extends NILResponseList<E>> T searchByName(String name) {
             T nameList = (T) new NILResponseList<E>();
 
-            this.stream().filter(e -> e.getName().contains(name)).forEach(nameList::add);
+            this.stream().filter(e -> e.getName().toLowerCase().contains(name.trim().toLowerCase())).forEach(nameList::add);
 
             return nameList;
         }
@@ -141,7 +141,7 @@ public class BaseResponseLists {
         public <T extends NILResponseList<E>> T searchByLongName(String longName) {
             T longNameList = (T) new NILResponseList<E>();
 
-            this.stream().filter(e -> e.getName().contains(longName)).forEach(longNameList::add);
+            this.stream().filter(e -> e.getName().toLowerCase().contains(longName.trim().toLowerCase())).forEach(longNameList::add);
 
             return longNameList;
         }

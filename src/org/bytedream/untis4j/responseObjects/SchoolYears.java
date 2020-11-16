@@ -74,7 +74,7 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
      * @since 1.0
      */
     public SchoolYearObject findByName(String name) {
-        return this.stream().filter(schoolYearObject -> schoolYearObject.getName().equals(name)).findAny().orElse(null);
+        return this.stream().filter(schoolYearObject -> schoolYearObject.getName().equalsIgnoreCase(name.trim())).findAny().orElse(null);
     }
 
     /**
@@ -120,7 +120,7 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
     public SchoolYears searchByName(String name) {
         SchoolYears schoolYears = new SchoolYears();
 
-        this.stream().filter(schoolYearObject -> schoolYearObject.getName().contains(name)).forEach(schoolYears::add);
+        this.stream().filter(schoolYearObject -> schoolYearObject.getName().toLowerCase().contains(name.trim().toLowerCase())).forEach(schoolYears::add);
 
         return schoolYears;
     }

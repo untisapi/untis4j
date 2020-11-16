@@ -32,7 +32,7 @@ public class Session {
 
     private Infos infos;
 
-    private int lastChange;
+    private long lastChange;
     private boolean useCache = true;
     private CacheManager cacheManager = new CacheManager();
     private RequestManager requestManager;
@@ -150,7 +150,7 @@ public class Session {
     private <T extends BaseResponse> T requestSender(UntisUtils.Method method, Map<String, ?> params, ResponseConsumer<? extends T> action) throws IOException {
         if (useCache) {
             try {
-                int newLatestImportTime = this.getLatestImportTime().getLatestImportTime();
+                long newLatestImportTime = this.getLatestImportTime().getLatestImportTime();
                 if (lastChange < newLatestImportTime) {
                     lastChange = newLatestImportTime;
                     cacheManager.update(method, requestManager, params, action);
@@ -437,7 +437,7 @@ public class Session {
             throw new IOException(response.getErrorMessage());
         }
 
-        return new LatestImportTime(jsonResponse.getInt("result"));
+        return new LatestImportTime(jsonResponse.getLong("result"));
     }
 
     /**

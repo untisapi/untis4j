@@ -13,7 +13,7 @@ import java.util.HashMap;
  */
 public class LatestImportTime extends ResponseObject {
 
-    private final int latestImportTime;
+    private final long latestImportTime;
 
     /**
      * Initializes the {@link LatestImportTime} class
@@ -21,7 +21,7 @@ public class LatestImportTime extends ResponseObject {
      * @param latestImportTime time when the last change were made
      * @since 1.0
      */
-    public LatestImportTime(int latestImportTime) {
+    public LatestImportTime(long latestImportTime) {
         this.latestImportTime = latestImportTime;
     }
 
@@ -31,7 +31,7 @@ public class LatestImportTime extends ResponseObject {
      * @return the time when the last change were made
      * @since 1.0
      */
-    public int getLatestImportTime() {
+    public long getLatestImportTime() {
         return latestImportTime;
     }
 

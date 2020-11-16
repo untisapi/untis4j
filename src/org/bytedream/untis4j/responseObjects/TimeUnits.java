@@ -62,7 +62,7 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
      * @since 1.0
      */
     public TimeUnitObject findByName(String name) {
-        return this.stream().filter(timeUnitObject -> timeUnitObject.getName().equals(name)).findAny().orElse(null);
+        return this.stream().filter(timeUnitObject -> timeUnitObject.getName().equalsIgnoreCase(name.trim())).findAny().orElse(null);
     }
 
     /**
@@ -97,7 +97,7 @@ public class TimeUnits extends ResponseList<TimeUnits.TimeUnitObject> {
     public TimeUnits searchByName(String name) {
         TimeUnits timeUnits = new TimeUnits();
 
-        this.stream().filter(timeUnitObject -> timeUnitObject.getName().contains(name)).forEach(timeUnits::add);
+        this.stream().filter(timeUnitObject -> timeUnitObject.getName().toLowerCase().contains(name.trim().toLowerCase())).forEach(timeUnits::add);
 
         return timeUnits;
     }

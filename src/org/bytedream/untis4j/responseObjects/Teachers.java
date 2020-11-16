@@ -59,7 +59,7 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
      * @since 1.0
      */
     public TeacherObject findByTitle(String title) {
-        return this.stream().filter(subject -> subject.getTitle().equals(title)).findAny().orElse(null);
+        return this.stream().filter(subject -> subject.getTitle().equalsIgnoreCase(title.trim())).findAny().orElse(null);
     }
 
     /**
@@ -70,7 +70,7 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
      * @since 1.0
      */
     public TeacherObject findByForeName(String foreName) {
-        return this.stream().filter(subject -> subject.getForename().equals(foreName)).findAny().orElse(null);
+        return this.stream().filter(subject -> subject.getForename().equalsIgnoreCase(foreName.trim())).findAny().orElse(null);
     }
 
     /**
@@ -81,7 +81,7 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
      * @since 1.0
      */
     public TeacherObject findByFullName(String fullName) {
-        return this.stream().filter(subject -> subject.getForename().equals(fullName)).findAny().orElse(null);
+        return this.stream().filter(subject -> subject.getForename().equalsIgnoreCase(fullName.trim())).findAny().orElse(null);
     }
 
     /**
@@ -94,7 +94,7 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
     public Teachers searchByTitle(String title) {
         Teachers teachers = new Teachers();
 
-        this.stream().filter(subject -> subject.getTitle().contains(title)).forEach(teachers::add);
+        this.stream().filter(subject -> subject.getTitle().toLowerCase().contains(title.trim().toLowerCase())).forEach(teachers::add);
 
         return teachers;
     }
@@ -109,7 +109,7 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
     public Teachers searchByForeName(String foreName) {
         Teachers teachers = new Teachers();
 
-        this.stream().filter(subject -> subject.getForename().contains(foreName)).forEach(teachers::add);
+        this.stream().filter(subject -> subject.getForename().toLowerCase().contains(foreName.trim().toLowerCase())).forEach(teachers::add);
 
         return teachers;
     }
@@ -124,7 +124,7 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
     public Teachers searchByFullName(String fullName) {
         Teachers teachers = new Teachers();
 
-        this.stream().filter(subject -> subject.getForename().contains(fullName)).forEach(teachers::add);
+        this.stream().filter(subject -> subject.getForename().toLowerCase().contains(fullName.trim().toLowerCase())).forEach(teachers::add);
 
         return teachers;
     }

@@ -35,7 +35,7 @@ public class Rooms extends NAILResponseList<Rooms.RoomObject> {
      * @since 1.0
      */
     public RoomObject findByBuilding(String building) {
-        return this.stream().filter(roomObject -> roomObject.getBuilding().equals(building)).findAny().orElse(null);
+        return this.stream().filter(roomObject -> roomObject.getBuilding().equalsIgnoreCase(building.trim())).findAny().orElse(null);
     }
 
     /**
@@ -48,7 +48,7 @@ public class Rooms extends NAILResponseList<Rooms.RoomObject> {
     public Rooms searchByBuilding(String building) {
         Rooms rooms = new Rooms();
 
-        this.stream().filter(roomObject -> roomObject.getBuilding().equals(building)).forEach(rooms::add);
+        this.stream().filter(roomObject -> roomObject.getBuilding().toLowerCase().contains(building.trim().toLowerCase())).forEach(rooms::add);
 
         return rooms;
     }

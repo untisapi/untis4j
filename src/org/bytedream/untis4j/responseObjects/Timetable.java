@@ -257,7 +257,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     public Timetable findByActivityType(String activityType) {
         Timetable timetable = new Timetable();
 
-        this.stream().filter(lesson -> lesson.getActivityType().equals(activityType)).forEach(timetable::add);
+        this.stream().filter(lesson -> lesson.getActivityType().equalsIgnoreCase(activityType.trim())).forEach(timetable::add);
 
         return timetable;
     }
@@ -423,7 +423,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     public Timetable searchByActivityType(String activityType) {
         Timetable timetable = new Timetable();
 
-        this.stream().filter(lesson -> lesson.getActivityType().equals(activityType)).forEach(timetable::add);
+        this.stream().filter(lesson -> lesson.getActivityType().toLowerCase().contains(activityType.trim().toLowerCase())).forEach(timetable::add);
 
         return timetable;
     }

@@ -60,7 +60,7 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      * @since 1.0
      */
     public SubjectObject findByAlternateName(String alternateName) {
-        return this.stream().filter(subjectObject -> subjectObject.getAlternateName().equals(alternateName)).findAny().orElse(null);
+        return this.stream().filter(subjectObject -> subjectObject.getAlternateName().equalsIgnoreCase(alternateName.trim())).findAny().orElse(null);
     }
 
     /**
@@ -70,7 +70,7 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      * @return the subject
      * @since 1.0
      */
-    public SubjectObject findByBackColor(String backColor) {
+    public SubjectObject findByBackColor(Color backColor) {
         return this.stream().filter(subjectObject -> subjectObject.getBackColor().equals(backColor)).findAny().orElse(null);
     }
 
@@ -81,7 +81,7 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      * @return the subject
      * @since 1.0
      */
-    public SubjectObject findByForeColor(String foreColor) {
+    public SubjectObject findByForeColor(Color foreColor) {
         return this.stream().filter(subjectObject -> subjectObject.getForeColor().equals(foreColor)).findAny().orElse(null);
     }
 
@@ -95,7 +95,7 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
     public Subjects searchByAlternateName(String alternateName) {
         Subjects subjects = new Subjects();
 
-        this.stream().filter(subjectObject -> subjectObject.getAlternateName().contains(alternateName)).forEach(subjects::add);
+        this.stream().filter(subjectObject -> subjectObject.getAlternateName().toLowerCase().contains(alternateName.trim().toLowerCase())).forEach(subjects::add);
 
         return subjects;
     }
@@ -110,7 +110,7 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
     public Subjects searchByBackColor(Color backColor) {
         Subjects subjects = new Subjects();
 
-        this.stream().filter(subjectObject -> subjectObject.getBackColor().toString().contains(backColor.toString())).forEach(subjects::add);
+        this.stream().filter(subjectObject -> subjectObject.getBackColor().equals(backColor)).forEach(subjects::add);
 
         return subjects;
     }
@@ -125,7 +125,7 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
     public Subjects searchByForeColor(Color foreColor) {
         Subjects subjects = new Subjects();
 
-        this.stream().filter(subjectObject -> subjectObject.getBackColor().toString().contains(foreColor.toString())).forEach(subjects::add);
+        this.stream().filter(subjectObject -> subjectObject.getBackColor().equals(foreColor)).forEach(subjects::add);
 
         return subjects;
     }
