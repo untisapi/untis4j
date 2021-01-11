@@ -750,20 +750,52 @@ public class Session {
                     }
                 }
 
-                LocalTime startTime;
-                LocalTime endTime;
+                String startString = String.valueOf(timetableInfos.getInt("startTime"));
+                String endString = String.valueOf(timetableInfos.getInt("endTime"));
 
-                try {
-                    startTime = LocalTime.parse(String.valueOf(timetableInfos.getInt("startTime")), DateTimeFormatter.ofPattern("HHmm"));
-                } catch (DateTimeParseException e) {
-                    startTime = LocalTime.parse(String.valueOf(timetableInfos.getInt("startTime")), DateTimeFormatter.ofPattern("Hmm"));
+                String startPattern;
+                String endPattern;
+
+                switch (startString.length()) {
+                    case 4:
+                        startPattern = "HHmm";
+                        break;
+                    case 3:
+                        startPattern = "Hmm";
+                        break;
+                    case 2:
+                        startString = "00" + startString;
+                        startPattern = "HHmm";
+                        break;
+                    case 1:
+                        startString = "000" + startString;
+                        startPattern = "HHmm";
+                        break;
+                    default:
+                        startPattern = null;
                 }
 
-                try {
-                    endTime = LocalTime.parse(String.valueOf(timetableInfos.getInt("endTime")), DateTimeFormatter.ofPattern("HHmm"));
-                } catch (DateTimeParseException e) {
-                    endTime = LocalTime.parse(String.valueOf(timetableInfos.getInt("endTime")), DateTimeFormatter.ofPattern("Hmm"));
+                switch (endString.length()) {
+                    case 4:
+                        endPattern = "HHmm";
+                        break;
+                    case 3:
+                        endPattern = "Hmm";
+                        break;
+                    case 2:
+                        endString = "00" + endString;
+                        endPattern = "HHmm";
+                        break;
+                    case 1:
+                        endString = "000" + endString;
+                        endPattern = "HHmm";
+                        break;
+                    default:
+                        endPattern = null;
                 }
+
+                LocalTime startTime = LocalTime.parse(startString, DateTimeFormatter.ofPattern(startPattern));
+                LocalTime endTime = LocalTime.parse(endString, DateTimeFormatter.ofPattern(endPattern));
 
                 UntisUtils.LessonCode code = UntisUtils.LessonCode.REGULAR;
                 if (timetableInfos.has("code")) {
