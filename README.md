@@ -136,6 +136,6 @@ Caching allows to use saved request responses.
 The advantages of caching are the obviously faster answer when the same things are requested, that the server does not have to send as much data and in case of internet loss data can still be accessed.
 Caching is activated by default, but can use `Session.useCache(...)` to enable / disable it.
 
-# Licence
+# License
 
 This project is licensed under the GNU Lesser General Public License v3.0 (LGPL-3.0) - see the [LICENSE](LICENSE) file for more details.
