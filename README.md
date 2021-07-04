@@ -138,4 +138,4 @@ Caching is activated by default, but can use `Session.useCache(...)` to enable /
 
 # Licence
 
-This project is licensed under the GNU Lesser General Public License v3.0 (LGPL-3.0) - see the [LICENSE](LICENCE) file for more details.
+This project is licensed under the GNU Lesser General Public License v3.0 (LGPL-3.0) - see the [LICENSE](LICENSE) file for more details.
