@@ -130,15 +130,9 @@ public class Main {
 
 # Information
 
-## Web Scraping
-
-The API use [web scraping](https://en.wikipedia.org/wiki/Web_scraping) to receive the necessary data.
-Theoretically, web scraping is illegal, but I've never heard of anybody getting any webuntis disadvantages because of it (ban or something like this).
-You can use [caching](#Caching) to minimize your server requests and the risc of being discovered by an admin.
-
 ## Caching
 
-Caching is available since the last few commits and allows to use saved request responses.
+Caching allows to use saved request responses.
 The advantages of caching are the obviously faster answer when the same things are requested, that the server does not have to send as much data and in case of internet loss data can still be accessed.
 Caching is activated by default, but can use `Session.useCache(...)` to enable / disable it.
 
