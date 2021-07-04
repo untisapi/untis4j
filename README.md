@@ -38,23 +38,25 @@ public class Main {
         try { 
             Session session = Session.login("your webuntis username", "your webuntis password", "https://example.webuntis.com", "myschool");  // create a new webuntis session
 
-            for (Timetable.Lesson lesson: session.getTimetableFromKlasseId(LocalDate.now(), LocalDate.now())) {  // get the timetable and loop over it
-                System.out.println("Lesson " + String.join(", ", lesson.getSubjectIds()) + " from " + lesson.getStartTime() + " to " + lesson.getEndTime());  // print the subject and the lesson time (from x to y)
+            // print out all classes with their names and ids
+            for (Classes.ClassObject classObject : session.getClasses()) {
+                System.out.printf("Class name: '%s' - Class id: '%d'\n", classObject.getName(), classObject.getId());
             }
 
-            session.logout();  //logout
-        } catch (LoginException e) {  // this exception get thrown if something went wrong with Session.login
+            // logout
+            session.logout();
+        } catch (LoginException e) {
+            // this exception get thrown if something went wrong with Session.login
             System.out.println("Failed to login: " + e.getMessage());
-            return;
-        } catch (IOException e) {  // if an error appears this get thrown
+        } catch (IOException e) {
+            // if an error appears this get thrown
             e.printStackTrace();
-            return;
         }
     }
 }
 ```
 
-## Get a specific klasse
+## Find / search a specific class
 
 ```java
 public class Main {
@@ -63,18 +65,26 @@ public class Main {
         try { 
             Session session = Session.login("your webuntis username", "your webuntis password", "https://example.webuntis.com", "myschool");  // creates a new webuntis session
 
-            Klassen klassen = session.getKlassen();  // get all klassen which are registered on the server
-            Klassen.KlasseObject myKlasse = klassen.findById(1234);  // find an klasse by its id
+            Classes classes = session.getClasses();
 
-            System.out.println("Name of my klasse: " + myKlasse.getLongName());
+            // get a class by its id
+            // findBy(...) methods only returns one result
+            System.out.println(classes.findById(1234));
 
-            session.logout();  //logout
-        } catch (LoginException e) {  // this exception get thrown if something went wrong with Session.login
+            // this prints all classes which contains 's' in their name.
+            // searchBy(...) methods can return multiple results / matches
+            for (Classes.ClassObject classObject : classes.searchByName("s")) {
+                System.out.println(classObject);
+            }
+
+            // logout
+            session.logout();
+        } catch (LoginException e) {
+            // this exception get thrown if something went wrong with Session.login
             System.out.println("Failed to login: " + e.getMessage());
-            return;
-        } catch (IOException e) {  // if an error appears this get thrown
+        } catch (IOException e) {
+            // if an error appears this get thrown
             e.printStackTrace();
-            return;
         }
     }
 
@@ -88,25 +98,31 @@ public class Main {
 
     public static void main(String[] args) {
         try { 
-            Session session = Session.login("your webuntis username", "your webuntis password", "webuntis.grupet.at", "demo_inf");  // creates a new webuntis session
+            Session session = Session.login("your webuntis username", "your webuntis password", "webuntis.grupet.at", "demo_inf");
+            // creates a new webuntis session
 
-            Response response = session.getCustomData("getAMethodThatIsNotImplemented");  // requests the custom method
-            if (response.isError()) {  // you can easily check if the response contains an error
+            Response response = session.getCustomData("getAMethodThatIsNotImplemented");
+            // requests the custom method
+            if (response.isError()) {
+                // you can easily check if the response contains an error
                 return;
             } else {
-                JSONObject responseObject = response.getResponse();  //get the response...
-                JSONObject result = responseObject.getJSONObject("result"); //...and read it
+                // get the response...
+                JSONObject responseObject = response.getResponse();
+                // ...and read it
+                JSONObject result = responseObject.getJSONObject("result");
 
                 System.out.println(result.toString());
             }
 
-            session.logout();  //logout
-        } catch (LoginException e) {  // this exception get thrown if something went wrong with Session.login
+            // logout
+            session.logout();
+        } catch (LoginException e) {
+            // this exception get thrown if something went wrong with Session.login
             System.out.println("Failed to login: " + e.getMessage());
-            return;
-        } catch (IOException e) {  // if an error appears this get thrown
+        } catch (IOException e) {
+            // if an error appears this get thrown
             e.printStackTrace();
-            return;
         }
     }
 }

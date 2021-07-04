@@ -40,7 +40,7 @@ public class Session {
     /**
      * Class to do all the Untis stuff.
      *
-     * <p>Main class to handle and get all Untis information<p/>
+     * <p>org.bytedream.untis4j.Main class to handle and get all Untis information<p/>
      *
      * @param infos          infos about the user
      * @param requestManager manager that handles all requests
@@ -221,13 +221,13 @@ public class Session {
     }
 
     /**
-     * Get the Information about the ClassRegEvents for a specific time period and klasse id (<- from https://github.com/python-webuntis/python-webuntis).
+     * Get the Information about the ClassRegEvents for a specific time period and class id (<- from https://github.com/python-webuntis/python-webuntis).
      *
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
      * @since 1.0
      */
-    public Response getAllClassRegEventsFromKlasseId(LocalDate start, LocalDate end, int id) throws IOException {
-        return this.getClassRegEvents(start, end, UntisUtils.ElementType.KLASSE, id);
+    public Response getAllClassRegEventsFromClassId(LocalDate start, LocalDate end, int id) throws IOException {
+        return this.getClassRegEvents(start, end, UntisUtils.ElementType.CLASS, id);
     }
 
     /**
@@ -367,29 +367,29 @@ public class Session {
     }
 
     /**
-     * Returns all klassen registered on the given server.
+     * Returns all classes registered on the given server.
      *
-     * <p>Returns {@link Klassen} with all information about the klasse which are registered on the given server</p>
+     * <p>Returns {@link Classes} with all information about the class which are registered on the given server</p>
      *
-     * @see Session#getKlassen(Integer)
+     * @see Session#getClasses(Integer)
      * @since 1.0
      */
-    public Klassen getKlassen() throws IOException {
-        return getKlassen(null);
+    public Classes getClasses() throws IOException {
+        return getClasses(null);
     }
 
     /**
-     * Returns all klassen from the given school year registered on the given server.
+     * Returns all classes from the given school year registered on the given server.
      *
-     * <p>Returns {@link Klassen} with all information about the klassen from the given school year which are registered on the given server</p>
+     * <p>Returns {@link Classes} with all information about the classes from the given school year which are registered on the given server</p>
      *
-     * @param schoolYearId number of the school year from which you want to get the klassen
-     * @return {@link Klassen} with all information about the klassen
+     * @param schoolYearId number of the school year from which you want to get the classes
+     * @return {@link Classes} with all information about the classes
      * @throws IOException if an IO Exception occurs
      * @since 1.0
      */
-    public Klassen getKlassen(Integer schoolYearId) throws IOException {
-        ResponseConsumer<Klassen> responseConsumer = response -> {
+    public Classes getClasses(Integer schoolYearId) throws IOException {
+        ResponseConsumer<Classes> responseConsumer = response -> {
             JSONObject jsonResponse = response.getResponse();
 
             if (response.isError()) {
@@ -397,25 +397,25 @@ public class Session {
             }
             JSONArray jsonArray = jsonResponse.getJSONArray("result");
 
-            Klassen klassen = new Klassen();
+            Classes classes = new Classes();
 
             for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject klassenInfo = jsonArray.getJSONObject(i);
-                klassen.add(new Klassen.KlasseObject(klassenInfo.getString("name"),
-                        klassenInfo.getBoolean("active"),
-                        klassenInfo.getInt("id"),
-                        klassenInfo.getString("longName")));
+                JSONObject classesInfo = jsonArray.getJSONObject(i);
+                classes.add(new Classes.ClassObject(classesInfo.getString("name"),
+                        classesInfo.getBoolean("active"),
+                        classesInfo.getInt("id"),
+                        classesInfo.getString("longName")));
             }
 
-            return klassen;
+            return classes;
         };
 
         if (schoolYearId != null) {
-            return requestSender(UntisUtils.Method.GETKLASSEN, new HashMap<String, Integer>() {{
+            return requestSender(UntisUtils.Method.GETCLASSES, new HashMap<String, Integer>() {{
                 put("schoolyearId", schoolYearId);
             }}, responseConsumer);
         } else {
-            return requestSender(UntisUtils.Method.GETKLASSEN, responseConsumer);
+            return requestSender(UntisUtils.Method.GETCLASSES, responseConsumer);
         }
     }
 
@@ -682,7 +682,7 @@ public class Session {
     /**
      * Returns the lessons / timetable for a specific time period.
      *
-     * <p> Returns the lessons / timetable for a specific time period and klasse / teacher / subject / room / student id<p/>
+     * <p> Returns the lessons / timetable for a specific time period and class / teacher / subject / room / student id<p/>
      *
      * @param start       the beginning of the time period
      * @param end         the end of the time period
@@ -709,7 +709,7 @@ public class Session {
 
             Timetable timetable = new Timetable();
 
-            Klassen k = getKlassen();
+            Classes k = getClasses();
             Teachers t = getTeachers();
             Subjects s = getSubjects();
             Rooms r = getRooms();
@@ -719,7 +719,7 @@ public class Session {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject timetableInfos = jsonArray.getJSONObject(i);
 
-                Klassen klassen = new Klassen();
+                Classes classes = new Classes();
                 Teachers teachers = new Teachers();
                 Subjects subjects = new Subjects();
                 Rooms rooms = new Rooms();
@@ -732,7 +732,7 @@ public class Session {
                         try {
                             switch (currentStringArray) {
                                 case "kl":
-                                    arrayJSONArray.forEach(o -> klassen.add(k.findById(((JSONObject) o).getInt("id"))));
+                                    arrayJSONArray.forEach(o -> classes.add(k.findById(((JSONObject) o).getInt("id"))));
                                     break;
                                 case "te":
                                     arrayJSONArray.forEach(o -> teachers.add(t.findById(((JSONObject) o).getInt("id"))));
@@ -806,7 +806,7 @@ public class Session {
                         startTime,
                         endTime,
                         timeUnits.findByStartTime(startTime),
-                        klassen,
+                        classes,
                         teachers,
                         rooms,
                         subjects,
@@ -819,13 +819,13 @@ public class Session {
     }
 
     /**
-     * Returns the lessons / timetable for a specific time period and klasse id.
+     * Returns the lessons / timetable for a specific time period and class id.
      *
      * @see Session#getTimetable(LocalDate, LocalDate, UntisUtils.ElementType, int)
      * @since 1.0
      */
-    public Timetable getTimetableFromKlasseId(LocalDate start, LocalDate end, int klasseId) throws IOException {
-        return this.getTimetable(start, end, UntisUtils.ElementType.KLASSE, klasseId);
+    public Timetable getTimetableFromClassId(LocalDate start, LocalDate end, int classId) throws IOException {
+        return this.getTimetable(start, end, UntisUtils.ElementType.CLASS, classId);
     }
 
     /**
@@ -907,13 +907,13 @@ public class Session {
     }
 
     /**
-     * Requests the timetable for a whole week and a klasse id
+     * Requests the timetable for a whole week and a class id
      *
      * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
      * @since 1.1
      */
-    public WeeklyTimetable getWeeklyTimetableFromKlasseId(LocalDate anyDateOfWeek, int klasseId) throws IOException {
-        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.KLASSE, klasseId);
+    public WeeklyTimetable getWeeklyTimetableFromClassId(LocalDate anyDateOfWeek, int classId) throws IOException {
+        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.CLASS, classId);
     }
 
     /**
@@ -923,7 +923,7 @@ public class Session {
      * @since 1.1
      */
     public WeeklyTimetable getWeeklyTimetableFromTeacherId(LocalDate anyDateOfWeek, int teacherId) throws IOException {
-        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.KLASSE, teacherId);
+        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.CLASS, teacherId);
     }
 
     /**
@@ -933,7 +933,7 @@ public class Session {
      * @since 1.1
      */
     public WeeklyTimetable getWeeklyTimetableFromSubjectId(LocalDate anyDateOfWeek, int subjectId) throws IOException {
-        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.KLASSE, subjectId);
+        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.CLASS, subjectId);
     }
 
     /**
@@ -943,7 +943,7 @@ public class Session {
      * @since 1.1
      */
     public WeeklyTimetable getWeeklyTimetableFromRoomId(LocalDate anyDateOfWeek, int roomId) throws IOException {
-        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.KLASSE, roomId);
+        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.CLASS, roomId);
     }
 
     /**
@@ -953,7 +953,7 @@ public class Session {
      * @since 1.1
      */
     public WeeklyTimetable getWeeklyTimetableFromStudentId(LocalDate anyDateOfWeek, int studentId) throws IOException {
-        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.KLASSE, studentId);
+        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.CLASS, studentId);
     }
 
     /**

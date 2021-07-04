@@ -102,7 +102,7 @@ public class UntisUtils {
      * @since 1.0
      */
     public enum ElementType {
-        KLASSE(1),
+        CLASS(1),
         TEACHER(2),
         SUBJECT(3),
         ROOM(4),
@@ -164,7 +164,7 @@ public class UntisUtils {
         GETEXAMS("getExams"),
         GETEXAMTYPES("getExamTypes"),
         GETHOLIDAYS("getHolidays"),
-        GETKLASSEN("getKlassen"),
+        GETCLASSES("getKlassen"),
         GETLATESTIMPORTTIME("getLatestImportTime"),
         GETROOMS("getRooms"),
         GETSCHOOLYEARS("getSchoolyears"),

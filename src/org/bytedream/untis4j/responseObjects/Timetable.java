@@ -69,14 +69,14 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
-     * Sorts the given timetable by all klassen and returns the sorted timetable
+     * Sorts the given timetable by all classes and returns the sorted timetable
      *
      * @param timetable timetable that should be sorted
      * @return the sorted timetable
      * @since 1.1
      */
-    public static Timetable sortByKlassen(Timetable timetable) {
-        timetable.sortByKlassen();
+    public static Timetable sortByClasses(Timetable timetable) {
+        timetable.sortByClasses();
         return timetable;
     }
 
@@ -189,14 +189,14 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
-     * Finds a lesson by its klassen ids
+     * Finds a lesson by its classes ids
      *
-     * @param klassen klassen of the lesson you want to find
+     * @param classes classes of the lesson you want to find
      * @return the lesson
      * @since 1.0
      */
-    public Lesson findByKlassen(Klassen klassen) {
-        return this.stream().filter(lesson -> lesson.getKlassen().containsAll(klassen)).findAny().orElse(null);
+    public Lesson findByClasses(Classes classes) {
+        return this.stream().filter(lesson -> lesson.getClasses().containsAll(classes)).findAny().orElse(null);
     }
 
     /**
@@ -323,17 +323,17 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
-     * Finds lessons that have the {@code klassenIds} or a part of it in their klassen
+     * Finds lessons that have the {@code classesIds} or a part of it in their classes
      *
-     * @param klassen klassen of the lessons you want to search
-     * @return {@link Timetable} with lessons that have the {@code klassenIds} or a part of it in their klassen ids
+     * @param classes classes of the lessons you want to search
+     * @return {@link Timetable} with lessons that have the {@code classesIds} or a part of it in their classes ids
      * @since 1.0
      */
-    public Timetable searchByKlassen(Klassen klassen) {
+    public Timetable searchByClasses(Classes classes) {
         Timetable timetable = new Timetable();
 
         this.forEach(lesson -> {
-            if (lesson.getKlassen().containsAll(klassen)) {
+            if (lesson.getClasses().containsAll(classes)) {
                 timetable.add(lesson);
             }
         });
@@ -465,23 +465,23 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
-     * Sorts the timetable by all klassen
+     * Sorts the timetable by all classes
      *
      * @since 1.1
      */
-    public void sortByKlassen() {
+    public void sortByClasses() {
         this.sort((o1, o2) -> {
-            Klassen o1Klassen = o1.getKlassen();
-            Klassen o2Klassen = o2.getKlassen();
+            Classes o1Classes = o1.getClasses();
+            Classes o2Classes = o2.getClasses();
 
             int o1Index = 0;
             int o2Index = 0;
 
-            if (o1Klassen.size() != 0) {
-                o1Index = o1Klassen.get(0).getId();
+            if (o1Classes.size() != 0) {
+                o1Index = o1Classes.get(0).getId();
             }
-            if (o2Klassen.size() != 0) {
-                o2Index = o2Klassen.get(0).getId();
+            if (o2Classes.size() != 0) {
+                o2Index = o2Classes.get(0).getId();
             }
 
             return o1Index - o2Index;
@@ -635,17 +635,17 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     }
 
     /**
-     * Returns all klassen that are saved in the lessons
+     * Returns all classes that are saved in the lessons
      *
-     * @return all klassen
+     * @return all classes
      * @since 1.1
      */
-    public Klassen getKlassen() {
-        Klassen klassen = new Klassen();
+    public Classes getClasses() {
+        Classes classes = new Classes();
 
-        this.stream().map(Lesson::getKlassen).forEach(klassen::addAll);
+        this.stream().map(Lesson::getClasses).forEach(classes::addAll);
 
-        return klassen;
+        return classes;
     }
 
     /**
@@ -730,7 +730,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
         private final LocalTime startTime;
         private final LocalTime endTime;
         private final TimeUnits.TimeUnitObject timeUnitObject;
-        private final Klassen klassen;
+        private final Classes classes;
         private final Teachers teachers;
         private final Rooms rooms;
         private final Subjects subjects;
@@ -743,7 +743,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          * @param date         date of the timetable
          * @param startTime    time when the lesson start
          * @param endTime      time when the lesson end
-         * @param klassen      klassen
+         * @param classes      classes
          * @param teachers     teachers
          * @param rooms        rooms
          * @param subjects     subjects
@@ -755,7 +755,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
                       LocalTime startTime,
                       LocalTime endTime,
                       TimeUnits.TimeUnitObject timeUnitObject,
-                      Klassen klassen,
+                      Classes classes,
                       Teachers teachers,
                       Rooms rooms,
                       Subjects subjects,
@@ -765,7 +765,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
             this.startTime = startTime;
             this.endTime = endTime;
             this.timeUnitObject = timeUnitObject;
-            this.klassen = klassen;
+            this.classes = classes;
             this.teachers = teachers;
             this.rooms = rooms;
             this.subjects = subjects;
@@ -814,13 +814,13 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
         }
 
         /**
-         * Returns the klassen that have this lesson
+         * Returns the classes that have this lesson
          *
-         * @return the klassen that have this lesson
+         * @return the classes that have this lesson
          * @since 1.0
          */
-        public Klassen getKlassen() {
-            return klassen;
+        public Classes getClasses() {
+            return classes;
         }
 
         /**
@@ -881,19 +881,19 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          */
         @Override
         public String toString() {
-            HashMap<String, Object> klasseAsMap = new HashMap<>();
+            HashMap<String, Object> classAsMap = new HashMap<>();
 
-            klasseAsMap.put("date", date);
-            klasseAsMap.put("klassen", klassen);
-            klasseAsMap.put("teachers", teachers);
-            klasseAsMap.put("rooms", rooms);
-            klasseAsMap.put("subjects", subjects);
-            klasseAsMap.put("code", code);
-            klasseAsMap.put("startTime", startTime.format(DateTimeFormatter.ofPattern("HHmm")));
-            klasseAsMap.put("endTime", endTime.format(DateTimeFormatter.ofPattern("HHmm")));
-            klasseAsMap.put("activityType", activityType);
+            classAsMap.put("date", date);
+            classAsMap.put("classes", classes);
+            classAsMap.put("teachers", teachers);
+            classAsMap.put("rooms", rooms);
+            classAsMap.put("subjects", subjects);
+            classAsMap.put("code", code);
+            classAsMap.put("startTime", startTime.format(DateTimeFormatter.ofPattern("HHmm")));
+            classAsMap.put("endTime", endTime.format(DateTimeFormatter.ofPattern("HHmm")));
+            classAsMap.put("activityType", activityType);
 
-            return new JSONObject(klasseAsMap).toString();
+            return new JSONObject(classAsMap).toString();
         }
     }
 
