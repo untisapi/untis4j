@@ -19,7 +19,7 @@ you can easily implement the method yourself with the `Session.getCustomData(...
 
 # Installation
 
-Just download the latest [untis4j.jar](https://github.com/ByteDream/untis4j/releases/download/v1.2/untis4j-1.2-withDependencies.jar) file, implement it into your project and start coding :)
+Just download the latest [untis4j.jar](https://github.com/ByteDream/untis4j/releases/download/v1.2.1/untis4j-1.2.1-withDependencies.jar) file, implement it into your project and start coding :)
 
 # Examples
 
