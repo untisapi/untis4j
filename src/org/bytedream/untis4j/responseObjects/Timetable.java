@@ -302,7 +302,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     public Timetable searchByEndTime(LocalTime endTime) {
         Timetable timetable = new Timetable();
 
-        this.stream().filter(lesson -> lesson.getStartTime().format(DateTimeFormatter.ofPattern("HHmmss")).contains(endTime.format(DateTimeFormatter.ofPattern("HHmmss")))).forEach(timetable::add);
+        this.stream().filter(lesson -> lesson.getEndTime().format(DateTimeFormatter.ofPattern("HHmmss")).contains(endTime.format(DateTimeFormatter.ofPattern("HHmmss")))).forEach(timetable::add);
 
         return timetable;
     }
