@@ -615,7 +615,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
     public ArrayList<LocalTime> getEndTimes() {
         ArrayList<LocalTime> endTimes = new ArrayList<>();
 
-        this.stream().map(Lesson::getStartTime).forEach(endTimes::add);
+        this.stream().map(Lesson::getEndTime).forEach(endTimes::add);
 
         return endTimes;
     }
