@@ -4,6 +4,7 @@ import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists.NAILR
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects.NAILResponseObject;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -34,8 +35,8 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      * @return the sorted subjects
      * @since 1.1
      */
-    public static Subjects sortByForeColorHex(Subjects subjects) {
-        subjects.sortByForeColorHex();
+    public static Subjects sortByForeColor(Subjects subjects) {
+        subjects.sortByForeColor();
         return subjects;
     }
 
@@ -46,8 +47,8 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      * @return the sorted subjects
      * @since 1.1
      */
-    public static Subjects sortByBackColorHex(Subjects subjects) {
-        subjects.sortByBackColorHex();
+    public static Subjects sortByBackColor(Subjects subjects) {
+        subjects.sortByBackColor();
         return subjects;
     }
 
@@ -65,23 +66,23 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
     /**
      * Finds a subject by its back color
      *
-     * @param backColorHex back color of the subject you want to find
+     * @param backColor back color of the subject you want to find
      * @return the subject
      * @since 1.0
      */
-    public SubjectObject findByBackColorHex(String backColorHex) {
-        return this.stream().filter(subjectObject -> subjectObject.getBackColorHex().equals(backColorHex)).findAny().orElse(null);
+    public SubjectObject findByBackColor(Color backColor) {
+        return this.stream().filter(subjectObject -> subjectObject.getBackColor().equals(backColor)).findAny().orElse(null);
     }
 
     /**
      * Finds a subject by its fore color
      *
-     * @param foreColorHex fore color of the subject you want to find
+     * @param foreColor fore color of the subject you want to find
      * @return the subject
      * @since 1.0
      */
-    public SubjectObject findByForeColorHex(String foreColorHex) {
-        return this.stream().filter(subjectObject -> subjectObject.getForeColorHex().equals(foreColorHex)).findAny().orElse(null);
+    public SubjectObject findByForeColor(Color foreColor) {
+        return this.stream().filter(subjectObject -> subjectObject.getForeColor().equals(foreColor)).findAny().orElse(null);
     }
 
     /**
@@ -100,31 +101,31 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
     }
 
     /**
-     * Finds subjects that have the {@code backColorHex} or a part of it in their back color
+     * Finds subjects that have the {@code backColor} or a part of it in their back color
      *
-     * @param backColorHex back color of the subjects you want to search
-     * @return {@link Subjects} with subjects that have the {@code backColorHex} or a part of it in their back color
+     * @param backColor back color of the subjects you want to search
+     * @return {@link Subjects} with subjects that have the {@code backColor} or a part of it in their back color
      * @since 1.0
      */
-    public Subjects searchByBackColorHex(String backColorHex) {
+    public Subjects searchByBackColor(Color backColor) {
         Subjects subjects = new Subjects();
 
-        this.stream().filter(subjectObject -> subjectObject.getBackColorHex().equals(backColorHex)).forEach(subjects::add);
+        this.stream().filter(subjectObject -> subjectObject.getBackColor().equals(backColor)).forEach(subjects::add);
 
         return subjects;
     }
 
     /**
-     * Finds subjects that have the {@code foreColorHex} or a part of it in their fore color
+     * Finds subjects that have the {@code foreColor} or a part of it in their fore color
      *
-     * @param foreColorHex fore color of the subjects you want to search
-     * @return {@link Subjects} with subjects that have the {@code foreColorHex} or a part of it in their fore color
+     * @param foreColor fore color of the subjects you want to search
+     * @return {@link Subjects} with subjects that have the {@code foreColor} or a part of it in their fore color
      * @since 1.0
      */
-    public Subjects searchByForeColorHex(String foreColorHex) {
+    public Subjects searchByForeColor(Color foreColor) {
         Subjects subjects = new Subjects();
 
-        this.stream().filter(subjectObject -> subjectObject.getBackColorHex().equals(foreColorHex)).forEach(subjects::add);
+        this.stream().filter(subjectObject -> subjectObject.getBackColor().equals(foreColor)).forEach(subjects::add);
 
         return subjects;
     }
@@ -143,7 +144,7 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      *
      * @since 1.1
      */
-    public void sortByForeColorHex() {
+    public void sortByForeColor() {
         this.sort((o1, o2) -> o1.getAlternateName().compareToIgnoreCase(o2.getAlternateName()));
     }
 
@@ -152,7 +153,7 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      *
      * @since 1.1
      */
-    public void sortByBackColorHex() {
+    public void sortByBackColor() {
         this.sort((o1, o2) -> o1.getAlternateName().compareToIgnoreCase(o2.getAlternateName()));
     }
 
@@ -176,12 +177,12 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      * @return all back colors
      * @since 1.1
      */
-    public ArrayList<String> getBackColorHexs() {
-        ArrayList<String> backColorHexs = new ArrayList<>();
+    public ArrayList<Color> getBackColors() {
+        ArrayList<Color> backColors = new ArrayList<>();
 
-        this.stream().map(SubjectObject::getBackColorHex).forEach(backColorHexs::add);
+        this.stream().map(SubjectObject::getBackColor).forEach(backColors::add);
 
-        return backColorHexs;
+        return backColors;
     }
 
     /**
@@ -190,12 +191,12 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
      * @return all fore colors
      * @since 1.1
      */
-    public ArrayList<String> getForeColorHexs() {
-        ArrayList<String> foreColorHexs = new ArrayList<>();
+    public ArrayList<Color> getForeColors() {
+        ArrayList<Color> foreColors = new ArrayList<>();
 
-        this.stream().map(SubjectObject::getForeColorHex).forEach(foreColorHexs::add);
+        this.stream().map(SubjectObject::getForeColor).forEach(foreColors::add);
 
-        return foreColorHexs;
+        return foreColors;
     }
 
     /**
@@ -207,8 +208,8 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
     public static class SubjectObject extends NAILResponseObject {
 
         private final String alternateName;
-        private final String backColorHex;
-        private final String foreColorHex;
+        private final Color backColor;
+        private final Color foreColor;
 
         /**
          * Initialize the {@link SubjectObject} class
@@ -218,15 +219,15 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
          * @param id            id of the subject
          * @param longName      long name of the subject
          * @param alternateName alternate name for the subject
-         * @param backColorHex     backColorHex
-         * @param foreColorHex     foreColorHex
+         * @param backColor     backColor
+         * @param foreColor     foreColor
          * @since 1.0
          */
-        public SubjectObject(String name, boolean active, int id, String longName, String alternateName, String backColorHex, String foreColorHex) {
+        public SubjectObject(String name, boolean active, int id, String longName, String alternateName, String backColor, String foreColor) {
             super(name, active, id, longName);
             this.alternateName = alternateName;
-            this.backColorHex = "#" + backColorHex;
-            this.foreColorHex = "#" + foreColorHex;
+            this.backColor = Color.decode("#" + backColor);
+            this.foreColor = Color.decode("#" + foreColor);
         }
 
         /**
@@ -245,8 +246,8 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
          * @return the back color
          * @since 1.0
          */
-        public String getBackColorHex() {
-            return backColorHex;
+        public Color getBackColor() {
+            return backColor;
         }
 
         /**
@@ -255,8 +256,8 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
          * @return fore color
          * @since 1.0
          */
-        public String getForeColorHex() {
-            return foreColorHex;
+        public Color getForeColor() {
+            return foreColor;
         }
 
         /**
@@ -274,8 +275,8 @@ public class Subjects extends NAILResponseList<Subjects.SubjectObject> {
             subjectAsMap.put("id", this.getId());
             subjectAsMap.put("longName", this.getLongName());
             subjectAsMap.put("alternateName", alternateName);
-            subjectAsMap.put("backColorHex", backColorHex);
-            subjectAsMap.put("foreColorHex", foreColorHex);
+            subjectAsMap.put("backColor", "#" + Integer.toHexString(backColor.getRGB()).substring(2));
+            subjectAsMap.put("foreColor", "#" + Integer.toHexString(foreColor.getRGB()).substring(2));
 
             return new JSONObject(subjectAsMap).toString();
         }

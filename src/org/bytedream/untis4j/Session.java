@@ -543,15 +543,15 @@ public class Session {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject subjectInfo = jsonArray.getJSONObject(i);
 
-                String backColorHex = "b1b3b4";
-                String foreColorHex = "b1b3b4";
+                String backColor = "b1b3b4";
+                String foreColor = "b1b3b4";
 
                 try {
-                    backColorHex = subjectInfo.getString("backColorHex");
+                    backColor = subjectInfo.getString("backColor");
                 } catch (JSONException ignore) {
                 }
                 try {
-                    foreColorHex = subjectInfo.getString("foreColorHex");
+                    foreColor = subjectInfo.getString("foreColor");
                 } catch (JSONException ignore) {
                 }
 
@@ -560,8 +560,8 @@ public class Session {
                         subjectInfo.getInt("id"),
                         subjectInfo.getString("longName"),
                         subjectInfo.getString("alternateName"),
-                        backColorHex,
-                        foreColorHex));
+                        backColor,
+                        foreColor));
             }
 
             return subjects;
