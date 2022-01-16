@@ -38,9 +38,10 @@ public class Main {
         try { 
             Session session = Session.login("your webuntis username", "your webuntis password", "https://example.webuntis.com", "myschool");  // create a new webuntis session
 
-            // print out all classes with their names and ids
-            for (Classes.ClassObject classObject : session.getClasses()) {
-                System.out.printf("Class name: '%s' - Class id: '%d'\n", classObject.getName(), classObject.getId());
+            // get the timetable and print every lesson
+            Timetable timetable = session.getTimetableFromClassId(LocalDate.now(), LocalDate.now(), session.getInfos().getClassId());
+            for (int i = 0; i < timetable.size(); i++) {
+                System.out.println("Lesson " + i+1 + ": " + timetable.get(i).getSubjects().toString());
             }
 
             // logout
@@ -135,6 +136,12 @@ public class Main {
 Caching allows to use saved request responses.
 The advantages of caching are the obviously faster answer when the same things are requested, that the server does not have to send as much data and in case of internet loss data can still be accessed.
 Caching is activated by default, but can use `Session.useCache(...)` to enable / disable it.
+
+## Building
+
+If you want to build / compile this project yourself, the `java: Compilation failed: internal java compiler error` error may occur when using IntelliJ as your IDE.
+To fix this, go to `File | Settings | Build, Execution, Deployment | Compiler | Java Compiler` and change the compiler from `Javac` to `Eclipse`.
+
 
 # License
 
