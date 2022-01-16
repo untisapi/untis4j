@@ -8,6 +8,7 @@ package org.bytedream.untis4j;
 import org.bytedream.untis4j.responseObjects.*;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists;
+import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -732,16 +734,24 @@ public class Session {
                         try {
                             switch (currentStringArray) {
                                 case "kl":
-                                    arrayJSONArray.forEach(o -> classes.add(k.findById(((JSONObject) o).getInt("id"))));
+                                    for (Object o : arrayJSONArray) {
+                                        classes.add(k.findById(((JSONObject) o).getInt("id")));
+                                    }
                                     break;
                                 case "te":
-                                    arrayJSONArray.forEach(o -> teachers.add(t.findById(((JSONObject) o).getInt("id"))));
+                                    for (Object o : arrayJSONArray) {
+                                        teachers.add(t.findById(((JSONObject) o).getInt("id")));
+                                    }
                                     break;
                                 case "su":
-                                    arrayJSONArray.forEach(o -> subjects.add(s.findById(((JSONObject) o).getInt("id"))));
+                                    for (Object o : arrayJSONArray) {
+                                        subjects.add(s.findById(((JSONObject) o).getInt("id")));
+                                    }
                                     break;
                                 case "ro":
-                                    arrayJSONArray.forEach(o -> rooms.add(r.findById(((JSONObject) o).getInt("id"))));
+                                    for (Object o : arrayJSONArray) {
+                                        rooms.add(r.findById(((JSONObject) o).getInt("id")));
+                                    }
                                     break;
                                 default:
                                     throw new IllegalStateException("Unexpected value: " + currentStringArray);
