@@ -55,15 +55,21 @@ public class CacheManager {
 
         Function<Integer, BaseResponse> function = (objects) -> {
             try {
-                BaseResponse response = action.getResponse(requestManager.POST(method.getMethod(), params));
-                cachedInformation.put(keyHashCode, response);
-                return response;
+                return action.getResponse(requestManager.POST(method.getMethod(), params));
             } catch (IOException e) {
                 return null;
             }
         };
 
-        return (T) cachedInformation.computeIfAbsent(keyHashCode, function);
+        BaseResponse response;
+        if ((response = cachedInformation.get(keyHashCode)) == null) {
+            try {
+                response = action.getResponse(requestManager.POST(method.getMethod(), params));
+            } catch (IOException e) {}
+            cachedInformation.put(keyHashCode, response);
+        }
+
+        return (T) response;
     }
 
     /**
