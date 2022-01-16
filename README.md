@@ -41,7 +41,7 @@ public class Main {
             // get the timetable and print every lesson
             Timetable timetable = session.getTimetableFromClassId(LocalDate.now(), LocalDate.now(), session.getInfos().getClassId());
             for (int i = 0; i < timetable.size(); i++) {
-                System.out.println("Lesson " + i+1 + ": " + timetable.get(i).getSubjects().toString());
+                System.out.println("Lesson " + (i+1) + ": " + timetable.get(i).getSubjects().toString());
             }
 
             // logout
