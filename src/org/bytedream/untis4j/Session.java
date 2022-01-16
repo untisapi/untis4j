@@ -734,23 +734,23 @@ public class Session {
                         try {
                             switch (currentStringArray) {
                                 case "kl":
-                                    for (Object o : arrayJSONArray) {
-                                        classes.add(k.findById(((JSONObject) o).getInt("id")));
+                                    for (int j = 0; j < arrayJSONArray.length(); j++) {
+                                        classes.add(k.findById(((JSONObject) arrayJSONArray.get(j)).getInt("id")));
                                     }
                                     break;
                                 case "te":
-                                    for (Object o : arrayJSONArray) {
-                                        teachers.add(t.findById(((JSONObject) o).getInt("id")));
+                                    for (int j = 0; j < arrayJSONArray.length(); j++) {
+                                        teachers.add(t.findById(((JSONObject) arrayJSONArray.get(j)).getInt("id")));
                                     }
                                     break;
                                 case "su":
-                                    for (Object o : arrayJSONArray) {
-                                        subjects.add(s.findById(((JSONObject) o).getInt("id")));
+                                    for (int j = 0; j < arrayJSONArray.length(); j++) {
+                                        subjects.add(s.findById(((JSONObject) arrayJSONArray.get(j)).getInt("id")));
                                     }
                                     break;
                                 case "ro":
-                                    for (Object o : arrayJSONArray) {
-                                        rooms.add(r.findById(((JSONObject) o).getInt("id")));
+                                    for (int j = 0; j < arrayJSONArray.length(); j++) {
+                                        rooms.add(r.findById(((JSONObject) arrayJSONArray.get(j)).getInt("id")));
                                     }
                                     break;
                                 default:
