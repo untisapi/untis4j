@@ -19,6 +19,7 @@ public class Infos {
     private final String userAgent;
 
     private final String sessionId;
+    private final int personId;
     private final UntisUtils.ElementType personType;
     private final int classId;
 
@@ -32,7 +33,7 @@ public class Infos {
      * @param userAgent  the user agent used for the api
      * @since 1.0
      */
-    public Infos(String username, String password, String server, String schoolName, String userAgent, String sessionId, UntisUtils.ElementType personType, int classId) {
+    public Infos(String username, String password, String server, String schoolName, String userAgent, String sessionId, int personId, UntisUtils.ElementType personType, int classId) {
         this.username = username;
         this.password = password;
         this.server = server;
@@ -40,6 +41,7 @@ public class Infos {
         this.userAgent = userAgent;
 
         this.sessionId = sessionId;
+        this.personId = personId;
         this.personType = personType;
         this.classId = classId;
     }
@@ -102,6 +104,16 @@ public class Infos {
      */
     public String getSessionId() {
         return sessionId;
+    }
+
+    /**
+     * Returns the person id of the user
+     *
+     * @return the person id of the user
+     * @since 1.3
+     */
+    public int getPersonId() {
+        return personId;
     }
 
     /**

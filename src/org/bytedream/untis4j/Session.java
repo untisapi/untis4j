@@ -263,13 +263,13 @@ public class Session {
     }
 
     /**
-     * Get the Information about the ClassRegEvents for a specific time period and student id (<- from https://github.com/python-webuntis/python-webuntis).
+     * Get the Information about the ClassRegEvents for a specific time period and person id (<- from https://github.com/python-webuntis/python-webuntis).
      *
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
      * @since 1.0
      */
-    public Response getAllClassRegEventsFromStudentId(LocalDate start, LocalDate end, int id) throws IOException {
-        return this.getClassRegEvents(start, end, UntisUtils.ElementType.STUDENT, id);
+    public Response getAllClassRegEventsFromPersonId(LocalDate start, LocalDate end, int personId) throws IOException {
+        return this.getClassRegEvents(start, end, UntisUtils.ElementType.PERSON, personId);
     }
 
     /**
@@ -869,13 +869,13 @@ public class Session {
     }
 
     /**
-     * Returns the lessons / timetable for a specific time period and student id.
+     * Returns the lessons / timetable for a specific time period and person id.
      *
      * @see Session#getTimetable(LocalDate, LocalDate, UntisUtils.ElementType, int)
      * @since 1.0
      */
-    public Timetable getTimetableFromStudentId(LocalDate start, LocalDate end, int studentId) throws IOException {
-        return this.getTimetable(start, end, UntisUtils.ElementType.STUDENT, studentId);
+    public Timetable getTimetableFromPersonId(LocalDate start, LocalDate end, int personId) throws IOException {
+        return this.getTimetable(start, end, UntisUtils.ElementType.PERSON, personId);
     }
 
     /**
@@ -957,13 +957,13 @@ public class Session {
     }
 
     /**
-     * Requests the timetable for a whole week and a student id
+     * Requests the timetable for a whole week and a person id
      *
      * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
      * @since 1.1
      */
-    public WeeklyTimetable getWeeklyTimetableFromStudentId(LocalDate anyDateOfWeek, int studentId) throws IOException {
-        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.CLASS, studentId);
+    public WeeklyTimetable getWeeklyTimetableFromPersonId(LocalDate anyDateOfWeek, int personId) throws IOException {
+        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.PERSON, personId);
     }
 
     /**

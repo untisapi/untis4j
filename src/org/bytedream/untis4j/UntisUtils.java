@@ -106,7 +106,7 @@ public class UntisUtils {
         TEACHER(2),
         SUBJECT(3),
         ROOM(4),
-        STUDENT(5);
+        PERSON(5);
 
         private final int elementType;
 

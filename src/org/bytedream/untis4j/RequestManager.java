@@ -99,7 +99,7 @@ public class RequestManager {
 
         UntisUtils.ElementType elementType = UntisUtils.ElementType.of(result.getInt("personType"));
 
-        return new Infos(username, password, server, schoolName, userAgent, result.getString("sessionId"), elementType, result.getInt("klasseId"));
+        return new Infos(username, password, server, schoolName, userAgent, result.getString("sessionId"), result.getInt("personId"), elementType, result.getInt("klasseId"));
     }
 
     /**
