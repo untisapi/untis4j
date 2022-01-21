@@ -731,9 +731,13 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
         private final LocalTime endTime;
         private final TimeUnits.TimeUnitObject timeUnitObject;
         private final Classes classes;
+        private final Classes originalClasses;
         private final Teachers teachers;
+        private final Teachers originalTeachers;
         private final Rooms rooms;
+        private final Rooms originalRooms;
         private final Subjects subjects;
+        private final Subjects originalSubjects;
         private final UntisUtils.LessonCode code;
         private final String activityType;
 
@@ -744,9 +748,13 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          * @param startTime    time when the lesson start
          * @param endTime      time when the lesson end
          * @param classes      classes
+         * @param originalClasses the original classes who are represented, if any
          * @param teachers     teachers
+         * @param originalTeachers the original teachers who are represented, if any
          * @param rooms        rooms
+         * @param originalRooms the original rooms if the class was moved to another room
          * @param subjects     subjects
+         * @param originalSubjects the original subjects if the subject has changed
          * @param code         code of the lesson (normally null, {@link UntisUtils.LessonCode#CANCELLED} if the lesson is cancelled, {@code UntisUtils.LessonCode.IRREGULAR} if e.g. a lesson has been moved
          * @param activityType type of the lesson
          * @since 1.0
@@ -756,9 +764,13 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
                       LocalTime endTime,
                       TimeUnits.TimeUnitObject timeUnitObject,
                       Classes classes,
+                      Classes originalClasses,
                       Teachers teachers,
+                      Teachers originalTeachers,
                       Rooms rooms,
+                      Rooms originalRooms,
                       Subjects subjects,
+                      Subjects originalSubjects,
                       UntisUtils.LessonCode code,
                       String activityType) {
             this.date = date;
@@ -766,9 +778,13 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
             this.endTime = endTime;
             this.timeUnitObject = timeUnitObject;
             this.classes = classes;
+            this.originalClasses = originalClasses;
             this.teachers = teachers;
+            this.originalTeachers = originalTeachers;
             this.rooms = rooms;
+            this.originalRooms = rooms;
             this.subjects = subjects;
+            this.originalSubjects = originalSubjects;
             this.code = code;
             this.activityType = activityType;
         }
@@ -824,6 +840,14 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
         }
 
         /**
+         * @return the original classes if the classes have changed
+         * @since 1.4
+         */
+        public Classes getOriginalClasses() {
+            return originalClasses;
+        }
+
+        /**
          * Returns the teachers that have this lesson
          *
          * @return the teachers that have this lesson
@@ -831,6 +855,14 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          */
         public Teachers getTeachers() {
             return teachers;
+        }
+
+        /**
+         * @return  the original teachers who are represented, if any
+         * @since 1.4
+         */
+        public Teachers getOriginalTeachers() {
+            return originalTeachers;
         }
 
         /**
@@ -844,6 +876,14 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
         }
 
         /**
+         * @return the original rooms if the class was moved to another room
+         * @since 1.4
+         */
+        public Rooms getOriginalRooms() {
+            return originalRooms;
+        }
+
+        /**
          * Returns the lesson subjects
          *
          * @return the lesson subjects
@@ -851,6 +891,14 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          */
         public Subjects getSubjects() {
             return subjects;
+        }
+
+        /**
+         * @return the original subjects if the subject has changed
+         * @since 1.4
+         */
+        public Subjects getOriginalSubjects() {
+            return originalSubjects;
         }
 
         /**
@@ -885,9 +933,13 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
 
             classAsMap.put("date", date);
             classAsMap.put("classes", classes);
+            classAsMap.put("originalClasses", originalClasses);
             classAsMap.put("teachers", teachers);
+            classAsMap.put("originalTeachers", originalTeachers);
             classAsMap.put("rooms", rooms);
+            classAsMap.put("originalRooms", originalRooms);
             classAsMap.put("subjects", subjects);
+            classAsMap.put("originalSubjects", originalSubjects);
             classAsMap.put("code", code);
             classAsMap.put("startTime", startTime.format(DateTimeFormatter.ofPattern("HHmm")));
             classAsMap.put("endTime", endTime.format(DateTimeFormatter.ofPattern("HHmm")));

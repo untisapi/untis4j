@@ -20,7 +20,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -722,41 +721,47 @@ public class Session {
                 JSONObject timetableInfos = jsonArray.getJSONObject(i);
 
                 Classes classes = new Classes();
+                Classes originalClasses = new Classes();
                 Teachers teachers = new Teachers();
+                Teachers originalTeachers = new Teachers();
                 Subjects subjects = new Subjects();
+                Subjects originalSubjects = new Subjects();
                 Rooms rooms = new Rooms();
+                Rooms originalRooms = new Rooms();
 
                 String[] arrayKeys = {"kl", "te", "su", "ro"};
 
                 for (String currentStringArray : arrayKeys) {
                     if (timetableInfos.has(currentStringArray)) { // some schools haven't specified their rooms or teachers
                         JSONArray arrayJSONArray = timetableInfos.getJSONArray(currentStringArray);
-                        try {
-                            switch (currentStringArray) {
-                                case "kl":
-                                    for (int j = 0; j < arrayJSONArray.length(); j++) {
-                                        classes.add(k.findById(((JSONObject) arrayJSONArray.get(j)).getInt("id")));
-                                    }
-                                    break;
-                                case "te":
-                                    for (int j = 0; j < arrayJSONArray.length(); j++) {
-                                        teachers.add(t.findById(((JSONObject) arrayJSONArray.get(j)).getInt("id")));
-                                    }
-                                    break;
-                                case "su":
-                                    for (int j = 0; j < arrayJSONArray.length(); j++) {
-                                        subjects.add(s.findById(((JSONObject) arrayJSONArray.get(j)).getInt("id")));
-                                    }
-                                    break;
-                                case "ro":
-                                    for (int j = 0; j < arrayJSONArray.length(); j++) {
-                                        rooms.add(r.findById(((JSONObject) arrayJSONArray.get(j)).getInt("id")));
-                                    }
-                                    break;
-                                default:
-                                    throw new IllegalStateException("Unexpected value: " + currentStringArray);
-                            }
-                        } catch (NullPointerException ignore) {}
+
+                        for (int j = 0; j < arrayJSONArray.length(); j++) {
+                            JSONObject obj = (JSONObject) arrayJSONArray.get(j);
+                            int objId = obj.getInt("id");
+                            Integer orgId = obj.has("orgid") ? obj.getInt("orgid") : null;
+                            try {
+                                switch (currentStringArray) {
+                                    case "kl":
+                                        classes.add(k.findById(objId));
+                                        if (orgId != null) originalClasses.add(k.findById(orgId));
+                                        break;
+                                    case "te":
+                                        teachers.add(t.findById(objId));
+                                        if (orgId != null) originalTeachers.add(t.findById(orgId));
+                                        break;
+                                    case "su":
+                                        subjects.add(s.findById(objId));
+                                        if (orgId != null) originalSubjects.add(s.findById(orgId));
+                                        break;
+                                    case "ro":
+                                        rooms.add(r.findById(objId));
+                                        if (orgId != null) originalRooms.add(r.findById(orgId));
+                                        break;
+                                    default:
+                                        throw new IllegalStateException("Unexpected value: " + currentStringArray);
+                                }
+                            } catch (NullPointerException ignore) {}
+                        }
                     }
                 }
 
@@ -817,9 +822,13 @@ public class Session {
                         endTime,
                         timeUnits.findByStartTime(startTime),
                         classes,
+                        originalClasses,
                         teachers,
+                        originalTeachers,
                         rooms,
+                        originalRooms,
                         subjects,
+                        originalSubjects,
                         code,
                         timetableInfos.getString("activityType")));
             }
