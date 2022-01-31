@@ -23,7 +23,7 @@ Just download the latest [untis4j.jar](https://smartrelease.bytedream.org/github
 
 # Examples
 
-To get an overview about all classes and methods, read the [docs](https://bytedream.github.io/untis4j/).
+To get an overview about all classes and methods, read the [docs](https://bytedream.org/docs/untis4j/).
 
 **Note:** For the `Session.login(...)` method a server and a school name is required. To gain these you have to go to [webuntis.com](https://webuntis.com/), type in your school and choose it.
 Then you will be redirected to the untis login page. The url of this page is, for example `https://example.webuntis.com/WebUntis/?school=myschool#/basic/main`.
