@@ -782,7 +782,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
             this.teachers = teachers;
             this.originalTeachers = originalTeachers;
             this.rooms = rooms;
-            this.originalRooms = rooms;
+            this.originalRooms = originalRooms;
             this.subjects = subjects;
             this.originalSubjects = originalSubjects;
             this.code = code;
@@ -837,6 +837,14 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          */
         public Classes getClasses() {
             return classes;
+        }
+
+        /**
+         * @return if any changes were made to the lesson, like teachers or rooms have been changed
+         * @since 1.4
+         */
+        public boolean hasChanges() {
+            return originalClasses.size() > 0 || originalTeachers.size() > 0 || originalRooms.size() > 0 || originalSubjects.size() > 0;
         }
 
         /**
@@ -933,6 +941,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
 
             classAsMap.put("date", date);
             classAsMap.put("classes", classes);
+            classAsMap.put("hasChanges", hasChanges());
             classAsMap.put("originalClasses", originalClasses);
             classAsMap.put("teachers", teachers);
             classAsMap.put("originalTeachers", originalTeachers);
