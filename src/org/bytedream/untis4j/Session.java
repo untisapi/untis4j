@@ -8,7 +8,6 @@ package org.bytedream.untis4j;
 import org.bytedream.untis4j.responseObjects.*;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists;
-import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseObjects;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -710,7 +709,7 @@ public class Session {
 
             Timetable timetable = new Timetable();
 
-            Classes k = getClasses();
+            Classes c = getClasses();
             Teachers t = getTeachers();
             Subjects s = getSubjects();
             Rooms r = getRooms();
@@ -742,19 +741,23 @@ public class Session {
                             try {
                                 switch (currentStringArray) {
                                     case "kl":
-                                        classes.add(k.findById(objId));
-                                        if (orgId != null) originalClasses.add(k.findById(orgId));
+                                        Classes.ClassObject classObject;
+                                        if ((classObject = c.findById(objId)) != null) classes.add(classObject);
+                                        if (orgId != null) originalClasses.add(c.findById(orgId));
                                         break;
                                     case "te":
-                                        teachers.add(t.findById(objId));
+                                        Teachers.TeacherObject teacherObject;
+                                        if ((teacherObject = t.findById(objId)) != null) teachers.add(teacherObject);
                                         if (orgId != null) originalTeachers.add(t.findById(orgId));
                                         break;
                                     case "su":
-                                        subjects.add(s.findById(objId));
+                                        Subjects.SubjectObject subjectObject;
+                                        if ((subjectObject = s.findById(objId)) != null) subjects.add(subjectObject);
                                         if (orgId != null) originalSubjects.add(s.findById(orgId));
                                         break;
                                     case "ro":
-                                        rooms.add(r.findById(objId));
+                                        Rooms.RoomObject roomObject;
+                                        if ((roomObject = r.findById(objId)) != null) rooms.add(roomObject);
                                         if (orgId != null) originalRooms.add(r.findById(orgId));
                                         break;
                                     default:
