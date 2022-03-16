@@ -2,6 +2,7 @@
 
 [Click here to get the latest version of the API (dependencies included)](https://smartrelease.bytedream.org/github/ByteDream/untis4j/untis4j-{major}.{minor}.{patch}-withDependencies.jar)
 
+![CI badge](https://github.com/bytedream/untis4j/workflows/CI/badge.svg)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c416d7e79b464afbaac22e3788b00f1f)](https://www.codacy.com/gh/ByteDream/untis4j/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ByteDream/untis4j&amp;utm_campaign=Badge_Grade)
 [![Download Badge](https://img.shields.io/github/downloads/ByteDream/untis4j/total)](https://smartrelease.bytedream.org/github/ByteDream/untis4j/untis4j-{major}.{minor}.{patch}-withDependencies.jar)
 
