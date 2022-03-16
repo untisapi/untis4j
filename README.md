@@ -21,6 +21,35 @@ you can easily implement the method yourself with the `Session.getCustomData(...
 
 Just download the latest [untis4j.jar](https://smartrelease.bytedream.org/github/ByteDream/untis4j/untis4j-{major}.{minor}.{patch}-withDependencies.jar) file, implement it into your project and start coding :)
 
+## Gradle
+
+<details>
+<summary>settings.gradle.kts</summary>
+
+```kotlin
+sourceControl {
+    gitRepository(java.net.URI("https://github.com/bytedream/untis4j.git")) {
+        producesModule("org.bytedream:untis4j")
+    }
+}
+```
+
+</details>
+<details>
+<summary>build.gradle.kts</summary>
+
+```kotlin
+dependencies {
+    implementation("org.bytedream:untis4j") {
+        version {
+            branch = "master"
+        }
+    }
+}
+```
+
+</details>
+
 # Examples
 
 To get an overview about all classes and methods, read the [docs](https://bytedream.org/docs/untis4j/).
