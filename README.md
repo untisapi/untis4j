@@ -20,16 +20,16 @@ you can easily implement the method yourself with the `Session.getCustomData(...
 
 ### Gradle
 
-`settings.gradle.kts`
+`settings.gradle`
 ```kotlin
 sourceControl {
-    gitRepository(java.net.URI("https://github.com/bytedream/untis4j.git")) {
+    gitRepository("https://github.com/bytedream/untis4j.git") {
         producesModule("org.bytedream:untis4j")
     }
 }
 ```
 
-`build.gradle.kts`
+`build.gradle`
 ```kotlin
 dependencies {
     implementation("org.bytedream:untis4j") {
