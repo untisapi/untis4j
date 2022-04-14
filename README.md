@@ -1,10 +1,13 @@
-**_untis4j_** - a java API for webuntis
+# untis4j - a java API for webuntis
 
-[Click here to get the latest version of the API (dependencies included)](https://smartrelease.bytedream.org/github/ByteDream/untis4j/untis4j-{major}.{minor}.{patch}-withDependencies.jar)
-
-![CI badge](https://github.com/bytedream/untis4j/workflows/CI/badge.svg)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c416d7e79b464afbaac22e3788b00f1f)](https://www.codacy.com/gh/ByteDream/untis4j/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ByteDream/untis4j&amp;utm_campaign=Badge_Grade)
-[![Download Badge](https://img.shields.io/github/downloads/ByteDream/untis4j/total)](https://smartrelease.bytedream.org/github/ByteDream/untis4j/untis4j-{major}.{minor}.{patch}-withDependencies.jar)
+<p align="center">
+    <a href="https://github.com/ByteDream/untis4j/actions/workflows/ci.yml">
+        <img src="https://github.com/bytedream/untis4j/workflows/CI/badge.svg" alt="">
+    </a>
+    <a href="https://smartrelease.bytedream.org/github/ByteDream/untis4j/untis4j-{tag}-withDependencies.jar">
+        <img src="https://img.shields.io/github/downloads/ByteDream/untis4j/total" alt="">
+    </a>
+</p>
 
 # Introduction
 
@@ -13,20 +16,11 @@ and another [java webuntis api](https://github.com/FearlessTobi/WebUntis-Java).
 It support almost all webuntis request and is easy to use. If a request method is missing,
 you can easily implement the method yourself with the `Session.getCustomData(...)` [method](#Custom-request).
 
-# Requirements
-
-- Java 8 or higher
-- `org.json` [java library](https://github.com/stleary/JSON-java)
-
 # Installation
 
-Just download the latest [untis4j.jar](https://smartrelease.bytedream.org/github/ByteDream/untis4j/untis4j-{major}.{minor}.{patch}-withDependencies.jar) file, implement it into your project and start coding :)
+### Gradle
 
-## Gradle
-
-<details>
-<summary>settings.gradle.kts</summary>
-
+`settings.gradle.kts`
 ```kotlin
 sourceControl {
     gitRepository(java.net.URI("https://github.com/bytedream/untis4j.git")) {
@@ -35,10 +29,7 @@ sourceControl {
 }
 ```
 
-</details>
-<details>
-<summary>build.gradle.kts</summary>
-
+`build.gradle.kts`
 ```kotlin
 dependencies {
     implementation("org.bytedream:untis4j") {
@@ -49,7 +40,9 @@ dependencies {
 }
 ```
 
-</details>
+### Jar
+
+Just download the latest [untis4j.jar](https://smartrelease.bytedream.org/github/ByteDream/untis4j/untis4j-{tag}-withDependencies.jar) file and implement it into your project.
 
 # Examples
 
@@ -59,7 +52,7 @@ To get an overview about all classes and methods, read the [docs](https://bytedr
 Then you will be redirected to the untis login page. The url of this page is, for example `https://example.webuntis.com/WebUntis/?school=myschool#/basic/main`.
 The server is the beginning of the url `https://example.webuntis.com` and the school name is the parameter after the `?school=`, in this case it is `myschool`
 
-## Simple timetable
+### Simple timetable
 
 ```java
 public class Main {
@@ -87,7 +80,7 @@ public class Main {
 }
 ```
 
-## Find / search a specific class
+### Find / search a specific class
 
 ```java
 public class Main {
@@ -122,7 +115,7 @@ public class Main {
 }
 ```
 
-## Custom request
+### Custom request
 
 ```java
 public class Main {
@@ -161,6 +154,10 @@ public class Main {
 
 # Information
 
+## Development
+
+**[⚠️ This library is looking for new contributors (or maintainer?)](https://github.com/ByteDream/untis4j/issues/12)**
+
 ## Caching
 
 Caching allows to use saved request responses.
@@ -169,7 +166,7 @@ Caching is activated by default, but can use `Session.useCache(...)` to enable /
 
 ## Building
 
-If you want to build / compile this project yourself, the `java: Compilation failed: internal java compiler error` error may occur when using IntelliJ as your IDE.
+If you want to build / compile this project yourself without gradle, the `java: Compilation failed: internal java compiler error` error may occur when using IntelliJ as your IDE.
 To fix this, go to `File | Settings | Build, Execution, Deployment | Compiler | Java Compiler` and change the compiler from `Javac` to `Eclipse`.
 
 
