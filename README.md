@@ -9,6 +9,12 @@
     </a>
 </p>
 
+---
+
+**[⚠️ This library is looking for a new maintainer!](https://github.com/ByteDream/untis4j/issues/12)**
+
+---
+
 # Introduction
 
 **untis4j** is a rich java API for the webuntis timetable / schedule software and is inspired from the [python webuntis api](https://github.com/python-webuntis/python-webuntis)
