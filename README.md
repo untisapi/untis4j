@@ -160,10 +160,6 @@ public class Main {
 
 # Information
 
-## Development
-
-**[⚠️ This library is looking for new contributors (or maintainer?)](https://github.com/ByteDream/untis4j/issues/12)**
-
 ## Caching
 
 Caching allows to use saved request responses.
