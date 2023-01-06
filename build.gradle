@@ -1,16 +1,16 @@
 plugins {
-    java
+    id 'java'
 }
 
-group = "org.bytedream"
-version = "1.3.0"
+group = 'org.bytedream'
+version = '1.3.0'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation("org.json:json:20220924")
+    implementation 'org.json:json:20220924'
 }
 
 java {

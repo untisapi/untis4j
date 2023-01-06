@@ -42,16 +42,28 @@ Add the dependency
 </dependency>
 ```
 
-### Gradle
+### Groovy
 
 Add the JitPack repository to your build file
-```gradle
+```groovy
 maven { url 'https://jitpack.io' }
 ```
 
 Add the dependency
-```gradle
+```groovy
 implementation 'com.github.bytedream:untis4j:${version}'
+```
+
+### Kotlin
+
+Add the JitPack repository to your build file
+```kotlin
+maven { url='https://jitpack.io' }
+```
+
+Add the dependency
+```kotlin
+implementation ("com.github.bytedream:untis4j:${version}")
 ```
 
 # Examples
