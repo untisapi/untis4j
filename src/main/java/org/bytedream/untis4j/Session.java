@@ -164,7 +164,7 @@ public class Session {
     }
 
     /**
-     * Information about the Request remark categories (<- from https://github.com/python-webuntis/python-webuntis).
+     * Information about the Request remark categories <a href="https://github.com/python-webuntis/python-webuntis">Python WebUntis</a>.
      *
      * <p>Requests all class reg categories and give {@link Response} with all information about from the request back (i got an error while testing this method: no right for getClassregCategories())</p>
      *
@@ -177,7 +177,7 @@ public class Session {
     }
 
     /**
-     * Information about the Request remark categories groups (<- from https://github.com/python-webuntis/python-webuntis).
+     * Information about the Request remark categories groups <a href="https://github.com/python-webuntis/python-webuntis">Python WebUntis</a>.
      *
      * <p>Requests all class reg categories and give {@link Response} with all information about from the request back (i got an error while testing this method: no right for getClassregCategoryGroups())</p>
      *
@@ -190,7 +190,7 @@ public class Session {
     }
 
     /**
-     * Get the Information about the ClassRegEvents for a specific school class and time period (<- from https://github.com/python-webuntis/python-webuntis).
+     * Get the Information about the ClassRegEvents for a specific school class and time period <a href="https://github.com/python-webuntis/python-webuntis">Python WebUntis</a>.
      *
      * <p>Requests all class reg categories and give {@link Response} with all information about from the request back (i got an error while testing this method: no right for getClassregEvents())</p>
      *
@@ -221,7 +221,7 @@ public class Session {
     }
 
     /**
-     * Get the Information about the ClassRegEvents for a specific time period and class id (<- from https://github.com/python-webuntis/python-webuntis).
+     * Get the Information about the ClassRegEvents for a specific time period and class id <a href="https://github.com/python-webuntis/python-webuntis">Python WebUntis</a>.
      *
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
      * @since 1.0
@@ -231,7 +231,7 @@ public class Session {
     }
 
     /**
-     * Get the Information about the ClassRegEvents for a specific time period and teacher id (<- from https://github.com/python-webuntis/python-webuntis).
+     * Get the Information about the ClassRegEvents for a specific time period and teacher id <a href="https://github.com/python-webuntis/python-webuntis">Python WebUntis</a>.
      *
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
      * @since 1.0
@@ -241,7 +241,7 @@ public class Session {
     }
 
     /**
-     * Get the Information about the ClassRegEvents for a specific time period and subject id (<- from https://github.com/python-webuntis/python-webuntis).
+     * Get the Information about the ClassRegEvents for a specific time period and subject id <a href="https://github.com/python-webuntis/python-webuntis">Python WebUntis</a>.
      *
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
      * @since 1.0
@@ -251,7 +251,7 @@ public class Session {
     }
 
     /**
-     * Get the Information about the ClassRegEvents for a specific time period and room id (<- from https://github.com/python-webuntis/python-webuntis).
+     * Get the Information about the ClassRegEvents for a specific time period and room id <a href="https://github.com/python-webuntis/python-webuntis">Python WebUntis</a>.
      *
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
      * @since 1.0
@@ -261,7 +261,7 @@ public class Session {
     }
 
     /**
-     * Get the Information about the ClassRegEvents for a specific time period and person id (<- from https://github.com/python-webuntis/python-webuntis).
+     * Get the Information about the ClassRegEvents for a specific time period and person id <a href="https://github.com/python-webuntis/python-webuntis">Python WebUntis</a>.
      *
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
      * @since 1.0
@@ -302,7 +302,7 @@ public class Session {
     }
 
     /**
-     * Information about the Exams. (<- from https://github.com/python-webuntis/python-webuntis).
+     * Information about the Exams. <a href="https://github.com/python-webuntis/python-webuntis">Python WebUntis</a>.
      *
      * <p>Requests all exams and give {@link Response} with all information about from the request back (i got an error while testing this method: no right for getExams())</p>
      *
@@ -682,7 +682,7 @@ public class Session {
     /**
      * Returns the lessons / timetable for a specific time period.
      *
-     * <p> Returns the lessons / timetable for a specific time period and class / teacher / subject / room / student id<p/>
+     * <p> Returns the lessons / timetable for a specific time period and class / teacher / subject / room / student id</p>
      *
      * @param start       the beginning of the time period
      * @param end         the end of the time period
