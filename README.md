@@ -1,12 +1,9 @@
 # untis4j - a java API for webuntis
 
 <p align="center">
-    <a href="https://github.com/ByteDream/untis4j/actions/workflows/ci.yml">
-        <img src="https://github.com/bytedream/untis4j/workflows/CI/badge.svg" alt="">
-    </a>
-    <a href="https://smartrelease.bytedream.org/github/ByteDream/untis4j/untis4j-{tag}-withDependencies.jar">
-        <img src="https://img.shields.io/github/downloads/ByteDream/untis4j/total" alt="">
-    </a>
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/ByteDream/untis4j/gradle_build.yml?label=Gradle%20Build">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/ByteDream/untis4j/maven_build.yml?label=Maven%20Build">
+    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/ByteDream/untis4j/total?label=Downloads">
 </p>
 
 ---
@@ -24,31 +21,38 @@ you can easily implement the method yourself with the `Session.getCustomData(...
 
 # Installation
 
+[![](https://jitpack.io/v/bytedream/untis4j.svg)](https://jitpack.io/#bytedream/untis4j)
+
+### Maven
+
+Add the JitPack repository to your build file
+```XML
+<repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+</repository>
+```
+
+Add the dependency
+```XML
+<dependency>
+    <groupId>com.github.bytedream</groupId>
+    <artifactId>untis4j</artifactId>
+    <version>${version}</version>
+</dependency>
+```
+
 ### Gradle
 
-`settings.gradle`
-```kotlin
-sourceControl {
-    gitRepository("https://github.com/bytedream/untis4j.git") {
-        producesModule("org.bytedream:untis4j")
-    }
-}
+Add the JitPack repository to your build file
+```gradle
+maven { url 'https://jitpack.io' }
 ```
 
-`build.gradle`
-```kotlin
-dependencies {
-    implementation("org.bytedream:untis4j") {
-        version {
-            branch = "master"
-        }
-    }
-}
+Add the dependency
+```gradle
+implementation 'com.github.bytedream:untis4j:${version}'
 ```
-
-### Jar
-
-Just download the latest [untis4j.jar](https://smartrelease.bytedream.org/github/ByteDream/untis4j/untis4j-{tag}-withDependencies.jar) file and implement it into your project.
 
 # Examples
 
