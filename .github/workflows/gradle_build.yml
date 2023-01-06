@@ -1,4 +1,4 @@
-name: CI
+name: Gradle Build
 
 on: [ push, pull_request ]
 
@@ -12,13 +12,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
-        with:
-          key: "$GITHUB_SHA"
-          path: |
-            ~/builds
-            ~/build
-            ~/.gradle
+          distribution: 'temurin'
       - name: Build with Gradle
         run: ./gradlew build

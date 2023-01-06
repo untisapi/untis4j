@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.json:json:20211205")
+    implementation("org.json:json:20220924")
 }
 
 java {
