@@ -1,8 +1,8 @@
 # untis4j - a java API for webuntis
 
 <p align="center">
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/ByteDream/untis4j/gradle_build.yml?label=Gradle%20Build">
     <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/ByteDream/untis4j/maven_build.yml?label=Maven%20Build">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/ByteDream/untis4j/maven_publish.yml?label=Maven%20Publish">
     <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/ByteDream/untis4j/total?label=Downloads">
 </p>
 
@@ -21,37 +21,48 @@ you can easily implement the method yourself with the `Session.getCustomData(...
 
 # Installation
 
-[![](https://jitpack.io/v/bytedream/untis4j.svg)](https://jitpack.io/#bytedream/untis4j)
-
 ### Maven
 
-Add the JitPack repository to your build file
+Add the GitHub repository to your build file
 ```XML
 <repository>
-    <id>jitpack.io</id>
-    <url>https://jitpack.io</url>
+    <id>github</id>
+    <name>GitHub Packages</name>
+    <url>https://maven.pkg.github.com/ByteDream/untis4j</url>
 </repository>
 ```
 
 Add the dependency
 ```XML
 <dependency>
-    <groupId>com.github.bytedream</groupId>
+    <groupId>org.bytedream</groupId>
     <artifactId>untis4j</artifactId>
     <version>${version}</version>
 </dependency>
 ```
 
-### Gradle
+### Groovy
 
-Add the JitPack repository to your build file
-```gradle
-maven { url 'https://jitpack.io' }
+Add the GitHub repository to your build file
+```groovy
+maven { url 'https://maven.pkg.github.com/ByteDream/untis4j' }
 ```
 
 Add the dependency
-```gradle
-implementation 'com.github.bytedream:untis4j:${version}'
+```groovy
+implementation 'org.bytedream:untis4j:${version}'
+```
+
+### Kotlin
+
+Add the GitHub repository to your build file
+```kotlin
+maven { url='https://maven.pkg.github.com/ByteDream/untis4j' }
+```
+
+Add the dependency
+```kotlin
+implementation ("org.bytedream:untis4j:${version}")
 ```
 
 # Examples

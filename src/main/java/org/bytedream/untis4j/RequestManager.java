@@ -92,7 +92,7 @@ public class RequestManager {
                 throw new LoginException("The response contains an error (" + errorObject.getInt("errorObject") + "): " + errorObject.getString("message"));
             }
         } catch (JSONException e) {
-            throw new IOException("An unexpected exception occurred: " + stringBuilder.toString());
+            throw new IOException("An unexpected exception occurred: " + stringBuilder);
         }
 
         JSONObject result = jsonObject.getJSONObject("result");
@@ -105,6 +105,9 @@ public class RequestManager {
     /**
      * Sends a POST request to the server
      *
+     * @param method params you want to send with the request
+     * @return {@link Response} with all information about the response
+     * @throws IOException if an IO Exception occurs
      * @see RequestManager#POST(String, Map)
      * @since 1.0
      */
@@ -166,7 +169,7 @@ public class RequestManager {
                     throw new ConnectException("The response contains an error (" + errorObject.getInt("errorObject") + "): " + errorObject.getString("message"));
                 }
             } catch (JSONException e) {
-                throw new ConnectException("An unexpected exception occurred: " + stringBuilder.toString());
+                throw new ConnectException("An unexpected exception occurred: " + stringBuilder);
             }
 
             if (method.equals(UntisUtils.Method.LOGOUT.getMethod()) && loggedIn && !error) {

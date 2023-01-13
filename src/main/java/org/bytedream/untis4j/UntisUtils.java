@@ -21,6 +21,8 @@ public class UntisUtils {
     /**
      * Processes the given params to a well-formatted string
      *
+     * @param method method you want to process
+     * @return a string with the processed params
      * @see UntisUtils#processParams(String, Map)
      * @since 1.0
      */

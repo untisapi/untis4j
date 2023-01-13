@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class to manage {@link TeacherObject} objects
@@ -267,8 +268,7 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
          */
         @Override
         public String toString() {
-            HashMap<String, Object> teacherAsMap = new HashMap<>();
-
+            Map<String, Object> teacherAsMap = new HashMap<>();
             teacherAsMap.put("name", this.getName());
             teacherAsMap.put("isActive", this.isActive());
             teacherAsMap.put("id", this.getId());
@@ -276,7 +276,6 @@ public class Teachers extends NAILResponseList<Teachers.TeacherObject> {
             teacherAsMap.put("title", title);
             teacherAsMap.put("foreName", title);
             teacherAsMap.put("fullName", fullName);
-
             return new JSONObject(teacherAsMap).toString();
         }
     }

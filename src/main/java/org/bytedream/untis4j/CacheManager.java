@@ -31,8 +31,13 @@ public class CacheManager {
     }
 
     /**
-     * Checks if the given method is in cache and depending on the result it returns the cached object or a the response of a new request
+     * Checks if the given method is in cache and depending on the result it returns the cached object or a response of a new request
      *
+     * @param method the request methode
+     * @param action the request action
+     * @param requestManager the request manager
+     * @param <T> the object type which extends BaseResponse
+     * @return returns the cached object
      * @see CacheManager#getOrRequest(UntisUtils.Method, RequestManager, Map, ResponseConsumer)
      * @since 1.1
      */
@@ -41,12 +46,13 @@ public class CacheManager {
     }
 
     /**
-     * Checks if the given method is in cache and depending on the result it returns the cached object or a the response of a new request
+     * Checks if the given method is in cache and depending on the result it returns the cached object or a response of a new request
      *
      * @param method         the POST method
      * @param requestManager request manager through which the POST requests are sent
      * @param params         params you want to send with the request
      * @param action         lambda expression that gets called if the {@code method} is not in the cache manager
+     * @param <T>            an object which extends {@link BaseResponse}
      * @return the response in a {@link ResponseList}
      * @since 1.1
      */
@@ -65,7 +71,7 @@ public class CacheManager {
         if ((response = cachedInformation.get(keyHashCode)) == null) {
             try {
                 response = action.getResponse(requestManager.POST(method.getMethod(), params));
-            } catch (IOException e) {}
+            } catch (IOException ignore) {}
             cachedInformation.put(keyHashCode, response);
         }
 
@@ -87,7 +93,7 @@ public class CacheManager {
     }
 
     /**
-     * Generates a individual code for every method param pair
+     * Generates an individual code for every method param pair
      *
      * @param method method to generate code from
      * @param params params to generate code from

@@ -3,7 +3,7 @@ package org.bytedream.untis4j;
 import java.io.IOException;
 
 /**
- * Exception if a error occurs while trying to login
+ * Exception if an error occurs while trying to log in
  *
  * @version 1.0
  * @since 1.0
