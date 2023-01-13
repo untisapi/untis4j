@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Class to control the untis4j API
@@ -63,6 +64,12 @@ public class Session {
      * <p>Send an login request to the server and returns {@link Session} if the login was successful.
      * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
      *
+     * @param username   the username used for the api
+     * @param password   the password used for the api
+     * @param server     the server used for the api
+     * @param schoolName the school name used for the api
+     * @return a session
+     * @throws IOException if an IO Exception occurs
      * @see Session#login(String, String, String, String, String)
      * @since 1.0
      */
@@ -223,6 +230,11 @@ public class Session {
     /**
      * Get the Information about the ClassRegEvents for a specific time period and class id <a href="https://github.com/python-webuntis/python-webuntis">Python WebUntis</a>.
      *
+     * @param start       the beginning of the time period
+     * @param end         the end of the time period
+     * @param id          id of the class
+     * @return {@link Response} with the response from the request
+     * @throws IOException if an IO Exception occurs
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
      * @since 1.0
      */
@@ -233,6 +245,11 @@ public class Session {
     /**
      * Get the Information about the ClassRegEvents for a specific time period and teacher id <a href="https://github.com/python-webuntis/python-webuntis">Python WebUntis</a>.
      *
+     * @param start       the beginning of the time period
+     * @param end         the end of the time period
+     * @param id          id of the teacher
+     * @return {@link Response} with the response from the request
+     * @throws IOException if an IO Exception occurs
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
      * @since 1.0
      */
@@ -243,6 +260,11 @@ public class Session {
     /**
      * Get the Information about the ClassRegEvents for a specific time period and subject id <a href="https://github.com/python-webuntis/python-webuntis">Python WebUntis</a>.
      *
+     * @param start       the beginning of the time period
+     * @param end         the end of the time period
+     * @param id          id of the subject
+     * @return {@link Response} with the response from the request
+     * @throws IOException if an IO Exception occurs
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
      * @since 1.0
      */
@@ -253,6 +275,11 @@ public class Session {
     /**
      * Get the Information about the ClassRegEvents for a specific time period and room id <a href="https://github.com/python-webuntis/python-webuntis">Python WebUntis</a>.
      *
+     * @param start       the beginning of the time period
+     * @param end         the end of the time period
+     * @param id          id of the room
+     * @return {@link Timetable} with all information about the events
+     * @throws IOException if an IO Exception occurs
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
      * @since 1.0
      */
@@ -263,6 +290,11 @@ public class Session {
     /**
      * Get the Information about the ClassRegEvents for a specific time period and person id <a href="https://github.com/python-webuntis/python-webuntis">Python WebUntis</a>.
      *
+     * @param start       the beginning of the time period
+     * @param end         the end of the time period
+     * @param personId    the id of the person
+     * @return {@link Timetable} with all information about the events
+     * @throws IOException if an IO Exception occurs
      * @see Session#getClassRegEvents(LocalDate, LocalDate, UntisUtils.ElementType, Integer)
      * @since 1.0
      */
@@ -371,6 +403,8 @@ public class Session {
      *
      * <p>Returns {@link Classes} with all information about the class which are registered on the given server</p>
      *
+     * @return {@link Classes} with all information about the class which are registered on the given server
+     * @throws IOException if an IO Exception occurs
      * @see Session#getClasses(Integer)
      * @since 1.0
      */
@@ -812,7 +846,7 @@ public class Session {
                         endPattern = null;
                 }
 
-                LocalTime startTime = LocalTime.parse(startString, DateTimeFormatter.ofPattern(startPattern));
+                LocalTime startTime = LocalTime.parse(startString, DateTimeFormatter.ofPattern(Objects.requireNonNull(startPattern)));
                 LocalTime endTime = LocalTime.parse(endString, DateTimeFormatter.ofPattern(endPattern));
 
                 UntisUtils.LessonCode code = UntisUtils.LessonCode.REGULAR;
@@ -843,6 +877,11 @@ public class Session {
     /**
      * Returns the lessons / timetable for a specific time period and class id.
      *
+     * @param start the beginning of the time period
+     * @param end   the end of the time period
+     * @param classId the id of the class
+     * @return {@link Timetable} with all information about the events
+     * @throws IOException if an IO Exception occurs
      * @see Session#getTimetable(LocalDate, LocalDate, UntisUtils.ElementType, int)
      * @since 1.0
      */
@@ -853,6 +892,11 @@ public class Session {
     /**
      * Returns the lessons / timetable for a specific time period and teacher id.
      *
+     * @param start the beginning of the time period
+     * @param end   the end of the time period
+     * @param teacherId the id of the teacher
+     * @return {@link Timetable} with all information about the events
+     * @throws IOException if an IO Exception occurs
      * @see Session#getTimetable(LocalDate, LocalDate, UntisUtils.ElementType, int)
      * @since 1.0
      */
@@ -863,6 +907,11 @@ public class Session {
     /**
      * Returns the lessons / timetable for a specific time period and subject id.
      *
+     * @param start the beginning of the time period
+     * @param end   the end of the time period
+     * @param subjectId the id of the subject
+     * @return {@link Timetable} with all information about the events
+     * @throws IOException if an IO Exception occurs
      * @see Session#getTimetable(LocalDate, LocalDate, UntisUtils.ElementType, int)
      * @since 1.0
      */
@@ -873,6 +922,11 @@ public class Session {
     /**
      * Returns the lessons / timetable for a specific time period and room id.
      *
+     * @param start the beginning of the time period
+     * @param end   the end of the time period
+     * @param roomId the id of the room
+     * @return {@link Timetable} with all information about the events
+     * @throws IOException if an IO Exception occurs
      * @see Session#getTimetable(LocalDate, LocalDate, UntisUtils.ElementType, int)
      * @since 1.0
      */
@@ -883,6 +937,11 @@ public class Session {
     /**
      * Returns the lessons / timetable for a specific time period and person id.
      *
+     * @param start the beginning of the time period
+     * @param end   the end of the time period
+     * @param personId the id of the person
+     * @return {@link Timetable} with all information about the events
+     * @throws IOException if an IO Exception occurs
      * @see Session#getTimetable(LocalDate, LocalDate, UntisUtils.ElementType, int)
      * @since 1.0
      */
@@ -931,6 +990,10 @@ public class Session {
     /**
      * Requests the timetable for a whole week and a class id
      *
+     * @param classId the id of the specific class
+     * @param anyDateOfWeek any day of the week you want to get the timetable from
+     * @return the weekly timetable
+     * @throws IOException if an IO Exception occurs
      * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
      * @since 1.1
      */
@@ -941,6 +1004,10 @@ public class Session {
     /**
      * Requests the timetable for a whole week and a teacher id
      *
+     * @param anyDateOfWeek any day of the week you want to get the timetable from
+     * @param teacherId the id of the teacher
+     * @return the weekly timetable
+     * @throws IOException if an IO Exception occurs
      * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
      * @since 1.1
      */
@@ -951,6 +1018,10 @@ public class Session {
     /**
      * Requests the timetable for a whole week and a subject id
      *
+     * @param anyDateOfWeek any day of the week you want to get the timetable from
+     * @param subjectId the id of the subject
+     * @return the weekly timetable
+     * @throws IOException if an IO Exception occurs
      * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
      * @since 1.1
      */
@@ -961,6 +1032,10 @@ public class Session {
     /**
      * Requests the timetable for a whole week and a room id
      *
+     * @param anyDateOfWeek any day of the week you want to get the timetable from
+     * @param roomId        the id of the room
+     * @return the weekly timetable
+     * @throws IOException – if an IO Exception occurs
      * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
      * @since 1.1
      */
@@ -971,6 +1046,10 @@ public class Session {
     /**
      * Requests the timetable for a whole week and a person id
      *
+     * @param anyDateOfWeek any day of the week you want to get the timetable from
+     * @param personId the id of a person
+     * @throws IOException if an IO Exception occurs
+     * @return the weekly timetable
      * @see Session#getWeeklyTimetable(LocalDate, UntisUtils.ElementType, int)
      * @since 1.1
      */
@@ -981,6 +1060,9 @@ public class Session {
     /**
      * Allows to request custom data.
      *
+     * @param method the POST methode
+     * @throws IOException if an IO Exception occurs
+     * @return {@link Response} with the response from the request
      * @see Session#getCustomData(String, Map)
      * @since 1.0
      */
@@ -993,6 +1075,8 @@ public class Session {
      *
      * <p>Requests custom data and give {@link Response} with all information about from the request back</p>
      *
+     * @param method the POST methode
+     * @param params params you want to send with the request
      * @return {@link Response} with the response from the request
      * @throws IOException if an IO Exception occurs
      * @since 1.0

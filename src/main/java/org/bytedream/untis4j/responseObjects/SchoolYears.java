@@ -258,7 +258,7 @@ public class SchoolYears extends ResponseList<SchoolYears.SchoolYearObject> {
     }
 
     /**
-     * Class to get information about the a school year
+     * Class to get information about the school year
      *
      * @version 1.1
      * @since 1.0

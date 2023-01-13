@@ -30,6 +30,10 @@ public class Infos {
      * @param password   the password used for the api
      * @param server     the server used for the api
      * @param schoolName the school name used for the api
+     * @param classId    the id of the class
+     * @param personId   the id of the person
+     * @param sessionId  the id of the session
+     * @param personType the person type
      * @param userAgent  the user agent used for the api
      * @since 1.0
      */

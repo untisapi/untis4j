@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class to manage {@link RoomObject} objects
@@ -28,7 +29,7 @@ public class Rooms extends NAILResponseList<Rooms.RoomObject> {
     }
 
     /**
-     * Finds an building by its name
+     * Finds a building by its name
      *
      * @param building name of the building you want to find
      * @return the building
@@ -119,14 +120,12 @@ public class Rooms extends NAILResponseList<Rooms.RoomObject> {
          */
         @Override
         public String toString() {
-            HashMap<String, Object> teacherAsMap = new HashMap<>();
-
+            Map<String, Object> teacherAsMap = new HashMap<>();
             teacherAsMap.put("name", this.getName());
             teacherAsMap.put("isActive", this.isActive());
             teacherAsMap.put("id", this.getId());
             teacherAsMap.put("longName", this.getLongName());
             teacherAsMap.put("building", building);
-
             return new JSONObject(teacherAsMap).toString();
         }
     }

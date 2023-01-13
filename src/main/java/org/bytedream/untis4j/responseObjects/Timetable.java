@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class to manage {@link Lesson} objects
@@ -744,19 +745,20 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
         /**
          * Initialize the {@link Lesson} class
          *
-         * @param date         date of the timetable
-         * @param startTime    time when the lesson start
-         * @param endTime      time when the lesson end
-         * @param classes      classes
-         * @param originalClasses the original classes who are represented, if any
-         * @param teachers     teachers
-         * @param originalTeachers the original teachers who are represented, if any
-         * @param rooms        rooms
-         * @param originalRooms the original rooms if the class was moved to another room
-         * @param subjects     subjects
-         * @param originalSubjects the original subjects if the subject has changed
-         * @param code         code of the lesson (normally null, {@link UntisUtils.LessonCode#CANCELLED} if the lesson is cancelled, {@code UntisUtils.LessonCode.IRREGULAR} if e.g. a lesson has been moved
-         * @param activityType type of the lesson
+         * @param date              date of the timetable
+         * @param startTime         time when the lesson start
+         * @param endTime           time when the lesson end
+         * @param timeUnitObject    the {@link org.bytedream.untis4j.responseObjects.TimeUnits.TimeUnitObject}
+         * @param classes           classes
+         * @param originalClasses   the original classes who are represented, if any
+         * @param teachers          teachers
+         * @param originalTeachers  the original teachers who are represented, if any
+         * @param rooms             rooms
+         * @param originalRooms     the original rooms if the class was moved to another room
+         * @param subjects          subjects
+         * @param originalSubjects  the original subjects if the subject has changed
+         * @param code              code of the lesson (normally null, {@link UntisUtils.LessonCode#CANCELLED} if the lesson is cancelled, {@code UntisUtils.LessonCode.IRREGULAR} if e.g. a lesson has been moved
+         * @param activityType      type of the lesson
          * @since 1.0
          */
         public Lesson(LocalDate date,
@@ -937,8 +939,7 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          */
         @Override
         public String toString() {
-            HashMap<String, Object> classAsMap = new HashMap<>();
-
+            Map<String, Object> classAsMap = new HashMap<>();
             classAsMap.put("date", date);
             classAsMap.put("classes", classes);
             classAsMap.put("hasChanges", hasChanges());
@@ -953,7 +954,6 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
             classAsMap.put("startTime", startTime.format(DateTimeFormatter.ofPattern("HHmm")));
             classAsMap.put("endTime", endTime.format(DateTimeFormatter.ofPattern("HHmm")));
             classAsMap.put("activityType", activityType);
-
             return new JSONObject(classAsMap).toString();
         }
     }

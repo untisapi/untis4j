@@ -35,6 +35,7 @@ public class BaseResponseLists {
         /**
          * Sorts the given list by all names and returns the sorted list
          *
+         * @param <T> a class that extends {@link NILResponseList}
          * @param list the list that should be sorted
          * @return the sorted list
          * @since 1.1
@@ -47,6 +48,7 @@ public class BaseResponseLists {
         /**
          * Sorts the given list by all ids and returns the sorted list
          *
+         * @param <T> a class that extends {@link NILResponseList}
          * @param list the list that should be sorted
          * @return the sorted list
          * @since 1.1
@@ -60,6 +62,7 @@ public class BaseResponseLists {
          * Sorts the given list by all long names and returns the sorted list
          *
          * @param list the list that should be sorted
+         * @param <T> a class which extends {@link NILResponseList}
          * @return the sorted list
          * @since 1.1
          */
@@ -105,6 +108,7 @@ public class BaseResponseLists {
          * Finds elements that have the {@code name} or a part of it in their name
          *
          * @param name name of the element you want to search
+         * @param <T> a class which extends {@link NILResponseList}
          * @return {@link T} with elements that have the {@code name} or a part of it in their name
          * @since 1.0
          */
@@ -120,6 +124,7 @@ public class BaseResponseLists {
          * Finds elements that have the {@code id} or a part of it in their id
          *
          * @param id id of the element you want to search
+         * @param <T> a class which extends {@link NILResponseList}
          * @return {@link T} with elements that have the {@code id} or a part of it in their id
          * @since 1.0
          */
@@ -135,6 +140,7 @@ public class BaseResponseLists {
          * Finds elements that have the {@code longName} or a part of it in their long name
          *
          * @param longName long name of the element you want to search
+         * @param <T> a class which extends {@link NILResponseList}
          * @return {@link T} with elements that have the {@code longName} or a part of it in their long name
          * @since 1.0
          */
@@ -229,6 +235,7 @@ public class BaseResponseLists {
          * Sorts the given list by all active elements and returns the sorted list
          *
          * @param list the list that should be sorted
+         * @param <T> a class which extends {@link NILResponseList}
          * @return the sorted list
          * @since 1.1
          */
@@ -252,6 +259,7 @@ public class BaseResponseLists {
          * Finds elements that are {@code active}
          *
          * @param active active state of the element you want to search
+         * @param <T> a class which extends {@link NAILResponseList}
          * @return {@link T} with elements that are {@code active}
          * @since 1.0
          */
