@@ -28,7 +28,7 @@ Add the GitHub repository to your build file
 <repository>
     <id>github</id>
     <name>GitHub Packages</name>
-    <url>https://maven.pkg.github.com/ByteDream/untis4j</url>
+    <url>https://maven.pkg.github.com/untisapi/untis4j</url>
 </repository>
 ```
 
@@ -45,7 +45,7 @@ Add the dependency
 
 Add the GitHub repository to your build file
 ```groovy
-maven { url 'https://maven.pkg.github.com/ByteDream/untis4j' }
+maven { url 'https://maven.pkg.github.com/untisapi/untis4j' }
 ```
 
 Add the dependency
@@ -57,7 +57,7 @@ implementation 'org.bytedream:untis4j:${version}'
 
 Add the GitHub repository to your build file
 ```kotlin
-maven { url='https://maven.pkg.github.com/ByteDream/untis4j' }
+maven { url='https://maven.pkg.github.com/untisapi/untis4j' }
 ```
 
 Add the dependency
