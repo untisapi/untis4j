@@ -1,14 +1,14 @@
 # untis4j - a java API for webuntis
 
 <p align="center">
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/ByteDream/untis4j/maven_build.yml?label=Maven%20Build">
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/ByteDream/untis4j/maven_publish.yml?label=Maven%20Publish">
-    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/ByteDream/untis4j/total?label=Downloads">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/untisapi/untis4j/maven_build.yml?label=Maven%20Build">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/untisapi/untis4j/maven_publish.yml?label=Maven%20Publish">
+    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/untisapi/untis4j/total?label=Downloads">
 </p>
 
 ---
 
-**[⚠️ This library is looking for a new maintainer!](https://github.com/ByteDream/untis4j/issues/12)**
+**[⚠️ This library is looking for a new maintainer!](https://github.com/untisapi/untis4j/issues/12)**
 
 ---
 
@@ -28,7 +28,7 @@ Add the GitHub repository to your build file
 <repository>
     <id>github</id>
     <name>GitHub Packages</name>
-    <url>https://maven.pkg.github.com/ByteDream/untis4j</url>
+    <url>https://maven.pkg.github.com/untisapi/untis4j</url>
 </repository>
 ```
 
@@ -45,7 +45,7 @@ Add the dependency
 
 Add the GitHub repository to your build file
 ```groovy
-maven { url 'https://maven.pkg.github.com/ByteDream/untis4j' }
+maven { url 'https://maven.pkg.github.com/untisapi/untis4j' }
 ```
 
 Add the dependency
@@ -57,7 +57,7 @@ implementation 'org.bytedream:untis4j:${version}'
 
 Add the GitHub repository to your build file
 ```kotlin
-maven { url='https://maven.pkg.github.com/ByteDream/untis4j' }
+maven { url='https://maven.pkg.github.com/untisapi/untis4j' }
 ```
 
 Add the dependency
@@ -180,11 +180,6 @@ public class Main {
 Caching allows to use saved request responses.
 The advantages of caching are the obviously faster answer when the same things are requested, that the server does not have to send as much data and in case of internet loss data can still be accessed.
 Caching is activated by default, but can use `Session.useCache(...)` to enable / disable it.
-
-## Building
-
-If you want to build / compile this project yourself without gradle, the `java: Compilation failed: internal java compiler error` error may occur when using IntelliJ as your IDE.
-To fix this, go to `File | Settings | Build, Execution, Deployment | Compiler | Java Compiler` and change the compiler from `Javac` to `Eclipse`.
 
 
 # License
