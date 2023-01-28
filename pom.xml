@@ -25,7 +25,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/ByteDream/untis4j</url>
+            <url>https://maven.pkg.github.com/untisapi/untis4j</url>
         </repository>
     </distributionManagement>
 
