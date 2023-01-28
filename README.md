@@ -1,14 +1,14 @@
 # untis4j - a java API for webuntis
 
 <p align="center">
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/ByteDream/untis4j/maven_build.yml?label=Maven%20Build">
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/ByteDream/untis4j/maven_publish.yml?label=Maven%20Publish">
-    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/ByteDream/untis4j/total?label=Downloads">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/untisapi/untis4j/maven_build.yml?label=Maven%20Build">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/untisapi/untis4j/maven_publish.yml?label=Maven%20Publish">
+    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/untisapi/untis4j/total?label=Downloads">
 </p>
 
 ---
 
-**[⚠️ This library is looking for a new maintainer!](https://github.com/ByteDream/untis4j/issues/12)**
+**[⚠️ This library is looking for a new maintainer!](https://github.com/untisapi/untis4j/issues/12)**
 
 ---
 
