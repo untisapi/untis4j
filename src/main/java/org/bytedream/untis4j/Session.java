@@ -839,9 +839,7 @@ public class Session {
                 }
 
                 String activityType = null;
-                try {
-                    activityType = timetableInfos.getString("activityType");
-                } catch (JSONException ignore) {}
+                if (timetableInfos.has("activityType")) activityType = timetableInfos.getString("activityType");
 
                 timetable.add(new Timetable.Lesson(LocalDate.parse(String.valueOf(timetableInfos.getInt("date")), DateTimeFormatter.ofPattern("yyyyMMdd")),
                         startTime,
