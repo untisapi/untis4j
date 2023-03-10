@@ -1,5 +1,7 @@
 package org.bytedream.untis4j;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,6 +12,7 @@ import java.io.InputStreamReader;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +28,7 @@ public class RequestManager {
     private final Infos infos;
     private final String url;
     private boolean loggedIn = true;
+    private final LoadingCache<String, Response> requests = Caffeine.newBuilder().maximumSize(1_000).expireAfterWrite(Duration.ofMinutes(10)).refreshAfterWrite(Duration.ofMinutes(1)).build(this::POST);
 
     /**
      * Initialize the {@link RequestManager} class
@@ -105,19 +109,6 @@ public class RequestManager {
     /**
      * Sends a POST request to the server
      *
-     * @param method params you want to send with the request
-     * @return {@link Response} with all information about the response
-     * @throws IOException if an IO Exception occurs
-     * @see RequestManager#POST(String, Map)
-     * @since 1.0
-     */
-    public Response POST(String method) throws IOException {
-        return this.POST(method, new HashMap<>());
-    }
-
-    /**
-     * Sends a POST request to the server
-     *
      * @param method the POST method
      * @param params params you want to send with the request
      * @return {@link Response} with all information about the response
@@ -127,60 +118,84 @@ public class RequestManager {
     public Response POST(String method, Map<String, ?> params) throws IOException {
 
         if (loggedIn || method.equals(UntisUtils.Method.LOGIN.getMethod())) {
-            boolean error;
-            URL url = new URL(this.url);
-            String requestBody = UntisUtils.processParams(method, params);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            connection.setRequestMethod("POST");
-            connection.setInstanceFollowRedirects(true);
-            connection.setDoOutput(true);
-            connection.setRequestProperty("User-Agent", infos.getUserAgent());
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            connection.setRequestProperty("Cookie", "JSESSIONID=" + infos.getSessionId() + "; schoolname=" + infos.getSchoolName());
-
-            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-            outputStream.writeBytes(requestBody);
-
-            BufferedReader input;
-
-            try {
-                input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                error = false;
-            } catch (NullPointerException e) {
-                error = true;
-                input = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-            }
-
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while ((line = input.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-
-            JSONObject jsonObject;
-
-            try {
-                jsonObject = new JSONObject(stringBuilder.toString());
-
-                if (jsonObject.has("error")) {
-                    JSONObject errorObject = jsonObject.getJSONObject("error");
-                    throw new ConnectException("The response contains an error (" + errorObject.getInt("errorObject") + "): " + errorObject.getString("message"));
-                }
-            } catch (JSONException e) {
-                throw new ConnectException("An unexpected exception occurred: " + stringBuilder);
-            }
-
-            if (method.equals(UntisUtils.Method.LOGOUT.getMethod()) && loggedIn && !error) {
+            Response response = POST(UntisUtils.processParams(method, params));
+            if (method.equals(UntisUtils.Method.LOGOUT.getMethod()) && loggedIn && response != null) {
                 loggedIn = false;
             }
-
-            return new Response(connection.getResponseCode(), jsonObject);
+            return response;
         } else {
             throw new LoginException("Not logged in");
         }
+    }
 
+    /**
+     * Sends a POST request to the server, but only if it is not in the cache
+     *
+     * @param method the POST method
+     * @param params params you want to send with the request
+     * @return {@link Response} with all information about the response
+     * @throws IOException if an IO Exception occurs
+     * @since 1.0
+     */
+    public Response CachedPOST(String method, Map<String, ?> params) throws IOException {
+
+        if (loggedIn) {
+            Response response = requests.get(UntisUtils.processParams(method, params));
+            if (method.equals(UntisUtils.Method.LOGOUT.getMethod()) && loggedIn && response != null) {
+                loggedIn = false;
+            }
+            return response;
+        } else {
+            throw new LoginException("Not logged in");
+        }
+    }
+
+    /**
+     * Sends a POST request to the server
+     *
+     * @return {@link Response} with all information about the response
+     * @throws IOException if an IO Exception occurs
+     * @since 1.0
+     */
+    private Response POST(String request) throws IOException
+    {
+        boolean error;
+        URL url = new URL(this.url);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setInstanceFollowRedirects(true);
+        connection.setDoOutput(true);
+        connection.setRequestProperty("User-Agent", infos.getUserAgent());
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Cookie", "JSESSIONID=" + infos.getSessionId() + "; schoolname=" + infos.getSchoolName());
+        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+        outputStream.writeBytes(request);
+        BufferedReader input;
+        try {
+            input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            error = false;
+        } catch (NullPointerException e) {
+            error = true;
+            input = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        while ((line = input.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(stringBuilder.toString());
+
+            if (jsonObject.has("error")) {
+                JSONObject errorObject = jsonObject.getJSONObject("error");
+                throw new ConnectException("The response contains an error (" + errorObject.getInt("errorObject") + "): " + errorObject.getString("message"));
+            }
+        } catch (JSONException e) {
+            throw new ConnectException("An unexpected exception occurred: " + stringBuilder);
+        }
+        if (error) return null;
+        return new Response(connection.getResponseCode(), jsonObject);
     }
 
     /**

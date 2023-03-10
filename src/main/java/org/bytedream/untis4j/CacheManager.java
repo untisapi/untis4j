@@ -59,14 +59,6 @@ public class CacheManager {
     public <T extends BaseResponse> T getOrRequest(UntisUtils.Method method, RequestManager requestManager, Map<String, ?> params, ResponseConsumer<T> action) {
         int keyHashCode = mapCode(method, params);
 
-        Function<Integer, BaseResponse> function = (objects) -> {
-            try {
-                return action.getResponse(requestManager.POST(method.getMethod(), params));
-            } catch (IOException e) {
-                return null;
-            }
-        };
-
         BaseResponse response;
         if ((response = cachedInformation.get(keyHashCode)) == null) {
             try {
@@ -103,5 +95,4 @@ public class CacheManager {
     private int mapCode(UntisUtils.Method method, Map<String, ?> params) {
         return Arrays.toString(new Object[]{method, params}).hashCode();
     }
-
 }
