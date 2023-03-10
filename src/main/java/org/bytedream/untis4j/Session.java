@@ -5,6 +5,7 @@
 
 package org.bytedream.untis4j;
 
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.bytedream.untis4j.responseObjects.*;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists;
@@ -32,10 +33,7 @@ import java.util.Objects;
 public class Session {
 
     private Infos infos;
-
-    private long lastChange;
     private boolean useCache = true;
-    private CacheManager cacheManager = new CacheManager();
     private RequestManager requestManager;
 
     /**
@@ -50,12 +48,6 @@ public class Session {
     private Session(Infos infos, RequestManager requestManager) {
         this.infos = infos;
         this.requestManager = requestManager;
-
-        try {
-            this.lastChange = getLatestImportTime().getLatestImportTime();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -112,7 +104,7 @@ public class Session {
      * @since 1.0
      */
     public void logout() throws IOException {
-        requestManager.POST(UntisUtils.Method.LOGOUT.getMethod());
+        requestManager.POST(UntisUtils.Method.LOGOUT.getMethod(), new HashMap<>());
     }
 
     /**
@@ -156,15 +148,7 @@ public class Session {
      */
     private <T extends BaseResponse> T requestSender(UntisUtils.Method method, Map<String, ?> params, ResponseConsumer<? extends T> action) throws IOException {
         if (useCache) {
-            try {
-                long newLatestImportTime = this.getLatestImportTime().getLatestImportTime();
-                if (lastChange < newLatestImportTime) {
-                    lastChange = newLatestImportTime;
-                    cacheManager.update(method, requestManager, params, action);
-                }
-            } catch (IOException ignore) {
-            }
-            return cacheManager.getOrRequest(method, requestManager, params, action);
+            return action.getResponse(requestManager.CachedPOST(method.getMethod(), params));
         } else {
             return action.getResponse(requestManager.POST(method.getMethod(), params));
         }
@@ -463,7 +447,7 @@ public class Session {
      * @since 1.0
      */
     public LatestImportTime getLatestImportTime() throws IOException {
-        Response response = requestManager.POST(UntisUtils.Method.GETLATESTIMPORTTIME.getMethod());
+        Response response = requestManager.POST(UntisUtils.Method.GETLATESTIMPORTTIME.getMethod(), new HashMap<>());
 
         JSONObject jsonResponse = response.getResponse();
 
@@ -1082,11 +1066,7 @@ public class Session {
      * @since 1.0
      */
     public Response getCustomData(String method, Map<String, ?> params) throws IOException {
-        if (params != null) {
-            return requestManager.POST(method, params);
-        } else {
-            return requestManager.POST(method);
-        }
+        return requestManager.POST(method, Objects.requireNonNullElseGet(params, HashMap::new));
     }
 
     /**
@@ -1097,26 +1077,6 @@ public class Session {
      */
     public Infos getInfos() {
         return infos;
-    }
-
-    /**
-     * Returns the used {@link CacheManager}
-     *
-     * @return the used {@link CacheManager}
-     * @since 1.1
-     */
-    public CacheManager getCacheManager() {
-        return cacheManager;
-    }
-
-    /**
-     * Replaces the current session cache manager with a new one
-     *
-     * @param cacheManager the new cache manager
-     * @since 1.1
-     */
-    public void setCacheManager(CacheManager cacheManager) {
-        this.cacheManager = cacheManager;
     }
 
     /**
