@@ -838,6 +838,11 @@ public class Session {
                     code = UntisUtils.LessonCode.valueOf(timetableInfos.getString("code").toUpperCase());
                 }
 
+                String activityType = null;
+                try {
+                    activityType = timetableInfos.getString("activityType");
+                } catch (JSONException ignore) {}
+
                 timetable.add(new Timetable.Lesson(LocalDate.parse(String.valueOf(timetableInfos.getInt("date")), DateTimeFormatter.ofPattern("yyyyMMdd")),
                         startTime,
                         endTime,
@@ -851,7 +856,7 @@ public class Session {
                         subjects,
                         originalSubjects,
                         code,
-                        timetableInfos.getString("activityType")));
+                        activityType));
             }
 
             return timetable;
