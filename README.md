@@ -35,7 +35,7 @@ POM
 
 <dependencies>
     <dependency>
-        <groupId>com.github.LuftigerLuca</groupId>
+        <groupId>com.github.untisapi</groupId>
         <artifactId>untis4j</artifactId>
         <version>RELEASE</version>
     </dependency>
