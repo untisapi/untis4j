@@ -67,7 +67,7 @@ public class RequestManager {
         connection.setInstanceFollowRedirects(true);
         connection.setDoOutput(true);
         connection.setRequestProperty("User-Agent", userAgent);
-        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
 
         DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
         outputStream.writeBytes(requestBody);
