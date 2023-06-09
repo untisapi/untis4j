@@ -166,7 +166,7 @@ public class RequestManager {
         connection.setInstanceFollowRedirects(true);
         connection.setDoOutput(true);
         connection.setRequestProperty("User-Agent", infos.getUserAgent());
-        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
         connection.setRequestProperty("Cookie", "JSESSIONID=" + infos.getSessionId() + "; schoolname=" + infos.getSchoolName());
         DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
         outputStream.writeBytes(request);

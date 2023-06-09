@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * Support class
  *
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 public class UntisUtils {
@@ -108,7 +108,8 @@ public class UntisUtils {
         TEACHER(2),
         SUBJECT(3),
         ROOM(4),
-        PERSON(5);
+        PERSON(5),
+        OTHER(6);
 
         private final int elementType;
 
@@ -130,8 +131,11 @@ public class UntisUtils {
          * @since 1.1
          */
         public static ElementType of(int elementType) {
-            if (1 > elementType || elementType > 6) {
+            if (1 > elementType) {
                 throw new EnumConstantNotPresentException(ElementType.class, "Invalid value for ElementType: " + elementType);
+            }
+            if(elementType > 6) {
+                return OTHER;
             }
             return ElementType.values()[elementType - 1];
         }
