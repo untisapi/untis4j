@@ -5,7 +5,6 @@
 
 package org.bytedream.untis4j;
 
-import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.bytedream.untis4j.responseObjects.*;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponse;
 import org.bytedream.untis4j.responseObjects.baseObjects.BaseResponseLists;
@@ -127,7 +126,7 @@ public class Session {
     }
 
     /**
-     * Checks if the cache should be used and depending on the result it calls {@link CacheManager#getOrRequest(UntisUtils.Method, RequestManager, Map, ResponseConsumer)} or request the given method manually
+     * Checks if the same request is still in the {@link com.github.benmanes.caffeine.cache.LoadingCache} and if not, the request is sent to the server.
      *
      * @see Session#requestSender(UntisUtils.Method, Map, ResponseConsumer)
      * @since 1.1
@@ -137,8 +136,9 @@ public class Session {
     }
 
     /**
-     * Checks if the cache should be used and depending on the result it calls {@link CacheManager#getOrRequest(UntisUtils.Method, RequestManager, Map, ResponseConsumer)} or request the given method manually
-     *
+     * Checks if the same request is still in the {@link com.github.benmanes.caffeine.cache.LoadingCache} and if not, the request is sent to the server.
+     * 
+     * 
      * @param method the POST method
      * @param params params you want to send with the request
      * @param action lambda expression that gets called if the {@code method} is not in the cache manager
