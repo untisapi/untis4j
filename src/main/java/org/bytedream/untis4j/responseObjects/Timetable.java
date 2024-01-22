@@ -719,6 +719,45 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
         return activityTypes;
     }
 
+    public ArrayList<String> getInfos() {
+        ArrayList<String> infos = new ArrayList<>();
+
+        this.stream().map(Lesson::getInfo).forEach(infos::add);
+
+        return infos;
+    }
+
+    public ArrayList<String> getSubstTexts() {
+        ArrayList<String> substText = new ArrayList<>();
+
+        this.stream().map(Lesson::getSubstText).forEach(substText::add);
+
+        return substText;
+    }
+
+    public ArrayList<String> getLsTexts() {
+        ArrayList<String> lsTexts = new ArrayList<>();
+
+        this.stream().map(Lesson::getLsText).forEach(lsTexts::add);
+
+        return lsTexts;
+    }
+
+    public ArrayList<Integer> getLsNumbers() {
+        ArrayList<Integer> lsNumbers = new ArrayList<>();
+
+        this.stream().map(Lesson::getLsNumber).forEach(lsNumbers::add);
+
+        return lsNumbers;
+    }
+    public ArrayList<String> getStudentGroups() {
+        ArrayList<String> studentGroups = new ArrayList<>();
+
+        this.stream().map(Lesson::getStudentGroup).forEach(studentGroups::add);
+
+        return studentGroups;
+    }
+
     /**
      * Class to get information about a lesson
      *
@@ -741,6 +780,11 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
         private final Subjects originalSubjects;
         private final UntisUtils.LessonCode code;
         private final String activityType;
+        private final String info;
+        private final String substText;
+        private final String lsText;
+        private final Integer lsNumber;
+        private final String studentGroup;
 
         /**
          * Initialize the {@link Lesson} class
@@ -759,6 +803,11 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
          * @param originalSubjects  the original subjects if the subject has changed
          * @param code              code of the lesson (normally null, {@link UntisUtils.LessonCode#CANCELLED} if the lesson is cancelled, {@code UntisUtils.LessonCode.IRREGULAR} if e.g. a lesson has been moved
          * @param activityType      type of the lesson
+         * @param info              info text of the lesson
+         * @param substText         substitution text
+         * @param lsText            ls text of the lesson
+         * @param lsNumber          ls Number of the lesson
+         * @param studentGroup      name of the studentGroup
          * @since 1.0
          */
         public Lesson(LocalDate date,
@@ -774,7 +823,12 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
                       Subjects subjects,
                       Subjects originalSubjects,
                       UntisUtils.LessonCode code,
-                      String activityType) {
+                      String activityType,
+                      String info,
+                      String substText,
+                      String lsText,
+                      Integer lsNumber,
+                      String studentGroup) {
             this.date = date;
             this.startTime = startTime;
             this.endTime = endTime;
@@ -789,6 +843,11 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
             this.originalSubjects = originalSubjects;
             this.code = code;
             this.activityType = activityType;
+            this.info = info;
+            this.substText = substText;
+            this.lsText = lsText;
+            this.lsNumber = lsNumber;
+            this.studentGroup = studentGroup;
         }
 
         /**
@@ -931,6 +990,21 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
             return activityType;
         }
 
+        public String getInfo() {
+            return info;
+        }
+        public String getSubstText() {
+            return substText;
+        }
+        public String getLsText() {
+            return lsText;
+        }
+        public Integer getLsNumber() {
+            return lsNumber;
+        }
+        public String getStudentGroup() {
+            return studentGroup;
+        }
         /**
          * Returns a json parsed string with all information
          *
@@ -954,6 +1028,11 @@ public class Timetable extends ResponseList<Timetable.Lesson> {
             classAsMap.put("startTime", startTime.format(DateTimeFormatter.ofPattern("HHmm")));
             classAsMap.put("endTime", endTime.format(DateTimeFormatter.ofPattern("HHmm")));
             classAsMap.put("activityType", activityType);
+            classAsMap.put("info", info);
+            classAsMap.put("substText", substText);
+            classAsMap.put("lsText", lsText);
+            classAsMap.put("lsNumber", lsNumber);
+            classAsMap.put("studentGroup", studentGroup);
             return new JSONObject(classAsMap).toString();
         }
     }

@@ -137,8 +137,8 @@ public class Session {
 
     /**
      * Checks if the same request is still in the {@link com.github.benmanes.caffeine.cache.LoadingCache} and if not, the request is sent to the server.
-     * 
-     * 
+     *
+     *
      * @param method the POST method
      * @param params params you want to send with the request
      * @param action lambda expression that gets called if the {@code method} is not in the cache manager
@@ -711,10 +711,26 @@ public class Session {
      * @since 1.0
      */
     public Timetable getTimetable(LocalDate start, LocalDate end, UntisUtils.ElementType elementType, int id) throws IOException {
-        HashMap<String, String> params = UntisUtils.localDateToParams(start, end);
-
-        params.put("type", String.valueOf(elementType.getElementType()));
-        params.put("id", String.valueOf(id));
+        if (end.isBefore(start)) {
+            throw new DateTimeException("The end date must end after or on the same day as the start date");
+        }
+        Map<String, ?> element = new HashMap<>(){{
+            put("type", elementType.getElementType());
+            put("id", id);
+        }};
+        Map<String, ?> options = new HashMap<>() {{
+            put("startDate", start.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+            put("endDate", end.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+            put("element", element);
+            put("onlyBaseTimetable", "False");
+            put("showInfo","True");
+            put("showSubstText", "True");
+            put("showLsText", "True");
+            put("showLsNumber", "True");
+            put("showStudentgroup", "True");
+        }};
+        Map<String, Map<String, ?>> params = new HashMap<>();
+        params.put("options", options);
 
         return requestSender(UntisUtils.Method.GETTIMETABLE, params, response -> {
             JSONObject jsonResponse = response.getResponse();
@@ -841,7 +857,23 @@ public class Session {
                 String activityType = null;
                 if (timetableInfos.has("activityType")) activityType = timetableInfos.getString("activityType");
 
-                timetable.add(new Timetable.Lesson(LocalDate.parse(String.valueOf(timetableInfos.getInt("date")), DateTimeFormatter.ofPattern("yyyyMMdd")),
+                String info = null;
+                if (timetableInfos.has("info")) info = timetableInfos.getString("info");
+
+                String substText = null;
+                if (timetableInfos.has("substText")) substText = timetableInfos.getString("substText");
+
+                String lsText = null;
+                if (timetableInfos.has("lstext")) lsText = timetableInfos.getString("lstext");
+
+                Integer lsNumber = null;
+                if (timetableInfos.has("lsnumber")) lsNumber  = timetableInfos.getInt("lsnumber");
+
+                String studentGroup = null;
+                if (timetableInfos.has("sg")) studentGroup = timetableInfos.getString("sg");
+
+                timetable.add(new Timetable.Lesson(
+                        LocalDate.parse(String.valueOf(timetableInfos.getInt("date")), DateTimeFormatter.ofPattern("yyyyMMdd")),
                         startTime,
                         endTime,
                         timeUnits.findByStartTime(startTime),
@@ -854,7 +886,13 @@ public class Session {
                         subjects,
                         originalSubjects,
                         code,
-                        activityType));
+                        activityType,
+                        info,
+                        substText,
+                        lsText,
+                        lsNumber,
+                        studentGroup
+                ));
             }
 
             return timetable;
