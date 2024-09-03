@@ -69,8 +69,9 @@ public class RequestManager {
         connection.setRequestProperty("User-Agent", userAgent);
         connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
 
-        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-        outputStream.writeBytes(requestBody);
+        OutputStreamWriter utf8Writer = new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8);
+        utf8Writer.write(requestBody);
+        utf8Writer.close();
 
         BufferedReader input;
 
