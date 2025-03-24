@@ -5,13 +5,11 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +59,29 @@ public class RequestManager {
             put("password", password);
             put("client", userAgent);
         }});
+        StringBuilder stringBuilder = getStringBuilder(userAgent, url, requestBody);
+
+        JSONObject jsonObject;
+
+        try {
+            jsonObject = new JSONObject(stringBuilder.toString());
+
+            if (jsonObject.has("error")) {
+                JSONObject errorObject = jsonObject.getJSONObject("error");
+                throw new LoginException("The response contains an error (" + errorObject.getInt("errorObject") + "): " + errorObject.getString("message"));
+            }
+        } catch (JSONException e) {
+            throw new IOException("An unexpected exception occurred: " + stringBuilder);
+        }
+
+        JSONObject result = jsonObject.getJSONObject("result");
+
+        UntisUtils.ElementType elementType = UntisUtils.ElementType.of(result.getInt("personType"));
+
+        return new Infos(username, password, server, schoolName, userAgent, result.getString("sessionId"), result.getInt("personId"), elementType, result.getInt("klasseId"));
+    }
+
+    private static StringBuilder getStringBuilder(String userAgent, URL url, String requestBody) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod("POST");
@@ -86,25 +107,7 @@ public class RequestManager {
         while ((line = input.readLine()) != null) {
             stringBuilder.append(line);
         }
-
-        JSONObject jsonObject;
-
-        try {
-            jsonObject = new JSONObject(stringBuilder.toString());
-
-            if (jsonObject.has("error")) {
-                JSONObject errorObject = jsonObject.getJSONObject("error");
-                throw new LoginException("The response contains an error (" + errorObject.getInt("errorObject") + "): " + errorObject.getString("message"));
-            }
-        } catch (JSONException e) {
-            throw new IOException("An unexpected exception occurred: " + stringBuilder);
-        }
-
-        JSONObject result = jsonObject.getJSONObject("result");
-
-        UntisUtils.ElementType elementType = UntisUtils.ElementType.of(result.getInt("personType"));
-
-        return new Infos(username, password, server, schoolName, userAgent, result.getString("sessionId"), result.getInt("personId"), elementType, result.getInt("klasseId"));
+        return stringBuilder;
     }
 
     /**

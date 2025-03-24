@@ -743,10 +743,38 @@ public class Session {
 
             Timetable timetable = new Timetable();
 
-            Classes c = getClasses();
-            Teachers t = getTeachers();
-            Subjects s = getSubjects();
-            Rooms r = getRooms();
+            Classes c;
+            Teachers t;
+            Subjects s;
+            Rooms r;
+
+            try {
+                c = getClasses();
+            } catch (IOException e) {
+                e.printStackTrace();
+                c = null;
+            }
+            try {
+                t = getTeachers();
+            } catch (IOException e) {
+                e.printStackTrace();
+                t = null;
+            }
+            try {
+                s = getSubjects();
+            } catch (IOException e) {
+                e.printStackTrace();
+                s = null;
+            }
+            try {
+                r = getRooms();
+            } catch (IOException e) {
+                e.printStackTrace();
+                r = null;
+            }
+
+
+
 
             TimeUnits timeUnits = getTimegridUnits().get(0).getTimeUnits();
 
