@@ -32,7 +32,6 @@ import java.util.Objects;
 public class Session {
 
     private Infos infos;
-    private boolean useCache = true;
     private RequestManager requestManager;
 
     /**
@@ -74,6 +73,26 @@ public class Session {
      * <p>Send an login request to the server and returns {@link Session} if the login was successful.
      * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
      *
+     * @param username   the username used for the api
+     * @param password   the password used for the api
+     * @param server     the server used for the api
+     * @param schoolName the school name used for the api
+     * @param useCache sets if every request response should be saved in cache
+     * @return a session
+     * @throws IOException if an IO Exception occurs
+     * @see Session#login(String, String, String, String, String)
+     * @since 1.0
+     */
+    public static Session login(String username, String password, String server, String schoolName, boolean useCache) throws IOException {
+        return login(username, password, server, schoolName, "", useCache);
+    }
+
+    /**
+     * Logs in to the server.
+     *
+     * <p>Send an login request to the server and returns {@link Session} if the login was successful.
+     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
+     *
      * @param server     the server from your school as URL
      * @param schoolName school name of the school you want to connect to
      * @param username   the username used for the API
@@ -84,12 +103,32 @@ public class Session {
      * @since 1.0
      */
     public static Session login(String username, String password, String server, String schoolName, String userAgent) throws IOException {
+        return login(username, password, server, schoolName, userAgent, true);
+    }
+
+    /**
+     * Logs in to the server.
+     *
+     * <p>Send an login request to the server and returns {@link Session} if the login was successful.
+     * Throws {@link IOException} if an IO Exception occurs or {@link LoginException} (which inherits from IOException) if login fails</p>
+     *
+     * @param server     the server from your school as URL
+     * @param schoolName school name of the school you want to connect to
+     * @param username   the username used for the API
+     * @param password   the password used for the API
+     * @param userAgent  the user agent you want to send with
+     * @param useCache sets if every request response should be saved in cache
+     * @return a {@link Session} session
+     * @throws IOException if an IO Exception occurs
+     * @since 1.0
+     */
+    public static Session login(String username, String password, String server, String schoolName, String userAgent, boolean useCache) throws IOException {
         if (!server.startsWith("http://") && !server.startsWith("https://")) {
             server = "https://" + server;
         }
         Infos infos = RequestManager.generateUserInfosAndLogin(username, password, server, schoolName, userAgent);
 
-        RequestManager requestManager = new RequestManager(infos);
+        RequestManager requestManager = new RequestManager(infos, useCache);
 
         return new Session(infos, requestManager);
     }
@@ -116,13 +155,14 @@ public class Session {
      * @since 1.0
      */
     public void reconnect() throws IOException {
+        boolean useCache = requestManager.isCacheUsed();
         try {
             logout();
         } catch (IOException ignore) {
         }
 
         infos = RequestManager.generateUserInfosAndLogin(infos.getUsername(), infos.getPassword(), infos.getServer(), infos.getSchoolName(), infos.getUserAgent());
-        requestManager = new RequestManager(infos);
+        requestManager = new RequestManager(infos, useCache);
     }
 
     /**
@@ -147,11 +187,7 @@ public class Session {
      * @since 1.1
      */
     private <T extends BaseResponse> T requestSender(UntisUtils.Method method, Map<String, ?> params, ResponseConsumer<? extends T> action) throws IOException {
-        if (useCache) {
-            return action.getResponse(requestManager.CachedPOST(method.getMethod(), params));
-        } else {
-            return action.getResponse(requestManager.POST(method.getMethod(), params));
-        }
+        return action.getResponse(requestManager.CachedPOST(method.getMethod(), params));
     }
 
     /**
@@ -1146,26 +1182,6 @@ public class Session {
      */
     public Infos getInfos() {
         return infos;
-    }
-
-    /**
-     * Gets if every request response should be saved in cache
-     *
-     * @return gets if every request response should be saved in cache
-     * @since 1.1
-     */
-    public boolean isCacheUsed() {
-        return useCache;
-    }
-
-    /**
-     * Sets if every request response should be saved in cache what returns in better performance
-     *
-     * @param useCache sets if every request response should be saved in cache
-     * @since 1.1
-     */
-    public void useCache(boolean useCache) {
-        this.useCache = useCache;
     }
 
 }
