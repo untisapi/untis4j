@@ -1065,7 +1065,7 @@ public class Session {
      * @since 1.1
      */
     public WeeklyTimetable getWeeklyTimetableFromTeacherId(LocalDate anyDateOfWeek, int teacherId) throws IOException {
-        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.CLASS, teacherId);
+        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.TEACHER, teacherId);
     }
 
     /**
@@ -1079,7 +1079,7 @@ public class Session {
      * @since 1.1
      */
     public WeeklyTimetable getWeeklyTimetableFromSubjectId(LocalDate anyDateOfWeek, int subjectId) throws IOException {
-        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.CLASS, subjectId);
+        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.SUBJECT, subjectId);
     }
 
     /**
@@ -1093,7 +1093,7 @@ public class Session {
      * @since 1.1
      */
     public WeeklyTimetable getWeeklyTimetableFromRoomId(LocalDate anyDateOfWeek, int roomId) throws IOException {
-        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.CLASS, roomId);
+        return this.getWeeklyTimetable(anyDateOfWeek, UntisUtils.ElementType.ROOM, roomId);
     }
 
     /**
