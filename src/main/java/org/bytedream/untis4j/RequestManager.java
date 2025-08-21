@@ -26,7 +26,8 @@ public class RequestManager {
     private final Infos infos;
     private final String url;
     private boolean loggedIn = true;
-    private final LoadingCache<String, Response> requests = Caffeine.newBuilder().maximumSize(1_000).expireAfterWrite(Duration.ofMinutes(10)).refreshAfterWrite(Duration.ofMinutes(1)).build(this::POST);
+    private final boolean useCache;
+    private LoadingCache<String, Response> requests;
 
     /**
      * Initialize the {@link RequestManager} class
@@ -34,10 +35,14 @@ public class RequestManager {
      * @param infos user information
      * @since 1.0
      */
-    public RequestManager(Infos infos) {
+    public RequestManager(Infos infos, boolean useCache) {
         this.infos = infos;
-
-        url = infos.getServer() + baseURL + "?school=" + infos.getSchoolName();
+        this.url = infos.getServer() + baseURL + "?school=" + infos.getSchoolName();
+        this.useCache = useCache;
+        
+        if (this.useCache) {
+            requests = Caffeine.newBuilder().maximumSize(1_000).expireAfterWrite(Duration.ofMinutes(10)).refreshAfterWrite(Duration.ofMinutes(1)).build(this::POST);
+        }
     }
 
     /**
@@ -144,7 +149,12 @@ public class RequestManager {
     public Response CachedPOST(String method, Map<String, ?> params) throws IOException {
 
         if (loggedIn) {
-            Response response = requests.get(UntisUtils.processParams(method, params));
+            Response response;
+            if (useCache) {
+                response = requests.get(UntisUtils.processParams(method, params));
+            } else {
+                response = POST(UntisUtils.processParams(method, params));
+            }
             if (method.equals(UntisUtils.Method.LOGOUT.getMethod()) && loggedIn && response != null) {
                 loggedIn = false;
             }
@@ -211,5 +221,14 @@ public class RequestManager {
     public String getURL() {
         return url;
     }
-
+    
+    /**
+     * Gets if every request response should be saved in cache
+     *
+     * @return gets if every request response should be saved in cache
+     * @since 1.1
+     */
+    public boolean isCacheUsed() {
+        return useCache;
+    }
 }
